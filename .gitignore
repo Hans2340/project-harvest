@@ -1,0 +1,31 @@
+# Godot 4+
+.godot/
+/android/
+*.translation
+
+# Exports / builds
+/build/
+/export/
+*.exe
+*.pck
+*.zip
+*.apk
+*.x86_64
+export_credentials.cfg
+
+# Mono / C# (in case we ever use it)
+.mono/
+data_*/
+mono_crash.*.json
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.tmp
+.vscode/
+.idea/
+
+# Art source files are fine to commit, but not their autosaves/backups
+*.ase~
+*.kra~
+*.psd~
