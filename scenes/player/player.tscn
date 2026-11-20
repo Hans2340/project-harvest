@@ -17,8 +17,8 @@ texture = ExtResource("3_shadow")
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_sprite")
 offset = Vector2(0, -18)
-hframes = 9
-vframes = 3
+hframes = 8
+vframes = 9
 
 [node name="Collision" type="CollisionShape2D" parent="."]
 position = Vector2(0, -2)
