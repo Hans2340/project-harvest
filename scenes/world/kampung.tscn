@@ -1,11 +1,10 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/kampung.gd" id="1_kampung"]
 [ext_resource type="TileSet" path="res://resources/tilesets/kampung_tileset.tres" id="2_tiles"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="3_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
 [ext_resource type="Script" path="res://scripts/world/zone_exit.gd" id="5_exit"]
-[ext_resource type="Script" path="res://scripts/ui/tile_highlight.gd" id="6_hl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
 size = Vector2(12, 96)
@@ -17,9 +16,6 @@ script = ExtResource("1_kampung")
 tile_set = ExtResource("2_tiles")
 
 [node name="Decor" type="Node2D" parent="."]
-
-[node name="Highlight" type="Node2D" parent="."]
-script = ExtResource("6_hl")
 
 [node name="YSort" type="Node2D" parent="."]
 y_sort_enabled = true

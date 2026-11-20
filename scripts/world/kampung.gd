@@ -81,7 +81,6 @@ var _crop_sprites := {}   ## Vector2i -> Sprite2D
 @onready var ysort: Node2D = $YSort
 @onready var crops_root: Node2D = $YSort/Crops
 @onready var player: Player = $YSort/Player
-@onready var highlight: TileHighlight = $Highlight
 @onready var night: CanvasModulate = $Night
 @onready var hud: Hud = $HUD
 
@@ -112,11 +111,6 @@ func _ready() -> void:
 	_update_lighting(int(GameState.minutes))
 	if GameState.day == 1 and FarmState.plots.is_empty():
 		hud.show_message("Kampung. Plant padi in the sawah (2 + E). Shift = run.")
-
-
-func _process(_delta: float) -> void:
-	var c := player.target_cell()
-	highlight.position = Vector2(c * TILE) + Vector2(TILE, TILE) / 2.0
 
 
 func _width() -> int:
