@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/farm.gd" id="1_farm"]
 [ext_resource type="TileSet" path="res://resources/tilesets/farm_tileset.tres" id="2_tiles"]
@@ -9,6 +9,9 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
 size = Vector2(32, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_exit_east"]
+size = Vector2(16, 32)
 
 [node name="Farm" type="Node2D"]
 script = ExtResource("1_farm")
@@ -35,6 +38,9 @@ position = Vector2(144, 154)
 [node name="from_mangrove" type="Marker2D" parent="Spawns"]
 position = Vector2(208, 698)
 
+[node name="from_kampung" type="Marker2D" parent="Spawns"]
+position = Vector2(1200, 474)
+
 [node name="ExitToMangrove" type="Area2D" parent="."]
 position = Vector2(208, 760)
 script = ExtResource("6_exit")
@@ -43,6 +49,15 @@ target_spawn = "from_farm"
 
 [node name="Shape" type="CollisionShape2D" parent="ExitToMangrove"]
 shape = SubResource("RectangleShape2D_exit")
+
+[node name="ExitToKampung" type="Area2D" parent="."]
+position = Vector2(1276, 464)
+script = ExtResource("6_exit")
+target_scene = "res://scenes/world/kampung.tscn"
+target_spawn = "from_farm"
+
+[node name="Shape" type="CollisionShape2D" parent="ExitToKampung"]
+shape = SubResource("RectangleShape2D_exit_east")
 
 [node name="Night" type="CanvasModulate" parent="."]
 

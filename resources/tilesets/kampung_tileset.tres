@@ -1,0 +1,147 @@
+[gd_resource type="TileSet" load_steps=10 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/tilesets/kampung/kampung_grass_dirt_48.png" id="1_tex"]
+[ext_resource type="Texture2D" path="res://assets/tilesets/kampung/kampung_grass_sawah_48.png" id="2_tex"]
+[ext_resource type="Texture2D" path="res://assets/tilesets/kampung/kampung_grass_sand_48.png" id="3_tex"]
+[ext_resource type="Texture2D" path="res://assets/tilesets/kampung/kampung_water_sand_48.png" id="4_tex"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_grass_dirt"]
+texture = ExtResource("1_tex")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_grass_sawah"]
+texture = ExtResource("2_tex")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_grass_sand"]
+texture = ExtResource("3_tex")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_water_sand"]
+texture = ExtResource("4_tex")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-24, -24, 0, -24, 0, 0, -24, 0)
+0:0/0/physics_layer_0/polygon_1/points = PackedVector2Array(0, -24, 24, -24, 24, 0, 0, 0)
+0:0/0/physics_layer_0/polygon_2/points = PackedVector2Array(-24, 0, 0, 0, 0, 24, -24, 24)
+0:0/0/physics_layer_0/polygon_3/points = PackedVector2Array(0, 0, 24, 0, 24, 24, 0, 24)
+1:0/0 = 0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(0, -24, 24, -24, 24, 0, 0, 0)
+1:0/0/physics_layer_0/polygon_1/points = PackedVector2Array(-24, 0, 0, 0, 0, 24, -24, 24)
+1:0/0/physics_layer_0/polygon_2/points = PackedVector2Array(0, 0, 24, 0, 24, 24, 0, 24)
+2:0/0 = 0
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-24, -24, 0, -24, 0, 0, -24, 0)
+2:0/0/physics_layer_0/polygon_1/points = PackedVector2Array(-24, 0, 0, 0, 0, 24, -24, 24)
+2:0/0/physics_layer_0/polygon_2/points = PackedVector2Array(0, 0, 24, 0, 24, 24, 0, 24)
+3:0/0 = 0
+3:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-24, 0, 0, 0, 0, 24, -24, 24)
+3:0/0/physics_layer_0/polygon_1/points = PackedVector2Array(0, 0, 24, 0, 24, 24, 0, 24)
+0:1/0 = 0
+0:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-24, -24, 0, -24, 0, 0, -24, 0)
+0:1/0/physics_layer_0/polygon_1/points = PackedVector2Array(0, -24, 24, -24, 24, 0, 0, 0)
+0:1/0/physics_layer_0/polygon_2/points = PackedVector2Array(0, 0, 24, 0, 24, 24, 0, 24)
+1:1/0 = 0
+1:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(0, -24, 24, -24, 24, 0, 0, 0)
+1:1/0/physics_layer_0/polygon_1/points = PackedVector2Array(0, 0, 24, 0, 24, 24, 0, 24)
+2:1/0 = 0
+2:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-24, -24, 0, -24, 0, 0, -24, 0)
+2:1/0/physics_layer_0/polygon_1/points = PackedVector2Array(0, 0, 24, 0, 24, 24, 0, 24)
+3:1/0 = 0
+3:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(0, 0, 24, 0, 24, 24, 0, 24)
+0:2/0 = 0
+0:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-24, -24, 0, -24, 0, 0, -24, 0)
+0:2/0/physics_layer_0/polygon_1/points = PackedVector2Array(0, -24, 24, -24, 24, 0, 0, 0)
+0:2/0/physics_layer_0/polygon_2/points = PackedVector2Array(-24, 0, 0, 0, 0, 24, -24, 24)
+1:2/0 = 0
+1:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(0, -24, 24, -24, 24, 0, 0, 0)
+1:2/0/physics_layer_0/polygon_1/points = PackedVector2Array(-24, 0, 0, 0, 0, 24, -24, 24)
+2:2/0 = 0
+2:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-24, -24, 0, -24, 0, 0, -24, 0)
+2:2/0/physics_layer_0/polygon_1/points = PackedVector2Array(-24, 0, 0, 0, 0, 24, -24, 24)
+3:2/0 = 0
+3:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-24, 0, 0, 0, 0, 24, -24, 24)
+0:3/0 = 0
+0:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-24, -24, 0, -24, 0, 0, -24, 0)
+0:3/0/physics_layer_0/polygon_1/points = PackedVector2Array(0, -24, 24, -24, 24, 0, 0, 0)
+1:3/0 = 0
+1:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(0, -24, 24, -24, 24, 0, 0, 0)
+2:3/0 = 0
+2:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-24, -24, 0, -24, 0, 0, -24, 0)
+3:3/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_water_sand_walkable"]
+texture = ExtResource("4_tex")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+
+[resource]
+tile_size = Vector2i(48, 48)
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_grass_dirt")
+sources/1 = SubResource("TileSetAtlasSource_grass_sawah")
+sources/2 = SubResource("TileSetAtlasSource_grass_sand")
+sources/3 = SubResource("TileSetAtlasSource_water_sand")
+sources/4 = SubResource("TileSetAtlasSource_water_sand_walkable")

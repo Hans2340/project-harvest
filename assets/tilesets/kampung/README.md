@@ -13,3 +13,10 @@
   4 corners match. Preview: `docs/references/concept/kampung_grass_dirt-demo.png`.
 - **Remake / variants:** `tools/pixellab_wang_demo.py <tileset.json> <name>` turns a
   `GET /v2/tilesets/{id}` response into these sheets.
+
+## kampung_grass_sawah, kampung_water_sand, kampung_grass_sand
+- Same method, 1 generation each (`tools/pixellab_tileset.py`). Refs in `docs/references/pixellab/tileset/`
+  (`sawah_ref_24`, `sand_ref_24`, `water_ref_24` = swamp-pack water at native pixel size).
+- Upper terrain: sawah / sand / sand. Lower: grass / water / grass. Raw JSON in `raw/`.
+- In Godot: `resources/tilesets/kampung_tileset.tres` (sources 0-3 = the four sets; 4 = water/sand
+  without collision, for the jetty). Water quarters of each tile block movement.

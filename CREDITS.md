@@ -5,6 +5,7 @@
 | Asset | Author | License | Used for |
 |---|---|---|---|
 | Dark Swamp Starter Asset Pack v1.0 | [Hypnobius](https://hypnobius.itch.io/) | Commercial & personal use allowed; **no redistribution of the pack** (see `assets/tilesets/dark_swamp/LICENSE.txt`) | Mangrove zone tiles, water, boardwalks, props, altar |
+| PixelLab (pixellab.ai) generations | AI tool, made by us | Per PixelLab terms | Kampung houses and tilesets (styled after the Dark Swamp pack) |
 | Dark Ages UI Pixel Art Asset Pack v1.0 | [Hypnobius](https://hypnobius.itch.io/) | Same terms: commercial & personal use; **no redistribution** (see `assets/ui/dark_ages/LICENSE.txt`) | Inventory window, item slots, hotbar, banners |
 
 > ✅ The artist (Hypnobius) has given us permission to use both packs as style references in

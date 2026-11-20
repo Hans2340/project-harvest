@@ -24,7 +24,7 @@ A farming RPG made with **Godot 4**.
 | E | Use tool on the highlighted tile · harvest ripe padi · sleep (face the bed) |
 | I or Tab | Open / close the inventory (game pauses) · Esc also closes |
 
-Walk south off the farm along the path to reach the **mangrove swamp**; walk back north to return.
+Walk **south** off the farm to reach the **mangrove swamp**, or **east** along the path to reach the **kampung**.
 
 Loop: hoe grass → plant → water → sleep. Watered padi grows one stage per
 night and is ripe after 3 watered nights. 1 real second = 10 in-game minutes;
@@ -40,9 +40,10 @@ godot --headless --path . -s tests/test_farm_cycle.gd
 godot --headless --path . -s tests/test_mangrove.gd
 godot --headless --path . -s tests/test_zone_travel.gd
 godot --headless --path . -s tests/test_inventory.gd
+godot --headless --path . -s tests/test_kampung.gd
 ```
 
-Each prints PASS/FAIL: the farming cycle, the mangrove zone build, travelling between zones, and the inventory.
+Each prints PASS/FAIL: the farming cycle, the mangrove zone build, travelling between zones, the inventory, and the kampung.
 
 ## Credits
 

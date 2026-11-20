@@ -23,7 +23,9 @@
 
 ### World & zones *(prototype)*
 - **Connected zones** (walk off an edge into the next zone). Built so far:
-  - **Farm** (32 px tiles), the player's land. South path → mangrove.
+  - **Farm** (32 px tiles), the player's land. South path → mangrove, east path → kampung.
+  - **Kampung** (48 px tiles, PixelLab tilesets in the swamp style): dirt yard with 4 rumah
+    kampung, sawah fields, sandy riverbank with a jetty, river.
   - **Paya Bakau, the mangrove swamp** (48 px tiles, Dark Swamp pack). River with boardwalks,
     an island with a **defiled keramat** (red-flame altar marked with the Ordo's black seal). Future
     home of Bujang Senang.
