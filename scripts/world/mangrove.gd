@@ -54,10 +54,12 @@ const LAYOUT := [
 
 var _altar_cells: Array[Vector2i] = []
 var ambience := Ambience.new()
+var sun_shadows := SunShadows.new()
 var _altar_sprite: Sprite2D
 
 
 func _ready() -> void:
+	shadows.add_child(sun_shadows)
 	_build_ground()
 	_build_props()
 	_build_bounds()
@@ -185,7 +187,8 @@ func _add_standing_prop(cell: Vector2i, file: String, blocker: Vector2) -> void:
 	if file.contains("tuft"):
 		s.set_meta("sway", true)
 	ysort.add_child(s)
-	shadows.add_child(ShadowUtil.make(base + Vector2(0, -1), Vector2(tex.get_width() + 6, 10)))
+	if not file.contains("tuft"):
+		sun_shadows.add_caster(s)
 	if blocker != Vector2.ZERO:
 		_add_blocker(base + Vector2(0, -blocker.y / 2.0), blocker)
 
@@ -221,7 +224,7 @@ func _add_altar(cell: Vector2i) -> void:
 	_altar_sprite.position = base
 	_altar_sprite.set_meta("minimap", "building")
 	ysort.add_child(_altar_sprite)
-	shadows.add_child(ShadowUtil.make(base + Vector2(0, -10), Vector2(108, 34)))
+	sun_shadows.add_caster(_altar_sprite)
 	_add_blocker(base + Vector2(0, -30), Vector2(88, 56))
 	var timer := Timer.new()
 	timer.wait_time = 0.18
@@ -282,6 +285,8 @@ func _build_ambience() -> void:
 	move_child(ambience, decor.get_index() + 1)
 	ambience.setup(self, {"tile": TILE, "map_size": Vector2(_width(), LAYOUT.size()) * TILE,
 		"water_cells": water, "firefly_cells": land, "sway": sway})
+	sun_shadows.add_caster(player.sprite)
+	sun_shadows.asar_started.connect(func(): hud.show_message(SunShadows.asar_message()))
 
 
 # ---------------------------------------------------------------- interaction
