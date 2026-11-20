@@ -9,4 +9,5 @@ PixelLab id: `0cacaf43-0c25-4e86-867a-86e6834d4195`. `metadata.json` names the s
 - `preview_size_compare.png`: petani NPC (v3, 40), first try (pro, 44, figure ~29 px, replaced),
   this one (pro, 56).
 - Pro mode: figure is ~2/3 of the canvas at these sizes, so use canvas 56 for a ~37 px figure.
-- No animations yet.
+- Run (`running-8-frames`, template mode) in south, east, north (`base/animations/run/`), 3 generations.
+- Previews for both Pendekar: `../preview_pendekar.png`, `../preview_pendekar_run.gif`.
