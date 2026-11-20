@@ -260,10 +260,69 @@ Ordo fort at the river mouth, Gunung Ledang.
   or must **stay together** (simpler to build). Suggest: start with *stay in the
   same zone*, allow splitting later.
 
+### S24. Player customisation: character creator + visible equipment
+Players can **change their look at the start** (character creator) **and during
+the game** (clothes, armour, headgear and weapons show on the sprite). Both
+**male and female** player characters.
+
+Drawing every item as a fully animated layer is too much work: 20 items × 8
+animations × 3 directions ≈ 480 animations. So each slot is handled in the
+cheapest way that still looks right:
+
+| Slot | How | Animation cost |
+|---|---|---|
+| **Body + outfit** (farmer, Hulubalang, baju rantai…) | One full sprite per outfit, skin included. Keep the number of outfits small. | High: 8 animations × 3 directions per outfit |
+| **Skin, cloth and hair colours** | **Palette swap** shader in Godot | Almost free |
+| **Headgear** (tengkolok, ketopong, selendang, bayang mask) | Static layer, 3 directions, pinned to a **head anchor** per frame | Low: 3 images per item |
+| **Weapons** (keris, tombak, sumpit, perisai) | Static layer, pinned and rotated on a **hand anchor** per frame | Low: 1–3 images per item |
+
+**Character creator** (start of game): body type (male/female), skin tone, hair
+style and colour, cloth colours. At ~40 px the face is only a few pixels, so
+"face options" are limited to eye/brow colour, not face shape.
+
+**Equipment** (during the game): outfits swap the body sprite; headgear and
+weapons swap layers; colour variants make one shape feel like several items
+(e.g. red, indigo and black tengkolok from one sprite).
+
+**Male and female**
+- Same skeleton, height and anchor points, so every headgear, weapon and palette
+  works on both. Only body shape, hair and clothing differ.
+- Body + outfit sprites double: 5 outfits (farmer + 4 classes) × 2 = **10 bodies,
+  ~240 animations** for the player.
+- Each headgear item is tagged *male / female / both* (e.g. tengkolok = male,
+  selendang = female, ketopong = both).
+- Women are real fighters: practical, era-appropriate clothing (baju panjang,
+  kain sarung, selendang; baju rantai for Hulubalang), never revealing.
+
+**Rules this adds for sprites**
+- All outfits for one body type use the **same skeleton/poses**, so frames line
+  up and anchors stay valid.
+- Every body sprite uses **one fixed master palette** (skin, cloth, hair ramps
+  on known indices) so the palette-swap shader works.
+- Each animation frame stores its **head and hand anchor points** in a small
+  data file next to the sheet.
+
+**Tooling: PixelLab** (see `docs/references/pixellab/README.md`)
+- Gemini and SpriteCook tests drew characters large and lost detail when shrunk
+  to ~40 px. PixelLab works at real pixel size, rotates to 4 directions and has
+  skeleton-based animation.
+- Estimate: ~2–4 generations per animation with retries → **~500–1,000
+  generations** for the player set. Tier 1 ($12/month, 2,000 generations) covers
+  it in about a month.
+
+**Test before approving** (fits in PixelLab's 40 free generations):
+1. Male and female base → rotate to 4 directions. Same look in every direction?
+2. Run (down) at ~40 px. Readable at real size?
+3. Change outfit with inpainting (e.g. farmer → Hulubalang). Body and face kept?
+4. Animate the new outfit with the **same skeleton**. Do frames line up with the base?
+
+If step 4 fails, fall back to fewer outfits plus more palette variants.
+
 ## Open questions
 - Final game name?
 - Exact number of pawang questions (max 7)?
 - Final blessing list and balancing?
+- How many outfits per body type at launch (S24)?
 
 ## Rejected ideas
 - Real-history Penjajah (Portuguese / British / Japanese) → replaced by a fictional empire.
