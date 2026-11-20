@@ -24,6 +24,18 @@
       "sha12": "f5357db92508",
       "label": "farmer 24x40 Stoneshard-format test v2",
       "file": "assets/sprites/concept/farmer_side_v2.png"
+    },
+    {
+      "asset_id": "88cbdfb9-83b8-446a-8463-45e471625a36",
+      "sha12": "fcfbdee563ef",
+      "label": "STYLE REFERENCE: official sprite format (use as style_asset_ids)",
+      "file": "docs/references/concept/official-sprite-format-ordo-sigillum.jpg"
+    },
+    {
+      "asset_id": "a4026bb2-e794-4837-9ccb-92d5943b2b6d",
+      "sha12": "1f6416466ab8",
+      "label": "farmer turnaround front/back/side in official style (3x size)",
+      "file": "assets/sprites/concept/farmer_turnaround_v1.png"
     }
   ]
 }
