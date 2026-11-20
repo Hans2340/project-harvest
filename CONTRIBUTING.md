@@ -18,5 +18,5 @@
 - Use static typing where you can (`var speed: float = 80.0`).
 
 ## Assets
-- Pixel art at 32×32 tiles; characters around 20×36 px. See `docs/game-design.md` → Art direction.
+- Follow the **Official sprite format** in `docs/game-design.md` (32 px tiles, ~24×36–40 characters, 4 directions, PNG only). Reference sheet: `docs/references/concept/official-sprite-format-ordo-sigillum.jpg`.
 - Put source files (`.aseprite`, `.kra`) next to the exported `.png`.

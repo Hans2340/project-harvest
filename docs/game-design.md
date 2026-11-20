@@ -152,14 +152,39 @@ Polish notes for the final versions:
   more serpent-like, often wears a crown (*mahkota*) and has no legs.
 
 ### Art direction
-- Characters ~**20×36 px** → **32 px tiles** at **640×360** base resolution
-  (project updated).
 - Top-down ¾ view, muted earthy palette with bright accents (padi gold,
   hibiscus red, spirit glows).
 - Visible equipment on the character (layered sprites).
 - Strong night/torch lighting to suit the folklore horror side.
 - Designs based on real references: museum keris, songket, rumah Melayu, old manuscripts.
 - Inspiration only: no copying Stoneshard assets, palette or UI.
+
+### ⭐ Official sprite format
+**Reference sheet:** `docs/references/concept/official-sprite-format-ordo-sigillum.jpg`
+(Ordo Sigillum soldiers, Binders and bound spirits). All new character and
+creature sprites must match it.
+
+| Rule | Value |
+|---|---|
+| Tile size | **32×32 px** |
+| Base resolution | **640×360**, integer scaling (project already set) |
+| Character size | about **24×36–40 px** (≈ 1 tile wide, ≈ 1¼ tiles tall); bigger creatures and bosses can be larger |
+| View | top-down ¾ |
+| Directions | **4 directions**: front (down), back (up), side (right). **Left = side flipped**, so draw 3 views |
+| Colours | limited palette, roughly 16–24 colours per sprite, simple shading |
+| Outline | dark outline (not pure black) |
+| Shadow | soft dark oval drop shadow under every character; can be a separate sprite |
+| Glow / light | lanterns, spirits and magic glow via Godot `PointLight2D` / additive effects, **not baked into the sprite** |
+| File format | **PNG** with transparency, exact pixel grid. No JPG for game assets |
+| Anchor | sprite origin at the feet (bottom centre) |
+
+Notes:
+- The reference sheet is a JPG concept and not pixel-perfect. Use it for size,
+  proportions, style and colours; final sprites must be clean PNGs.
+- The earlier side-only 24×40 farmer test (`assets/sprites/concept/farmer_side_*.png`)
+  is superseded by this format. Use it for scale and colours only.
+- Minimum animation set per character (to confirm later): idle, walk, attack,
+  hurt, death, plus farming actions for the player (hoe, water, harvest).
 
 ---
 
