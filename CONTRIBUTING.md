@@ -10,7 +10,8 @@
   which scene you're working on.
 - Split big scenes into smaller instanced scenes (player, HUD, each building).
 - Don't commit the `.godot/` folder (already ignored).
-- Do commit the `.import` files next to assets.
+- Do commit the `.import` files next to assets and the `.uid` files next to scripts.
+- `docs/` has a `.gdignore`, so Godot ignores reference images there.
 
 ## Code style (GDScript)
 - Follow the official style guide: tabs, `snake_case` for files/functions/vars,

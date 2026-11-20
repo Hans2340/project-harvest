@@ -1,0 +1,30 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/farm.gd" id="1_farm"]
+[ext_resource type="TileSet" path="res://resources/tilesets/farm_tileset.tres" id="2_tiles"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="3_player"]
+[ext_resource type="Texture2D" path="res://assets/sprites/placeholder/tile_highlight.png" id="4_hl"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="5_hud"]
+[ext_resource type="Resource" path="res://resources/crops/padi.tres" id="6_padi"]
+
+[node name="Farm" type="Node2D"]
+script = ExtResource("1_farm")
+default_crop = ExtResource("6_padi")
+
+[node name="Ground" type="TileMapLayer" parent="."]
+tile_set = ExtResource("2_tiles")
+
+[node name="Highlight" type="Sprite2D" parent="."]
+texture = ExtResource("4_hl")
+
+[node name="YSort" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Crops" type="Node2D" parent="YSort"]
+y_sort_enabled = true
+
+[node name="Player" parent="YSort" instance=ExtResource("3_player")]
+
+[node name="Night" type="CanvasModulate" parent="."]
+
+[node name="HUD" parent="." instance=ExtResource("5_hud")]

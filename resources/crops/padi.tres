@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CropData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/crops/crop_data.gd" id="1_crop"]
+[ext_resource type="Texture2D" path="res://assets/sprites/placeholder/padi.png" id="2_tex"]
+
+[resource]
+script = ExtResource("1_crop")
+id = "padi"
+display_name = "Padi"
+seed_item = "padi_seed"
+harvest_item = "padi"
+harvest_amount = 2
+texture = ExtResource("2_tex")
+stage_count = 4
+days_per_stage = 1

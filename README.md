@@ -15,6 +15,29 @@ A farming RPG made with **Godot 4**.
 3. Open Godot → **Import** → select `project.godot`.
 4. Press **F5** to run.
 
+## Prototype controls
+
+| Key | Action |
+|---|---|
+| WASD | Move |
+| 1 / 2 / 3 | Tool: Cangkul (hoe) / Benih padi (seeds) / Air (water) |
+| E | Use tool on the highlighted tile · harvest ripe padi · sleep (face the bed) |
+
+Loop: hoe grass → plant → water → sleep. Watered padi grows one stage per
+night and is ripe after 3 watered nights. 1 real second = 10 in-game minutes;
+at 02:00 you pass out and the next day starts.
+
+All art is **placeholder** (`assets/sprites/placeholder/`, `assets/tilesets/placeholder_tiles.png`)
+until the real sprites are ready.
+
+## Tests
+
+```bash
+godot --headless --path . -s tests/test_farm_cycle.gd
+```
+
+Plays a full hoe → plant → water → sleep → harvest cycle and prints PASS/FAIL.
+
 ## Project layout
 
 ```
@@ -23,6 +46,7 @@ assets/      art, audio, fonts (raw + imported)
 scenes/      .tscn files (world, player, ui, crops)
 scripts/     .gd files, mirroring scenes/
   autoload/  global singletons (GameState, ...)
+tests/       headless test scripts
 resources/   .tres data (item & crop definitions)
 docs/        design notes
 ```
