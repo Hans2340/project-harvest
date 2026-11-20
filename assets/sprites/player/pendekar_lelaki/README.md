@@ -23,3 +23,6 @@ PixelLab id: `0cacaf43-0c25-4e86-867a-86e6834d4195`. `metadata.json` names the s
   three facings (down, up, side; left = side flipped): idle (4 frames), walk (8), run (8).
   Preview: `preview_player_sheet.png`.
 - Previews for both Pendekar: `../preview_pendekar.png`, `../preview_pendekar_run.gif`.
+
+Idle feet are pinned (2026-11-20): every idle frame takes frame 0's bottom 4 rows, so the
+feet stay planted while the upper body breathes.
