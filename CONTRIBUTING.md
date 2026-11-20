@@ -18,5 +18,5 @@
 - Use static typing where you can (`var speed: float = 80.0`).
 
 ## Assets
-- Pixel art at 16×16 tiles.
+- Pixel art at 32×32 tiles; characters around 20×36 px. See `docs/game-design.md` → Art direction.
 - Put source files (`.aseprite`, `.kra`) next to the exported `.png`.

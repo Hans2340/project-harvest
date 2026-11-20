@@ -29,7 +29,7 @@ docs/        design notes
 
 ## Settings already configured
 
-- 480×270 base resolution, integer scaling (pixel-art friendly)
+- 640×360 base resolution (32 px tiles), integer scaling (pixel-art friendly)
 - Nearest-neighbour texture filter, pixel snapping
 - Compatibility renderer (runs on older laptops)
 - Input actions: `move_up/down/left/right` (WASD), `interact` (E)
