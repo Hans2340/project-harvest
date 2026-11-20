@@ -188,7 +188,7 @@ func _add_standing_prop(cell: Vector2i, file: String, blocker: Vector2) -> void:
 		s.set_meta("sway", true)
 	ysort.add_child(s)
 	if not file.contains("tuft"):
-		sun_shadows.add_caster(s, Vector2(tex.get_width() + 6, 10))
+		sun_shadows.add_caster(s)
 	if blocker != Vector2.ZERO:
 		_add_blocker(base + Vector2(0, -blocker.y / 2.0), blocker)
 
@@ -224,7 +224,7 @@ func _add_altar(cell: Vector2i) -> void:
 	_altar_sprite.position = base
 	_altar_sprite.set_meta("minimap", "building")
 	ysort.add_child(_altar_sprite)
-	sun_shadows.add_caster(_altar_sprite, Vector2(108, 34))
+	sun_shadows.add_caster(_altar_sprite)
 	_add_blocker(base + Vector2(0, -30), Vector2(88, 56))
 	var timer := Timer.new()
 	timer.wait_time = 0.18
@@ -285,7 +285,7 @@ func _build_ambience() -> void:
 	move_child(ambience, decor.get_index() + 1)
 	ambience.setup(self, {"tile": TILE, "map_size": Vector2(_width(), LAYOUT.size()) * TILE,
 		"water_cells": water, "firefly_cells": land, "sway": sway})
-	sun_shadows.add_caster(player.sprite, Vector2(22, 8))
+	sun_shadows.add_caster(player.sprite)
 	sun_shadows.asar_started.connect(func(): hud.show_message(SunShadows.asar_message()))
 
 

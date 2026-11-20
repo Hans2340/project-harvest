@@ -70,10 +70,16 @@ func _initialize() -> void:
 	z.player.global_position = lamp + Vector2(0, 900)
 	await process_frame
 	_check(not pivot.visible, "night, far from lamps: no cast shadow")
-	await process_frame   # the player was teleported off the map; let physics settle it
-	await process_frame
-	var foot_oval: Polygon2D = ss._casters[ss.caster_count() - 1][3]
-	_check(foot_oval != null and foot_oval.visible and foot_oval.color.a > 0.3 and foot_oval.position == z.player.sprite.global_position.round(), "night: the player keeps a foot shadow under the feet (%s a=%.2f at %s vs %s)" % [foot_oval != null, foot_oval.color.a if foot_oval else 0.0, foot_oval.position if foot_oval else Vector2.ZERO, z.player.sprite.global_position])
+	var fruit_ovals := 0
+	var other_ovals := 0
+	for c in ss._casters:
+		if c[3] == null:
+			continue
+		if c[0].has_meta("tree_kind") and c[0].get_meta("tree_kind") == "fruit":
+			fruit_ovals += 1
+		else:
+			other_ovals += 1
+	_check(fruit_ovals == 12 and other_ovals == 0, "foot shadows only under the fruit trees (%d fruit, %d other)" % [fruit_ovals, other_ovals])
 
 	# Asar notice once per day.
 	SS.asar_day = -1

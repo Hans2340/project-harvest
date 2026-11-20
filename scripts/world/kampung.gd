@@ -237,7 +237,7 @@ func _build_props() -> void:
 		sun_shadows.add_box(_house_footprint(s, HOUSE_FEET[h[0]]), HOUSE_EAVES, HOUSE_OVERHANG)
 		ZoneUtil.add_blocker(self, base + Vector2(0, -40), Vector2(200, 72))
 	for t in PALMS:
-		_add_tree("kelapa_%02d.png" % t[0], t[1], Vector2(16, 10), Vector2(46, 16)).set_meta("tree_kind", "palm")
+		_add_tree("kelapa_%02d.png" % t[0], t[1], Vector2(16, 10), Vector2.ZERO).set_meta("tree_kind", "palm")
 	for t in FRUIT_TREES:
 		_add_tree("pokok_buah_%02d.png" % t[0], t[1], Vector2(28, 14), Vector2(124, 60)).set_meta("tree_kind", "fruit")
 	for c in TUFTS:
@@ -293,7 +293,7 @@ func _standing_prop(cell: Vector2i, file: String, blocker: Vector2) -> void:
 		s.set_meta("sway", true)
 	ysort.add_child(s)
 	if not file.contains("tuft"):
-		sun_shadows.add_caster(s, Vector2(tex.get_width() + 6, 10))
+		sun_shadows.add_caster(s)
 	if blocker != Vector2.ZERO:
 		ZoneUtil.add_blocker(self, base + Vector2(0, -blocker.y / 2.0), blocker)
 
@@ -323,7 +323,7 @@ func _build_ambience() -> void:
 		lamps.append(Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE - 100))
 		lamp_ground.append(Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE + 8))
 	sun_shadows.set_lamps(lamp_ground)
-	sun_shadows.add_caster(player.sprite, Vector2(22, 8))
+	sun_shadows.add_caster(player.sprite)
 	sun_shadows.asar_started.connect(func(): hud.show_message(SunShadows.asar_message()))
 	add_child(ambience)
 	move_child(ambience, decor.get_index() + 1)
