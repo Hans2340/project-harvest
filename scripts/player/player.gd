@@ -23,7 +23,7 @@ const TOOL_NAMES := ["Cangkul (hoe)", "Benih padi (seeds)", "Air (watering)"]
 enum Anim { IDLE, WALK, RUN, ATK1, ATK2, ATK3 }
 const ANIM_FRAMES := [4, 8, 8, 3, 6, 7]
 const ANIM_FPS := [5.0, 10.0, 14.0, 12.0, 16.0, 14.0]
-## Silat combo (attack: J or left click): jab, cross, kick. Pressing attack again during a
+## Silat combo (attack: J, or left click on a target): jab, cross, kick. Pressing attack again during a
 ## strike queues the next one; the combo resets after the kick or when you stop pressing.
 const COMBO := [Anim.ATK1, Anim.ATK2, Anim.ATK3]
 const HIT_FRAME := [1, 5, 4]           ## frame where the fist or foot is furthest out
@@ -60,10 +60,30 @@ var _hitstop := 0.0
 var _target: Node2D = null   ## the strike's auto-target, if any
 var _dash_time := 0.0
 
+## Click-to-move (left click). On the ground: walk there, round houses and trees (hold the
+## button to keep following the cursor). On something hittable: walk up to it and strike. On a
+## cell the zone wants a tool used on (sawah, ripe padi): walk next to it and use the tool.
+## Any movement key takes control back.
+enum Click { NONE, WALK, ATTACK, USE }
+const ARRIVE := 2.0
+const FOLLOW_REPATH := 0.15        ## seconds between re-paths while holding the button
+const STUCK_TIME := 0.5
+var nav: NavGrid = null            ## built on the first click (the zone sets camera limits first)
+var cursor := ClickCursor.new()
+var _path := PackedVector2Array()
+var _click: int = Click.NONE
+var _click_target: Node2D = null
+var _click_cell := Vector2i.ZERO
+var _following := false
+var _repath := 0.0
+var _stuck := 0.0
+
 @onready var sprite: Sprite2D = $Sprite
 
 
 func _ready() -> void:
+	cursor.player = self
+	add_child(cursor)
 	var gs := get_node_or_null("/root/GameState")
 	if gs:
 		_apply_character(gs.character)
@@ -85,11 +105,17 @@ func _physics_process(delta: float) -> void:
 	if can_move:
 		input = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	var running := Input.is_action_pressed("run")
-	velocity = input * (run_speed if running else speed)
+	var spd := run_speed if running else speed
+	if input != Vector2.ZERO or not can_move:
+		cancel_click()
+		velocity = input * spd
+	else:
+		velocity = _follow_path(delta, spd)
 	move_and_slide()
+	var moving := velocity.length() > 1.0
 	var anim: int = Anim.IDLE
-	if input != Vector2.ZERO:
-		_update_facing(input)
+	if moving:
+		_update_facing(velocity)
 		anim = Anim.RUN if running else Anim.WALK
 	if anim != _anim:
 		if anim == Anim.RUN or _anim == Anim.RUN:
@@ -104,6 +130,14 @@ func _physics_process(delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not can_move:
 		return
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			click_at(get_global_mouse_position())
+			_following = _click == Click.WALK
+		else:
+			_following = false
+		get_viewport().set_input_as_handled()
+		return
 	for i in 3:
 		if event.is_action_pressed("tool_%d" % (i + 1)):
 			current_tool = i
@@ -112,6 +146,158 @@ func _unhandled_input(event: InputEvent) -> void:
 		use_requested.emit(current_tool, target_cell())
 	if event.is_action_pressed("attack"):
 		attack()
+
+
+## What a left click at world point `p` does (see Click).
+func click_at(p: Vector2) -> void:
+	if not can_move:
+		return
+	var t := hittable_at(p)
+	if t:
+		_set_click(Click.ATTACK)
+		_click_target = t
+		if is_attacking() or _in_strike_range(t):
+			_path.clear()
+			attack()
+			_click = Click.NONE
+		else:
+			_path_to(t.global_position)
+		return
+	var cell := Vector2i(floori(p.x / tile_size), floori(p.y / tile_size))
+	if is_use_target(cell):
+		_set_click(Click.USE)
+		_click_cell = cell
+		_path_to_use(cell)
+		return
+	_set_click(Click.WALK)
+	_path_to(p)
+	cursor.mark(p)
+
+
+func cancel_click() -> void:
+	_path.clear()
+	_click = Click.NONE
+	_click_target = null
+	_following = false
+
+
+func is_walking_path() -> bool:
+	return not _path.is_empty()
+
+
+## The hittable whose body is under the point (a little forgiving), or null.
+func hittable_at(p: Vector2) -> Node2D:
+	for n in get_tree().get_nodes_in_group("hittable"):
+		if n.hit_center().distance_to(p) <= n.hit_radius() + 10.0:
+			return n
+	return null
+
+
+## The zone wants the current tool used on this cell when clicked (sawah, ripe padi...).
+func is_use_target(cell: Vector2i) -> bool:
+	var zone := get_tree().current_scene
+	return zone != null and zone.has_method("is_click_use_target") and zone.is_click_use_target(current_tool, cell)
+
+
+func _set_click(kind: int) -> void:
+	cancel_click()
+	_click = kind
+	_stuck = 0.0
+
+
+func _ensure_nav() -> void:
+	if nav:
+		return
+	var cam := get_node_or_null("Camera") as Camera2D
+	var area := Rect2(0, 0, 4096, 4096)
+	if cam and cam.limit_right < 1000000:
+		area = Rect2(cam.limit_left, cam.limit_top, cam.limit_right - cam.limit_left, cam.limit_bottom - cam.limit_top)
+	nav = NavGrid.new()
+	var ex: Array[RID] = [get_rid()]
+	nav.build(get_world_2d(), area, collision_mask, ex)
+
+
+func _path_to(p: Vector2) -> void:
+	_ensure_nav()
+	_path = nav.find_path(global_position, p)
+
+
+## Stand on the neighbouring tile nearest to us, facing the cell.
+func _path_to_use(cell: Vector2i) -> void:
+	_ensure_nav()
+	var c := (Vector2(cell) + Vector2(0.5, 0.5)) * tile_size
+	var best := PackedVector2Array()
+	var best_len := INF
+	for d in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
+		var stand: Vector2 = c + d * tile_size
+		if not nav.is_walkable(nav.cell_of(stand)):
+			continue
+		var path := nav.find_path(global_position, stand)
+		if path.is_empty() and global_position.distance_to(stand) > ARRIVE:
+			continue
+		var length := _path_length(path)
+		if length < best_len:
+			best_len = length
+			best = path
+	if best_len == INF:
+		cancel_click()
+		return
+	_path = best
+	if _path.is_empty():
+		_arrive()
+
+
+func _path_length(path: PackedVector2Array) -> float:
+	var length := 0.0
+	var prev := global_position
+	for q in path:
+		length += prev.distance_to(q)
+		prev = q
+	return length
+
+
+func _in_strike_range(t: Node2D) -> bool:
+	return t.hit_center().distance_to(_body_centre()) <= AUTO_RANGE
+
+
+## Velocity along the click path this frame (zero when there's none). Also handles following
+## the held button, striking a target once in range, and giving up when stuck.
+func _follow_path(delta: float, spd: float) -> Vector2:
+	if _following and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+		_repath -= delta
+		if _repath <= 0.0:
+			_repath = FOLLOW_REPATH
+			_path_to(get_global_mouse_position())
+	if _click == Click.ATTACK and is_instance_valid(_click_target) and _in_strike_range(_click_target):
+		_path.clear()
+		_click = Click.NONE
+		attack()
+		return Vector2.ZERO
+	if _path.is_empty():
+		return Vector2.ZERO
+	var to := _path[0] - global_position
+	if to.length() <= ARRIVE:
+		_path.remove_at(0)
+		if _path.is_empty():
+			_arrive()
+			return Vector2.ZERO
+		to = _path[0] - global_position
+	# Stuck against something the grid missed: give up.
+	_stuck = _stuck + delta if get_real_velocity().length() < spd * 0.2 else 0.0
+	if _stuck > STUCK_TIME:
+		cancel_click()
+		return Vector2.ZERO
+	return to.normalized() * minf(spd, to.length() / delta)
+
+
+func _arrive() -> void:
+	if _click == Click.USE:
+		var c := (Vector2(_click_cell) + Vector2(0.5, 0.5)) * tile_size
+		_update_facing(c - global_position)
+		if target_cell() == _click_cell:
+			use_requested.emit(current_tool, _click_cell)
+	_click = Click.NONE
+	_click_target = null
 
 
 func is_attacking() -> bool:

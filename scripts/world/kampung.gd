@@ -172,6 +172,14 @@ func is_sawah(cell: Vector2i) -> bool:
 	return true
 
 
+## Click-to-move asks this: should a left click on `cell` walk over and use `tool` on it?
+## Ripe padi (harvest) with any tool, or an empty sawah plot with the seeds.
+func is_click_use_target(tool: int, cell: Vector2i) -> bool:
+	if FarmState.is_ripe(cell):
+		return true
+	return tool == Player.Tool.SEEDS and is_sawah(cell) and not FarmState.plots.has(cell)
+
+
 ## Returns [source, atlas coords] for a cell, or [] if its corners mix an unsupported pair.
 func tile_for(cell: Vector2i) -> Array:
 	var c := [_corner(cell.x, cell.y), _corner(cell.x + 1, cell.y),
