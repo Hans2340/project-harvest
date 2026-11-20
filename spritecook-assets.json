@@ -12,6 +12,18 @@
       "sha12": "d5455df541c3",
       "label": "farmer art test v2",
       "file": "assets/sprites/concept/farmer_v2.png"
+    },
+    {
+      "asset_id": "44d5f100-9fba-4cf8-9622-5b528c0252ab",
+      "sha12": "c15432087698",
+      "label": "farmer 24x40 Stoneshard-format test v1",
+      "file": "assets/sprites/concept/farmer_side_v1.png"
+    },
+    {
+      "asset_id": "9cd0c7b5-f32e-4250-85fd-93b43dadd88d",
+      "sha12": "f5357db92508",
+      "label": "farmer 24x40 Stoneshard-format test v2",
+      "file": "assets/sprites/concept/farmer_side_v2.png"
     }
   ]
 }
