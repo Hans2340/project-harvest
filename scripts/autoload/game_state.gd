@@ -138,6 +138,34 @@ func toggle_fullscreen() -> void:
 	var mode := DisplayServer.window_get_mode()
 	var full := mode == DisplayServer.WINDOW_MODE_FULLSCREEN or mode == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
 	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if full else DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
+	if full:
+		fit_window.call_deferred()
+
+
+const TITLE_BAR := 40   ## px kept free above the window for its title bar
+
+
+func _ready() -> void:
+	fit_window()
+
+
+## Size the window to the largest whole multiple of the base resolution (640x360) that fits the
+## screen's usable area (minus the taskbar and the title bar), and centre it: 1280x720 on a 1080p
+## screen, 1920x1080 on 1440p, 3200x1800 on 4K. The stretch aspect is "expand", so any other window
+## shape or screen ratio shows more of the world instead of black bars.
+func fit_window() -> void:
+	if DisplayServer.get_name() == "headless" or Engine.is_embedded_in_editor():
+		return
+	if DisplayServer.window_get_mode() != DisplayServer.WINDOW_MODE_WINDOWED:
+		return
+	var base := Vector2i(ProjectSettings.get_setting("display/window/size/viewport_width"),
+		ProjectSettings.get_setting("display/window/size/viewport_height"))
+	var area := DisplayServer.screen_get_usable_rect()
+	var scale := maxi(1, mini(area.size.x / base.x, (area.size.y - TITLE_BAR) / base.y))
+	var size := base * scale
+	DisplayServer.window_set_min_size(base)
+	DisplayServer.window_set_size(size)
+	DisplayServer.window_set_position(area.position + (area.size - size) / 2 + Vector2i(0, TITLE_BAR / 2))
 
 
 func add_gold(amount: int) -> void:

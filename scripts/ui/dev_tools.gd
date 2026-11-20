@@ -14,14 +14,25 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	visible = false
 
+	# Pinned under the clock at the top-right corner, whatever the screen width.
+	var box := Control.new()
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	box.offset_left = -170
+	box.offset_right = -6
+	box.offset_top = 90
+	box.offset_bottom = 240
+	add_child(box)
 	var frame := UiSkin.nine(UiSkin.PANEL_DARK, 12)
-	frame.position = Vector2(470, 70)
-	frame.size = Vector2(164, 150)
-	add_child(frame)
-	_panel.position = frame.position + Vector2(10, 8)
-	_panel.size = frame.size - Vector2(20, 16)
+	frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	box.add_child(frame)
+	_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_panel.offset_left = 10
+	_panel.offset_top = 8
+	_panel.offset_right = -10
+	_panel.offset_bottom = -8
 	_panel.add_theme_constant_override("separation", 3)
-	add_child(_panel)
+	box.add_child(_panel)
 
 	_panel.add_child(UiSkin.label("Dev Tools  [F1]", 10, UiSkin.TEXT_GOLD))
 	_panel.add_child(UiSkin.label("Watak", 8))
