@@ -1,6 +1,6 @@
 class_name Hud
 extends CanvasLayer
-## On-screen info: clock + minimap (top-right), tool hotbar, short messages, inventory window.
+## On-screen info: minimap (top-left), clock (top-right), tool hotbar, short messages, inventory window.
 
 @onready var info: Label = $Info
 @onready var message: Label = $Message

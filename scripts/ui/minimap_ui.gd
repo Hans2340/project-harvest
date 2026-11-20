@@ -1,6 +1,6 @@
 class_name MinimapUI
 extends Control
-## Small map under the clock (toggle with M). Built from the current zone's Ground tiles:
+## Small map in the top-left corner (toggle with M). Built from the current zone's Ground tiles:
 ## each tile becomes one pixel coloured by the tile's average colour, then houses and trees
 ## (sprites tagged with meta "minimap") are marked, and a dot follows the player.
 
@@ -19,11 +19,11 @@ static var _tile_colors := {}
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	offset_left = -BOX.x - 4
-	offset_right = -4
-	offset_top = 92
-	offset_bottom = 92 + BOX.y
+	set_anchors_preset(Control.PRESET_TOP_LEFT)
+	offset_left = 4
+	offset_right = 4 + BOX.x
+	offset_top = 4
+	offset_bottom = 4 + BOX.y
 	var frame := UiSkin.nine(UiSkin.PANEL_DARK, 12)
 	frame.size = BOX
 	add_child(frame)
