@@ -18,7 +18,9 @@ PixelLab id: `0cacaf43-0c25-4e86-867a-86e6834d4195`. `metadata.json` names the s
     with the pose estimates): the poses come from the run of the free "Adventurer 2D Pixel Art"
     pack (licence allows use in a game). Skeletons were estimated on its 8 run_down frames, and
     the limbs' moves relative to shoulders/hips were put on Pendekar's own proportions, with the
-    fists kept at chest height.
+    fists kept at chest height. **east** too (same method, 2 + 3 generations; rest pose = the
+    cycle's mean, torso leant ~2 px forward, stride x1.3). north stays the template run: the
+    reference's back-view estimates were too unsteady and the result barely moved its legs.
 - `player_sheet.png`: 8 columns x 9 rows, used by `scenes/player/player.tscn`. Rows in blocks of
   three facings (down, up, side; left = side flipped): idle (4 frames), walk (8), run (8).
   Preview: `preview_player_sheet.png`.
