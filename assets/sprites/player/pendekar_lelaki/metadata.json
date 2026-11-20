@@ -1,0 +1,69 @@
+{
+  "group_id": "bd71d46e-66a9-450a-85af-b9004a78509b",
+  "states": [
+    {
+      "character": {
+        "id": "0cacaf43-0c25-4e86-867a-86e6834d4195",
+        "name": "Idle",
+        "prompt": "young Malay pendekar (silat warrior) man, 15th-century Melaka era, short messy black hair, warm brown skin, loose long-sleeved dark charcoal baju with thin gold trim, wide deep red bengkung sash, red kain samping over the hips, loose black seluar gathered at the ankles, barefoot, empty hands, no headgear, no weapon",
+        "size": {
+          "width": 56,
+          "height": 56
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-11-20T08:48:52.723676+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {
+          "run": {
+            "south": [
+              "Idle/animations/run/south/frame_000.png",
+              "Idle/animations/run/south/frame_001.png",
+              "Idle/animations/run/south/frame_002.png",
+              "Idle/animations/run/south/frame_003.png",
+              "Idle/animations/run/south/frame_004.png",
+              "Idle/animations/run/south/frame_005.png",
+              "Idle/animations/run/south/frame_006.png",
+              "Idle/animations/run/south/frame_007.png"
+            ],
+            "north": [
+              "Idle/animations/run/north/frame_000.png",
+              "Idle/animations/run/north/frame_001.png",
+              "Idle/animations/run/north/frame_002.png",
+              "Idle/animations/run/north/frame_003.png",
+              "Idle/animations/run/north/frame_004.png",
+              "Idle/animations/run/north/frame_005.png",
+              "Idle/animations/run/north/frame_006.png",
+              "Idle/animations/run/north/frame_007.png"
+            ],
+            "east": [
+              "Idle/animations/run/east/frame_000.png",
+              "Idle/animations/run/east/frame_001.png",
+              "Idle/animations/run/east/frame_002.png",
+              "Idle/animations/run/east/frame_003.png",
+              "Idle/animations/run/east/frame_004.png",
+              "Idle/animations/run/east/frame_005.png",
+              "Idle/animations/run/east/frame_006.png",
+              "Idle/animations/run/east/frame_007.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-11-20T08:58:20.402320"
+}

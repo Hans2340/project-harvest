@@ -281,9 +281,9 @@ cheapest way that still looks right:
 
 | Slot | How | Animation cost |
 |---|---|---|
-| **Body + outfit** (farmer, Hulubalang, baju rantai…) | One full sprite per outfit, skin included. Keep the number of outfits small. | High: 8 animations × 3 directions per outfit |
+| **Body + outfit** (Hulubalang, Pendekar, Bayang, Pawang) | One full sprite per outfit, skin included. Keep the number of outfits small. | High: 8 animations × 3 directions per outfit |
 | **Skin, cloth and hair colours** | **Palette swap** shader in Godot | Almost free |
-| **Headgear** (tengkolok, ketopong, selendang, bayang mask) | Static layer, 3 directions, pinned to a **head anchor** per frame | Low: 3 images per item |
+| **Headgear** (tengkolok, ketopong, selendang, kelubung, bayang mask) | Static layer, 3 directions, pinned to a **head anchor** per frame | Low: 3 images per item |
 | **Weapons** (keris, tombak, sumpit, perisai) | Static layer, pinned and rotated on a **hand anchor** per frame | Low: 1–3 images per item |
 
 **Character creator** (start of game): body type (male/female), skin tone, hair
@@ -297,10 +297,22 @@ weapons swap layers; colour variants make one shape feel like several items
 **Male and female**
 - Same skeleton, height and anchor points, so every headgear, weapon and palette
   works on both. Only body shape, hair and clothing differ.
-- Body + outfit sprites double: 5 outfits (farmer + 4 classes) × 2 = **10 bodies,
-  ~240 animations** for the player.
+- Body + outfit sprites double: 4 class outfits × 2 = **8 bodies,
+  ~192 animations** for the player.
+- **Petani (farmer) is not a player outfit.** Farmers are **NPCs** the player can
+  talk to and interact with, not playable characters (decided by leoxent,
+  2026-11-20). Their sprites come from the NPC budget, not the player set.
 - Each headgear item is tagged *male / female / both* (e.g. tengkolok = male,
   selendang = female, ketopong = both).
+- **Head covering for women (kelubung)** is a **headgear layer, not part of the
+  body sprite** (decided by leoxent, 2026-11-20). The player chooses to wear it
+  or not, and it works on every class without new bodies.
+  - Style: a long plain draped head cloth over hair, neck and shoulders, as in
+    15th-century Melaka. **Not** a modern tudung (bawal, sarung or awning styles).
+  - Tagged *female*. It hides the hair completely, so female base sprites keep
+    their hair in a **tight, compact bun** that fits under the layer.
+  - Static layer (3 images), so it does not sway in animations. This is
+    acceptable at ~40 px.
 - Women are real fighters: practical, era-appropriate clothing (baju panjang,
   kain sarung, selendang; baju rantai for Hulubalang), never revealing.
 
@@ -327,6 +339,10 @@ weapons swap layers; colour variants make one shape feel like several items
 4. Animate the new outfit with the **same skeleton**. Do frames line up with the base?
 
 If step 4 fails, fall back to fewer outfits plus more palette variants.
+
+Test run 2026-11-20 (17 generations): all four steps passed, with notes. The
+test used farmer bodies as stand-in bases, so those sprites are NPC material, not
+player art. Results: `assets/sprites/player/s24_test/README.md`.
 
 ## Open questions
 - Final game name?
