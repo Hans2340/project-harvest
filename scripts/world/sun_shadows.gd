@@ -6,8 +6,7 @@ extends CanvasGroup
 ## near a pelita lamp cast a short shadow away from it.
 ##
 ## All copies are drawn inside this CanvasGroup and the group is faded as a whole, so where two
-## shadows overlap the ground does not get darker. The round contact shadows from ShadowUtil stay
-## under everything.
+## shadows overlap the ground does not get darker.
 ##
 ## A zone adds one under its Shadows node, then calls add_caster() for each sprite and add_box()
 ## for each building.

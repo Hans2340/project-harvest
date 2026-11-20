@@ -187,7 +187,6 @@ func _add_standing_prop(cell: Vector2i, file: String, blocker: Vector2) -> void:
 	if file.contains("tuft"):
 		s.set_meta("sway", true)
 	ysort.add_child(s)
-	shadows.add_child(ShadowUtil.make(base + Vector2(0, -1), Vector2(tex.get_width() + 6, 10)))
 	if not file.contains("tuft"):
 		sun_shadows.add_caster(s)
 	if blocker != Vector2.ZERO:
@@ -225,7 +224,6 @@ func _add_altar(cell: Vector2i) -> void:
 	_altar_sprite.position = base
 	_altar_sprite.set_meta("minimap", "building")
 	ysort.add_child(_altar_sprite)
-	shadows.add_child(ShadowUtil.make(base + Vector2(0, -10), Vector2(108, 34)))
 	sun_shadows.add_caster(_altar_sprite)
 	_add_blocker(base + Vector2(0, -30), Vector2(88, 56))
 	var timer := Timer.new()

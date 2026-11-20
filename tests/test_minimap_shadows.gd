@@ -15,7 +15,8 @@ func _initialize() -> void:
 	_check(tex != null and tex.get_width() == 46 * mm._scale and tex.get_height() == 32 * mm._scale, "kampung minimap built (46x32 tiles at %dx)" % mm._scale)
 	var pp: Vector2 = mm.player_point()
 	_check(pp.x > 0 and pp.y > 0 and pp.x < tex.get_width() and pp.y < tex.get_height(), "player dot inside the map")
-	_check(z.get_node("Shadows").get_child_count() >= 28, "shadows under houses, trees and props (%d)" % z.get_node("Shadows").get_child_count())
+	var sun_count: int = z.sun_shadows.caster_count() + z.sun_shadows.box_count()
+	_check(sun_count >= 28, "sun shadows for houses, trees and props (%d)" % sun_count)
 
 	var ev := InputEventAction.new()
 	ev.action = "minimap"
@@ -30,7 +31,7 @@ func _initialize() -> void:
 		await process_frame
 	mm = current_scene.get_node("HUD").minimap
 	_check(mm._map_rect.texture != null and mm._map_rect.texture.get_width() == 32 * mm._scale, "swamp minimap built")
-	_check(current_scene.get_node("Shadows").get_child_count() > 5, "swamp props have shadows")
+	_check(current_scene.sun_shadows.caster_count() > 5, "swamp props have sun shadows")
 
 	print("RESULT: ", "PASS" if ok else "FAIL")
 	quit(0 if ok else 1)

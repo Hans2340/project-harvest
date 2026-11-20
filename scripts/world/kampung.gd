@@ -234,7 +234,6 @@ func _build_props() -> void:
 		s.position = base
 		s.set_meta("minimap", "building")
 		ysort.add_child(s)
-		shadows.add_child(ShadowUtil.make(base + Vector2(0, -26), Vector2(236, 64)))
 		sun_shadows.add_box(_house_footprint(s, HOUSE_FEET[h[0]]), HOUSE_EAVES, HOUSE_OVERHANG)
 		ZoneUtil.add_blocker(self, base + Vector2(0, -40), Vector2(200, 72))
 	for t in PALMS:
@@ -278,7 +277,6 @@ func _add_tree(file: String, cell: Vector2i, trunk: Vector2, shadow: Vector2) ->
 	s.set_meta("minimap", "tree")
 	s.set_meta("sway", true)
 	ysort.add_child(s)
-	shadows.add_child(ShadowUtil.make(base + Vector2(0, -2), shadow))
 	sun_shadows.add_caster(s)
 	ZoneUtil.add_blocker(self, base + Vector2(0, -trunk.y / 2.0), trunk)
 	return s
@@ -294,7 +292,6 @@ func _standing_prop(cell: Vector2i, file: String, blocker: Vector2) -> void:
 	if file.contains("tuft"):
 		s.set_meta("sway", true)
 	ysort.add_child(s)
-	shadows.add_child(ShadowUtil.make(base + Vector2(0, -1), Vector2(tex.get_width() + 6, 10)))
 	if not file.contains("tuft"):
 		sun_shadows.add_caster(s)
 	if blocker != Vector2.ZERO:
