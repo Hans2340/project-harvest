@@ -31,6 +31,8 @@
 - The early placeholder farm zone was removed; farming now happens in the kampung sawah.
 - Planted padi persists across zones; passing out anywhere wakes you at home in the kampung.
 - Time: 1 real hour = 24 in-game hours. Shift = run.
+- **Calendar:** 3 monsoon seasons x 28 days (Kemarau, Musim Buah, Tengkujuh), Malay weekdays
+  (Isnin...Ahad). Currency: **pitis** (tin coins of the Melaka era). Clock UI top-right.
 
 ### Team roles
 - **leoxent**: sprites / character art.

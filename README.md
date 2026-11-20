@@ -29,6 +29,10 @@ You start at **home in the kampung** (the house top-left of the yard). Plant pad
 without watering and is ripe after 3 nights. Face your house and press E to sleep.
 Walk **west** along the path to reach **Paya Bakau**, the mangrove swamp.
 
+The **clock** (top-right) shows a sky dial with the sun/moon and a sweeping hand, the date
+(Malay weekday + day of the season), season and weather icons, the time, and your money (pitis).
+Seasons are the monsoons: Kemarau → Musim Buah → Tengkujuh, 28 days each.
+
 Time: **1 real hour = 24 in-game hours**. A day runs 06:00 to 02:00 (50 real minutes); at
 02:00 you pass out and wake at home.
 
@@ -42,9 +46,10 @@ godot --headless --path . -s tests/test_mangrove.gd
 godot --headless --path . -s tests/test_zone_travel.gd
 godot --headless --path . -s tests/test_inventory.gd
 godot --headless --path . -s tests/test_kampung.gd
+godot --headless --path . -s tests/test_clock.gd
 ```
 
-Each prints PASS/FAIL: sawah farming, the swamp, travelling between zones, the inventory, and the kampung.
+Each prints PASS/FAIL: sawah farming, the swamp, travelling between zones, the inventory, the kampung, and the clock.
 
 ## Credits
 
