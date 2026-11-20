@@ -23,6 +23,8 @@ A farming RPG made with **Godot 4**.
 | 1 / 2 / 3 | Tool: Cangkul (hoe) / Benih padi (seeds) / Air (water) |
 | E | Use tool on the highlighted tile · harvest ripe padi · sleep (face the bed) |
 
+Walk south off the farm along the path to reach the **mangrove swamp**; walk back north to return.
+
 Loop: hoe grass → plant → water → sleep. Watered padi grows one stage per
 night and is ripe after 3 watered nights. 1 real second = 10 in-game minutes;
 at 02:00 you pass out and the next day starts.
@@ -34,9 +36,15 @@ until the real sprites are ready.
 
 ```bash
 godot --headless --path . -s tests/test_farm_cycle.gd
+godot --headless --path . -s tests/test_mangrove.gd
+godot --headless --path . -s tests/test_zone_travel.gd
 ```
 
-Plays a full hoe → plant → water → sleep → harvest cycle and prints PASS/FAIL.
+Each prints PASS/FAIL: the farming cycle, the mangrove zone build, and travelling between zones.
+
+## Credits
+
+Third-party assets are listed in [CREDITS.md](CREDITS.md). **Keep this repo private**: one asset pack may not be redistributed.
 
 ## Project layout
 
@@ -49,6 +57,7 @@ scripts/     .gd files, mirroring scenes/
 tests/       headless test scripts
 resources/   .tres data (item & crop definitions)
 docs/        design notes
+tools/       asset conversion scripts (Python + Pillow)
 ```
 
 ## Settings already configured

@@ -21,6 +21,14 @@
 - **Dark but hopeful.** The cruelty is real, but the story is about the village
   rising back up. Cozy farm moments give relief between the dark parts.
 
+### World & zones *(prototype)*
+- **Connected zones** (walk off an edge into the next zone). Built so far:
+  - **Farm** (32 px tiles), the player's land. South path → mangrove.
+  - **Paya Bakau, the mangrove swamp** (48 px tiles, Dark Swamp pack). River with boardwalks,
+    an island with a **defiled keramat** (red-flame altar marked with the Ordo's black seal). Future
+    home of Bujang Senang.
+- Farm plots persist across zones; passing out anywhere wakes you in bed on the farm.
+
 ### Team roles
 - **leoxent**: sprites / character art.
 

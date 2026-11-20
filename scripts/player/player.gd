@@ -11,6 +11,8 @@ enum Tool { HOE, SEEDS, WATER }
 const TOOL_NAMES := ["Cangkul (hoe)", "Benih padi (seeds)", "Air (watering)"]
 
 @export var speed: float = 90.0
+## Grid size of the current zone (farm = 32, swamp = 48). Set by the zone.
+@export var tile_size: float = 32.0
 
 var facing := Vector2.DOWN
 var current_tool: int = Tool.HOE
@@ -42,8 +44,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 ## The tile in front of the player's feet.
 func target_cell() -> Vector2i:
-	var p := global_position + facing * 22.0
-	return Vector2i(floori(p.x / 32.0), floori(p.y / 32.0))
+	var p := global_position + facing * (tile_size * 0.7)
+	return Vector2i(floori(p.x / tile_size), floori(p.y / tile_size))
 
 
 func _update_facing(dir: Vector2) -> void:
