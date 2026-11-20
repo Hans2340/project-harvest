@@ -33,6 +33,20 @@ const HOUSES := [
 ## Cells you can face to sleep (front of the home house).
 const HOME_DOOR := Rect2i(9, 8, 5, 3)
 
+## Trees (PixelLab, 64 px, drawn at 2x like the houses). [variant, trunk cell].
+const TREE_DIR := "res://assets/sprites/trees/"
+const TREE_SCALE := 2.0
+const PALMS := [   # pokok kelapa: riverbank and yard corners
+	[0, Vector2i(3, 24)], [3, Vector2i(9, 24)], [6, Vector2i(13, 23)], [9, Vector2i(23, 24)],
+	[12, Vector2i(28, 23)], [1, Vector2i(33, 24)], [5, Vector2i(39, 24)], [14, Vector2i(44, 23)],
+	[2, Vector2i(7, 4)], [8, Vector2i(29, 4)], [11, Vector2i(7, 20)], [15, Vector2i(29, 20)],
+]
+const FRUIT_TREES := [   # pokok buah (durian / rambutan): kampung edges
+	[0, Vector2i(2, 3)], [6, Vector2i(14, 1)], [10, Vector2i(21, 1)], [1, Vector2i(27, 1)],
+	[13, Vector2i(37, 2)], [4, Vector2i(42, 2)], [7, Vector2i(2, 8)], [3, Vector2i(3, 17)],
+	[12, Vector2i(32, 7)], [9, Vector2i(32, 18)], [14, Vector2i(45, 12)], [2, Vector2i(45, 20)],
+]
+
 const TUFTS := [Vector2i(3, 3), Vector2i(2, 17), Vector2i(32, 2), Vector2i(32, 13), Vector2i(45, 24),
 	Vector2i(8, 23), Vector2i(26, 23), Vector2i(40, 23)]
 const ROCKS := [Vector2i(10, 25), Vector2i(29, 25), Vector2i(44, 1), Vector2i(1, 22)]
@@ -204,6 +218,10 @@ func _build_props() -> void:
 		s.position = base
 		ysort.add_child(s)
 		ZoneUtil.add_blocker(self, base + Vector2(0, -40), Vector2(200, 72))
+	for t in PALMS:
+		_add_tree("kelapa_%02d.png" % t[0], t[1], Vector2(16, 10))
+	for t in FRUIT_TREES:
+		_add_tree("pokok_buah_%02d.png" % t[0], t[1], Vector2(28, 14))
 	for c in TUFTS:
 		_standing_prop(c, "grass_tuft_small.png", Vector2.ZERO)
 	for c in ROCKS:
@@ -213,6 +231,20 @@ func _build_props() -> void:
 		r.texture = load(PROPS_DIR + ("water_reeds_a.png" if c.x % 2 == 0 else "water_reeds_b.png"))
 		r.position = Vector2(c.x * TILE + TILE / 2.0, c.y * TILE + TILE / 2.0)
 		decor.add_child(r)
+
+
+## A tree standing on `cell`: sprite base at the cell's bottom, trunk blocks movement.
+func _add_tree(file: String, cell: Vector2i, trunk: Vector2) -> void:
+	var tex: Texture2D = load(TREE_DIR + file)
+	var base := Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE - 6)
+	var s := Sprite2D.new()
+	s.texture = tex
+	s.scale = Vector2(TREE_SCALE, TREE_SCALE)
+	s.offset = Vector2(0, -tex.get_height() / 2.0 + 1)
+	s.position = base
+	s.set_meta("tree", true)
+	ysort.add_child(s)
+	ZoneUtil.add_blocker(self, base + Vector2(0, -trunk.y / 2.0), trunk)
 
 
 func _standing_prop(cell: Vector2i, file: String, blocker: Vector2) -> void:

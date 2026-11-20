@@ -30,6 +30,17 @@ func _initialize() -> void:
 		if c is Sprite2D and c.texture and c.texture.resource_path.contains("rumah_kampung"):
 			houses += 1
 	_check(houses == 4, "4 houses placed")
+	var trees := 0
+	var bad_trees := []
+	for t in zone.PALMS + zone.FRUIT_TREES:
+		var c: Vector2i = t[1]
+		var corners: String = zone._corner(c.x, c.y) + zone._corner(c.x + 1, c.y) + zone._corner(c.x, c.y + 1) + zone._corner(c.x + 1, c.y + 1)
+		if corners.contains("w") or corners.contains("s") or (c.y in [11, 12] and c.x < 31):
+			bad_trees.append(c)
+	for c in zone.get_node("YSort").get_children():
+		if c.has_meta("tree"):
+			trees += 1
+	_check(trees == 24 and bad_trees.is_empty(), "24 trees on dry ground, off the main path (bad: %s)" % [bad_trees])
 	var game_time = root.get_node("GameState").GAME_MINUTES_PER_SECOND
 	_check(is_equal_approx(game_time * 25.0 * 60.0, 24.0 * 60.0), "25 real minutes = 24 game hours")
 	print("RESULT: ", "PASS" if ok else "FAIL")
