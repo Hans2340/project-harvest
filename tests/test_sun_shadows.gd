@@ -35,9 +35,19 @@ func _initialize() -> void:
 	var pivot: Node2D = ss._casters[ss.caster_count() - 1][1]
 	var ps: Sprite2D = z.player.sprite
 	_check(player_sh.texture == ps.texture and player_sh.region_rect.position == Vector2(SS._cell(ps).position), "player shadow copies the player's sprite and current frame")
-	var foot: float = SS.foot_y(z.player.sprite)
-	var feet: Vector2 = z.player.sprite.global_position + Vector2(0, foot)
-	_check(foot >= 0.0 and pivot.position.distance_to(feet.round()) < 0.5 and player_sh.position.y == -foot, "player shadow hinges on the player's feet (foot line %.0f px below origin)" % foot)
+	var foot: Vector2 = SS.foot_point(z.player.sprite)
+	var feet: Vector2 = z.player.sprite.global_position + foot
+	_check(absf(foot.x) < 6.0 and pivot.position.distance_to(feet.round()) < 0.5 and player_sh.position == -foot, "player shadow hinges on the player's feet (%s)" % foot)
+	var palm: Sprite2D = null
+	for c in ss._casters:
+		if c[0].has_meta("tree_kind") and c[0].get_meta("tree_kind") == "palm":
+			palm = c[0]
+			break
+	var palm_foot: Vector2 = SS.foot_point(palm)
+	var tex_img: Image = palm.texture.get_image()
+	var px := int(palm_foot.x - palm.get_rect().position.x)
+	var py := int(palm_foot.y - palm.get_rect().position.y) - 1
+	_check(tex_img.get_pixel(clampi(px, 0, tex_img.get_width() - 1), clampi(py, 0, tex_img.get_height() - 1)).a > 0.5, "palm shadow hinges on the trunk base pixel (%s)" % palm_foot)
 	_check(pivot.visible and pivot.transform.y.x < 0.0, "9:00: player shadow is on and points right (y axis leans left, so height maps right)")
 
 	_check(ss.box_count() == 4, "kampung: every house has a box shadow")

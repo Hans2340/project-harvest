@@ -21,6 +21,9 @@ const RAIN_FACTOR := 0.2
 const LAMP_RADIUS := 260.0
 const LAMP_HEIGHT := 90.0
 const LAMP_ALPHA := 0.8
+## Silhouette shadows keep at least this much depth down (or up) the screen, so a shadow thrown
+## straight east or west still reads as a flattened shape, not a line.
+const SILHOUETTE_MIN_Y := 0.3
 ## The Asar message only shows if you are about when it starts (not hours later on a zone change).
 const ASAR_WINDOW := 60
 
@@ -91,9 +94,9 @@ func _process(_delta: float) -> void:
 			if lamp[1] > str_:
 				vec = lamp[0]
 				str_ = lamp[1]
-		var hinge := _sync(src, c[2]) * src.scale.y
+		var foot := _sync(src, c[2]) * src.scale
 		var pivot: Node2D = c[1]
-		pivot.transform = ground_transform(vec, (src.global_position + Vector2(0, hinge)).round())
+		pivot.transform = ground_transform(vec, (src.global_position + foot).round())
 		pivot.visible = str_ > 0.01 and src.is_visible_in_tree()
 		(c[2] as Sprite2D).modulate.a = str_
 	for b in _boxes:
@@ -132,47 +135,63 @@ static func _centre(points: PackedVector2Array) -> Vector2:
 		c += p
 	return c / maxf(points.size(), 1)
 
-## Lays a sprite on the ground: a pixel `z` above the feet (local y = -z) lands z * vec away,
-## and the sprite's width turns to lie across the shadow (foreshortened like the ground), so a
-## shadow thrown east or west stays as wide as the body instead of thinning to a line.
+## Lays a front-view sprite on the ground: a pixel `z` above its base (local y = -z) lands z * vec
+## away, while its width stays left-to-right. The sprite is drawn from the front, so turning its
+## width to lie across the light (as a 3D object would) makes a tree look like it fell over;
+## skewing and flattening it is how 2D games keep the shadow reading as that tree.
 static func ground_transform(vec: Vector2, origin: Vector2) -> Transform2D:
-	var n := vec.normalized()
-	var across := Vector2(n.y, -n.x)
-	across.y *= Sun.GROUND_Y
-	return Transform2D(across, -vec, origin)
+	var v := vec
+	if absf(v.y) < SILHOUETTE_MIN_Y:
+		v.y = SILHOUETTE_MIN_Y if v.y >= 0.0 else -SILHOUETTE_MIN_Y
+	return Transform2D(Vector2(1, 0), -v, origin)
 
 
-## Local y (unscaled) of the lowest opaque pixel row the sprite draws right now: where it meets
-## the ground. Cached per texture and frame.
-static func foot_y(src: Sprite2D) -> float:
+## Where the sprite meets the ground, in its local (unscaled) coordinates: the lowest opaque row,
+## at the middle of the opaque pixels in its bottom few rows (a leaning palm's trunk base is not
+## under the middle of the picture). Cached per texture and frame.
+static func foot_point(src: Sprite2D) -> Vector2:
 	var tex := src.texture
 	if tex == null:
-		return 0.0
+		return Vector2.ZERO
 	var key := "%d:%d:%s:%s" % [tex.get_rid().get_id(), src.frame, src.region_enabled, src.region_rect]
-	if _foot_cache.has(key):
-		return _foot_cache[key]
 	var rect := src.get_rect()
-	var cell := _cell(src)
-	var inset := 0
-	var img: Image = _image_cache.get(tex.get_rid().get_id())
-	if img == null:
-		img = tex.get_image()
-		if img != null and img.is_compressed():
-			img.decompress()
-		_image_cache[tex.get_rid().get_id()] = img
-	if img != null:
-		var found := false
-		for row in range(cell.size.y - 1, -1, -1):
-			for x in cell.size.x:
-				if img.get_pixel(cell.position.x + x, cell.position.y + row).a > 0.5:
-					found = true
+	var foot: Vector2
+	if _foot_cache.has(key):
+		foot = _foot_cache[key]
+	else:
+		var cell := _cell(src)
+		var img: Image = _image_cache.get(tex.get_rid().get_id())
+		if img == null:
+			img = tex.get_image()
+			if img != null and img.is_compressed():
+				img.decompress()
+			_image_cache[tex.get_rid().get_id()] = img
+		var bottom := cell.size.y - 1
+		var sum_x := 0.0
+		var n := 0
+		if img != null:
+			var found := -1
+			for row in range(cell.size.y - 1, -1, -1):
+				for x in cell.size.x:
+					if img.get_pixel(cell.position.x + x, cell.position.y + row).a > 0.5:
+						if found < 0:
+							found = row
+						sum_x += x + 0.5
+						n += 1
+				if found >= 0 and row <= found - 3:
 					break
-			if found:
-				inset = cell.size.y - 1 - row
-				break
-	var foot := rect.end.y - inset
-	_foot_cache[key] = foot
-	return foot
+			if found >= 0:
+				bottom = found
+		# x from the cell's left edge, y as rows above the cell's bottom (flip-independent).
+		foot = Vector2(sum_x / n if n > 0 else cell.size.x / 2.0, cell.size.y - 1 - bottom)
+		_foot_cache[key] = foot
+	var fx := foot.x if not src.flip_h else rect.size.x - foot.x
+	return Vector2(rect.position.x + fx, rect.end.y - foot.y)
+
+
+## Local y (unscaled) of the sprite's lowest opaque pixel row.
+static func foot_y(src: Sprite2D) -> float:
+	return foot_point(src).y
 
 
 static var _foot_cache := {}
@@ -189,13 +208,14 @@ static func _cell(src: Sprite2D) -> Rect2i:
 
 
 ## Copies what the source shows right now (frame, flip), so animated sprites keep their shadow,
-## cut off below the hinge line. Returns the hinge's local y (unscaled) in the source.
-func _sync(src: Sprite2D, sh: Sprite2D) -> float:
+## hinged on its base. Returns the base point in the source's local (unscaled) coordinates.
+func _sync(src: Sprite2D, sh: Sprite2D) -> Vector2:
 	sh.texture = src.texture
 	if src.texture == null:
-		return 0.0
+		return Vector2.ZERO
 	var rect := src.get_rect()
-	var hinge := foot_y(src)
+	var foot := foot_point(src)
+	var hinge := foot.y
 	var cell := _cell(src)
 	cell.size.y = clampi(ceili(hinge - rect.position.y), 0, cell.size.y)
 	sh.region_enabled = true
@@ -208,8 +228,8 @@ func _sync(src: Sprite2D, sh: Sprite2D) -> float:
 	sh.scale = src.scale
 	sh.flip_h = src.flip_h
 	sh.flip_v = src.flip_v
-	sh.position = Vector2(0, -hinge * src.scale.y)
-	return hinge
+	sh.position = -foot * src.scale
+	return foot
 
 
 ## [vector, strength] of the shadow from the nearest pelita at `pos`.
