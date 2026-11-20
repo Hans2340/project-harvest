@@ -24,6 +24,7 @@ A farming RPG made with **Godot 4**.
 | E | Use the tool on the highlighted tile · harvest ripe padi · sleep (face your house) |
 | I or Tab | Open / close the inventory (game pauses) · Esc also closes |
 | M | Show / hide the minimap (peta) |
+| F7 | Debug: toggle rain on/off |
 
 You start at **home in the kampung** (the house top-left of the yard). Plant padi in the
 **sawah** east of the houses (2 + E). The sawah is flooded, so padi grows one stage every night
@@ -32,7 +33,12 @@ Walk **west** along the path to reach **Paya Bakau**, the mangrove swamp.
 
 The **clock** (top-right) shows a sky dial with the sun/moon and a sweeping hand, the date
 (Malay weekday + day of the season), season and weather icons, the time, and your money (pitis).
-Seasons are the monsoons: Kemarau → Musim Buah → Tengkujuh, 28 days each.
+Seasons are the monsoons: Kemarau → Musim Buah → Tengkujuh, 28 days each. Each morning rolls
+the weather from the season (Tengkujuh is rainy, Musim Buah sometimes, Kemarau rarely).
+
+The world is alive: trees, grass, reeds and padi sway in the wind (harder in rain), water
+glints, cloud shadows drift, birds fly over, leaves fall from fruit trees, dust floats by day,
+and at night pelita lamps glow at the houses and fireflies come out. Rain darkens the sky.
 
 Time: **25 real minutes = 24 in-game hours**. A day runs 06:00 to 02:00 (about 21 real minutes);
 at 02:00 you pass out and wake at home.
@@ -49,9 +55,10 @@ godot --headless --path . -s tests/test_inventory.gd
 godot --headless --path . -s tests/test_kampung.gd
 godot --headless --path . -s tests/test_clock.gd
 godot --headless --path . -s tests/test_minimap_shadows.gd
+godot --headless --path . -s tests/test_ambience.gd
 ```
 
-Each prints PASS/FAIL: sawah farming, the swamp, travelling between zones, the inventory, the kampung, the clock, and the minimap/shadows.
+Each prints PASS/FAIL: sawah farming, the swamp, travelling between zones, the inventory, the kampung, the clock, the minimap/shadows, and the environment/weather.
 
 ## Credits
 

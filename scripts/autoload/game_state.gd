@@ -6,6 +6,7 @@ signal day_changed(new_day: int)
 signal time_changed(minutes: int)
 signal items_changed
 signal gold_changed(gold: int)
+signal weather_changed(weather: String)
 
 const DAY_START_MINUTES := 6 * 60   ## 06:00
 const DAY_END_MINUTES := 26 * 60    ## 02:00 next day: pass out
@@ -41,6 +42,7 @@ func _process(delta: float) -> void:
 func advance_day() -> void:
 	day += 1
 	minutes = DAY_START_MINUTES
+	roll_weather()
 	day_changed.emit(day)
 	time_changed.emit(int(minutes))
 
@@ -81,8 +83,31 @@ func weekday_short() -> String:
 	return WEEKDAYS_SHORT[(day - 1) % 7]
 
 
-## Weather is always clear for now; a weather system can set this later.
+## Today's weather: "cerah" (clear) or "hujan" (rain). Rolled each morning from the season.
 var weather := "cerah"
+## Chance of rain per season (Kemarau, Musim Buah, Tengkujuh).
+const RAIN_CHANCE := [0.06, 0.25, 0.65]
+
+
+## Deterministic per day, so a day's weather is the same if you reload it later.
+func roll_weather() -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = day * 7919 + 13
+	set_weather("hujan" if day > 1 and rng.randf() < RAIN_CHANCE[season_index()] else "cerah")
+
+
+func set_weather(w: String) -> void:
+	weather = w
+	weather_changed.emit(weather)
+
+
+func is_raining() -> bool:
+	return weather == "hujan"
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("debug_weather"):   # F7: toggle rain for testing
+		set_weather("cerah" if is_raining() else "hujan")
 
 
 func add_gold(amount: int) -> void:

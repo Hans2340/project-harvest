@@ -53,6 +53,7 @@ const LAYOUT := [
 @onready var hud: Hud = $HUD
 
 var _altar_cells: Array[Vector2i] = []
+var ambience := Ambience.new()
 var _altar_sprite: Sprite2D
 
 
@@ -60,6 +61,7 @@ func _ready() -> void:
 	_build_ground()
 	_build_props()
 	_build_bounds()
+	_build_ambience()
 	player.tile_size = TILE
 	Zones.place_player(self, player, $Spawns/from_kampung.global_position)
 	var cam: Camera2D = player.get_node("Camera")
@@ -180,6 +182,8 @@ func _add_standing_prop(cell: Vector2i, file: String, blocker: Vector2) -> void:
 	s.texture = tex
 	s.offset = Vector2(0, -tex.get_height() / 2.0)
 	s.position = base
+	if file.contains("tuft"):
+		s.set_meta("sway", true)
 	ysort.add_child(s)
 	shadows.add_child(ShadowUtil.make(base + Vector2(0, -1), Vector2(tex.get_width() + 6, 10)))
 	if blocker != Vector2.ZERO:
@@ -190,6 +194,8 @@ func _add_standing_prop(cell: Vector2i, file: String, blocker: Vector2) -> void:
 func _add_flat_prop(cell: Vector2i, file: String) -> void:
 	var s := Sprite2D.new()
 	s.texture = load(PROPS_DIR + file)
+	if file.contains("reeds"):
+		s.set_meta("sway", true)
 	s.position = Vector2(cell.x * TILE + TILE / 2.0, cell.y * TILE + TILE / 2.0)
 	decor.add_child(s)
 
@@ -255,6 +261,27 @@ func _build_bounds() -> void:
 	_add_blocker(Vector2(w / 2.0, h + 8), Vector2(w, 16))
 	_add_blocker(Vector2(-8, h / 2.0), Vector2(16, h))
 	_add_blocker(Vector2(w + 8, h / 2.0), Vector2(16, h))
+
+
+## Wind, water glints, clouds, birds, fireflies, dust and rain (no lamps out here).
+func _build_ambience() -> void:
+	var water := []
+	var land := []
+	for y in LAYOUT.size():
+		for x in _width():
+			var c := _char(Vector2i(x, y))
+			if c == "~" or c == "r" or c == "k":
+				water.append(Vector2i(x, y))
+			elif c == "." or c == ",":
+				land.append(Vector2i(x, y))
+	var sway := []
+	for n in ysort.get_children() + decor.get_children():
+		if n.has_meta("sway"):
+			sway.append(n)
+	add_child(ambience)
+	move_child(ambience, decor.get_index() + 1)
+	ambience.setup(self, {"tile": TILE, "map_size": Vector2(_width(), LAYOUT.size()) * TILE,
+		"water_cells": water, "firefly_cells": land, "sway": sway})
 
 
 # ---------------------------------------------------------------- interaction

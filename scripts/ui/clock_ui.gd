@@ -82,6 +82,7 @@ func _ready() -> void:
 	GameState.time_changed.connect(func(_m): _refresh())
 	GameState.day_changed.connect(func(_d): _refresh())
 	GameState.gold_changed.connect(func(_g): _refresh())
+	GameState.weather_changed.connect(func(_w): _refresh())
 	_refresh()
 
 
@@ -112,8 +113,15 @@ static func body_angle(hours: float) -> float:
 	return PI * (1.0 - clampf((hours - 19.0) / 7.0, 0.0, 1.0))
 
 
-## Sky colour for a time of day (hours, 6..26).
+## Sky colour for a time of day (hours, 6..26), greyer in rain.
 static func sky_color(hours: float) -> Color:
+	var c := _clear_sky(hours)
+	if GameState.is_raining():
+		c = c.lerp(Color(0.42, 0.45, 0.5) * c.get_luminance() * 2.2, 0.7)
+	return c
+
+
+static func _clear_sky(hours: float) -> Color:
 	var dawn := Color(0.93, 0.62, 0.45)
 	var day := Color(0.45, 0.66, 0.84)
 	var dusk := Color(0.86, 0.47, 0.32)
@@ -157,7 +165,13 @@ class Dial:
 				draw_rect(Rect2(c + p, Vector2(1, 1)), Color(1, 1, 0.85, night))
 		# sun by day, moon by night, riding the same arc as the hand
 		var body_pos := c + Vector2.from_angle(-ClockUI.body_angle(hours)) * (r - 8)
-		if hours < 19.0:
+		if GameState.is_raining():
+			# rain clouds instead of the sun/moon
+			for k in 3:
+				draw_circle(c + Vector2(-10 + k * 9, -14 + (k % 2) * 3), 6, Color(0.55, 0.58, 0.62))
+			for k in 4:
+				draw_line(c + Vector2(-12 + k * 7, -6), c + Vector2(-14 + k * 7, -1), Color(0.6, 0.75, 0.9), 1.0)
+		elif hours < 19.0:
 			draw_circle(body_pos, 5, Color(1.0, 0.85, 0.4))
 			draw_circle(body_pos, 3.5, Color(1.0, 0.95, 0.7))
 		else:

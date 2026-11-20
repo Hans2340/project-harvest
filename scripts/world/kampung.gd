@@ -89,6 +89,7 @@ const VERTICES := [
 ]
 
 var _crop_sprites := {}   ## Vector2i -> Sprite2D
+var ambience := Ambience.new()
 
 @onready var ground: TileMapLayer = $Ground
 @onready var decor: Node2D = $Decor
@@ -105,6 +106,7 @@ func _ready() -> void:
 	_build_jetty()
 	_build_props()
 	_sync_crops()
+	_build_ambience()
 	var w := _width() * TILE
 	var h := _height() * TILE
 	var exit: Area2D = $ExitToMangrove
@@ -222,9 +224,9 @@ func _build_props() -> void:
 		shadows.add_child(ShadowUtil.make(base + Vector2(0, -26), Vector2(236, 64)))
 		ZoneUtil.add_blocker(self, base + Vector2(0, -40), Vector2(200, 72))
 	for t in PALMS:
-		_add_tree("kelapa_%02d.png" % t[0], t[1], Vector2(16, 10), Vector2(46, 16))
+		_add_tree("kelapa_%02d.png" % t[0], t[1], Vector2(16, 10), Vector2(46, 16)).set_meta("tree_kind", "palm")
 	for t in FRUIT_TREES:
-		_add_tree("pokok_buah_%02d.png" % t[0], t[1], Vector2(28, 14), Vector2(104, 34))
+		_add_tree("pokok_buah_%02d.png" % t[0], t[1], Vector2(28, 14), Vector2(104, 34)).set_meta("tree_kind", "fruit")
 	for c in TUFTS:
 		_standing_prop(c, "grass_tuft_small.png", Vector2.ZERO)
 	for c in ROCKS:
@@ -233,11 +235,12 @@ func _build_props() -> void:
 		var r := Sprite2D.new()
 		r.texture = load(PROPS_DIR + ("water_reeds_a.png" if c.x % 2 == 0 else "water_reeds_b.png"))
 		r.position = Vector2(c.x * TILE + TILE / 2.0, c.y * TILE + TILE / 2.0)
+		r.set_meta("sway", true)
 		decor.add_child(r)
 
 
 ## A tree standing on `cell`: sprite base at the cell's bottom, trunk blocks movement.
-func _add_tree(file: String, cell: Vector2i, trunk: Vector2, shadow: Vector2) -> void:
+func _add_tree(file: String, cell: Vector2i, trunk: Vector2, shadow: Vector2) -> Sprite2D:
 	var tex: Texture2D = load(TREE_DIR + file)
 	var base := Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE - 6)
 	var s := Sprite2D.new()
@@ -247,9 +250,11 @@ func _add_tree(file: String, cell: Vector2i, trunk: Vector2, shadow: Vector2) ->
 	s.position = base
 	s.set_meta("tree", true)
 	s.set_meta("minimap", "tree")
+	s.set_meta("sway", true)
 	ysort.add_child(s)
 	shadows.add_child(ShadowUtil.make(base + Vector2(0, -2), shadow))
 	ZoneUtil.add_blocker(self, base + Vector2(0, -trunk.y / 2.0), trunk)
+	return s
 
 
 func _standing_prop(cell: Vector2i, file: String, blocker: Vector2) -> void:
@@ -259,10 +264,40 @@ func _standing_prop(cell: Vector2i, file: String, blocker: Vector2) -> void:
 	s.texture = tex
 	s.offset = Vector2(0, -tex.get_height() / 2.0)
 	s.position = base
+	if file.contains("tuft"):
+		s.set_meta("sway", true)
 	ysort.add_child(s)
 	shadows.add_child(ShadowUtil.make(base + Vector2(0, -1), Vector2(tex.get_width() + 6, 10)))
 	if blocker != Vector2.ZERO:
 		ZoneUtil.add_blocker(self, base + Vector2(0, -blocker.y / 2.0), blocker)
+
+
+## Wind, water glints, clouds, birds, leaves, pelita lamps, fireflies, dust and rain.
+func _build_ambience() -> void:
+	var water := []
+	var flies := []
+	for y in _height():
+		for x in _width():
+			var c := _corner(x, y) + _corner(x + 1, y) + _corner(x, y + 1) + _corner(x + 1, y + 1)
+			if c.contains("w"):
+				water.append(Vector2i(x, y))
+			elif c.contains("s") or (c == "gggg" and y > 20):
+				flies.append(Vector2i(x, y))
+	var sway := []
+	var fruit := []
+	for n in ysort.get_children() + decor.get_children():
+		if n.has_meta("sway"):
+			sway.append(n)
+		if n.get_meta("tree_kind", "") == "fruit":
+			fruit.append(n)
+	var lamps := []
+	for h in HOUSES:
+		var cell: Vector2i = h[1]
+		lamps.append(Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE - 100))
+	add_child(ambience)
+	move_child(ambience, decor.get_index() + 1)
+	ambience.setup(self, {"tile": TILE, "map_size": Vector2(_width(), _height()) * TILE,
+		"water_cells": water, "firefly_cells": flies, "sway": sway, "leaf_trees": fruit, "lamps": lamps})
 
 
 # ---------------------------------------------------------------- farming
@@ -283,6 +318,7 @@ func _sync_crops() -> void:
 			sprite = Sprite2D.new()
 			sprite.offset = Vector2(0, -16)
 			sprite.position = Vector2(cell.x * TILE + TILE / 2.0, cell.y * TILE + TILE - 6)
+			sprite.material = Ambience.get_sway_material()
 			crops_root.add_child(sprite)
 			_crop_sprites[cell] = sprite
 		sprite.texture = crop.texture

@@ -33,6 +33,11 @@
 - Time: 25 real minutes = 24 in-game hours (a 06:00-02:00 day is about 21 real minutes). Shift = run.
 - **Calendar:** 3 monsoon seasons x 28 days (Kemarau, Musim Buah, Tengkujuh), Malay weekdays
   (Isnin...Ahad). Currency: **pitis** (tin coins of the Melaka era). Clock UI top-right.
+- **Weather:** rolled each morning by season (rain chance: Kemarau 6%, Musim Buah 25%,
+  Tengkujuh 65%). Rain darkens the light and strengthens the wind; clear Kemarau days have a
+  warm haze.
+- **Ambience (all zones):** wind sway, water glints, cloud shadows, birds, falling leaves, dust
+  motes, pelita lamps and fireflies at night (`scripts/world/ambience.gd`).
 
 ### Team roles
 - **leoxent**: sprites / character art.

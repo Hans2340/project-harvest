@@ -13,6 +13,7 @@ var minimap := MinimapUI.new()
 
 
 func _ready() -> void:
+	layer = 2   # above the world-space effects layer (rain, fireflies)
 	add_child(hotbar)
 	add_child(clock)
 	add_child(minimap)
