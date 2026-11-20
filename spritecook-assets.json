@@ -6,6 +6,52 @@
       "sha12": "fcfbdee563ef",
       "label": "STYLE REFERENCE: official sprite format (use as style_asset_ids)",
       "file": "docs/references/concept/official-sprite-format-ordo-sigillum.jpg"
+    },
+    {
+      "asset_id": "19ed3584-21be-4234-a661-360efcf18f59",
+      "sha12": "d0634919eee6",
+      "label": "STYLE REFERENCE: Dark Swamp ground (Hypnobius)",
+      "file": "assets/tilesets/dark_swamp/raw/GroundTileset.png"
+    },
+    {
+      "asset_id": "bbb8b49d-bc5e-49c7-8258-0462507649dd",
+      "sha12": "b32a5bf6e801",
+      "label": "STYLE REFERENCE: Dark Swamp water (Hypnobius)",
+      "file": "assets/tilesets/dark_swamp/raw/WaterAnimation.png"
+    },
+    {
+      "asset_id": "93e9930e-c807-42d8-9c14-e4870a330aee",
+      "sha12": "5719de6b78d5",
+      "label": "STYLE REFERENCE: Dark Swamp props (Hypnobius)",
+      "file": "assets/tilesets/dark_swamp/raw/PropsTileset.png"
+    },
+    {
+      "asset_id": "befdaebc-08a7-4692-865b-214a906f38b5",
+      "sha12": "4095e7ca4c93",
+      "label": "STYLE REFERENCE: Dark Swamp altar (Hypnobius)",
+      "file": "assets/tilesets/dark_swamp/raw/AltarSpritesheet.png"
+    },
+    {
+      "asset_id": "674af21a-b81c-4648-9207-951977925a72",
+      "sha12": "dfa3c1127feb",
+      "label": "STYLE REFERENCE: Dark Ages UI tilesheet (Hypnobius)",
+      "file": "assets/ui/dark_ages/ui_tilesheet.png"
     }
-  ]
+  ],
+  "style_references_collection_id": "3ea82e0c-d8aa-45a2-9af4-d71d092cd311",
+  "usage": {
+    "characters": [
+      "88cbdfb9-83b8-446a-8463-45e471625a36"
+    ],
+    "swamp_environment": [
+      "19ed3584-21be-4234-a661-360efcf18f59",
+      "bbb8b49d-bc5e-49c7-8258-0462507649dd",
+      "93e9930e-c807-42d8-9c14-e4870a330aee",
+      "befdaebc-08a7-4692-865b-214a906f38b5"
+    ],
+    "ui": [
+      "674af21a-b81c-4648-9207-951977925a72"
+    ],
+    "note": "Pass the matching list as style_asset_ids to generate_game_art so new art follows our style."
+  }
 }
