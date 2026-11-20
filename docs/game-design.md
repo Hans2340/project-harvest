@@ -38,8 +38,17 @@
   - **Bound spirits:** marked with the black seal and wrapped in iron chains or
     nails, so the player can tell them from free spirits.
   - **Buildings:** square stone forts with bone-white banners; carracks with pale sails.
-- **Emblem style:** bold, single-colour, symmetrical silhouette sigils
-  (reference: `docs/references/emblem-style-reference.png`, style only). See S16.
+- **Emblem & ranks** *(was S16)*: an **eye in the centre of a round seal,
+  pinned by radiating iron nails, with wings**. The emblem's metal and detail
+  show rank:
+
+  | Rank | Emblem |
+  |---|---|
+  | **Acolyte** | Grey iron seal, dark grey wings, plain. |
+  | **Warden** | Bronze/copper seal, pale gold wings. |
+  | **Grandmaster** | Gold and red seal set with jewels, large ornate red-gold wings. |
+
+  Concept art: `docs/references/concept/emblems-ordo-sigillum-ranks.jpg`.
 - **Occult empire with 15th-century military equipment.** They came here *for*
   the spirits. Spirit-binding is their real source of power, backed by an army
   of the period:
@@ -120,7 +129,27 @@ Story hook: the Ordo Sigillum want to capture the player *because* of their bles
 ### Magic & weapons
 - **Pawang / bomoh** magic: charms (azimat), spirit offerings, protecting crops.
 - Era weapons: keris, parang, tombak, golok, sumpit.
-- **Combat style is undecided** (see S15).
+- **Combat style: real-time action** *(was S15)*. Move and attack freely, with
+  dodges and combos (top-down action RPG). Silat flavours the movement,
+  combos and counters.
+  - Works well with real-time farming and co-op.
+  - Needs more animation frames per class, so plan the art budget around it.
+
+### Player-side emblems *(was S17)*
+| Faction | Emblem |
+|---|---|
+| **Resistance** | A keris crossed over a padi stalk on a riveted iron plate. |
+| **Naga Tasik Chini** | A naga coiled inside a round teal-and-copper frame, above lake water. |
+| **Orang Bunian** | A pale green leaf with gold veins on a silver frame, faintly glowing. |
+
+Concept art: `docs/references/concept/emblems-player-factions.jpg`.
+
+Polish notes for the final versions:
+- The **keris** in the concept has a straight blade and a pistol-grip hilt.
+  A real keris has an asymmetric guard (*ganja*) and often a wavy blade
+  (*luk*); use museum references.
+- The **naga** in the concept looks like a European dragon. A Malay naga is
+  more serpent-like, often wears a crown (*mahkota*) and has no legs.
 
 ### Art direction
 - Characters ~**20×36 px** → **32 px tiles** at **640×360** base resolution
@@ -136,36 +165,10 @@ Story hook: the Ordo Sigillum want to capture the player *because* of their bles
 
 ## 💡 Suggestions (pending approval)
 
-### S15. Combat style
-Note: this choice also affects co-op and how farming and combat fit together.
-
-| Option | How it plays | Pros | Cons |
-|---|---|---|---|
-| **A. Real-time action** | Move and attack freely, with dodges and combos (like top-down action RPGs). | Feels natural next to real-time farming; easiest to make co-op fun; silat combos and counters shine. | Needs more animation frames per class. |
-| **B. Turn-based on tiles** (like Stoneshard) | Each move or attack is a turn; enemies act after you. | Tactical, matches the Stoneshard inspiration, less animation needed. | Awkward with real-time farming and co-op (waiting for your friend's turn). |
-| **C. Hybrid** *(recommended)* | Farming and exploring are real-time; combat is real-time but deliberate: stamina, telegraphed enemy attacks, positioning matters. | Keeps the Stoneshard "every fight is dangerous" feel and still works in co-op. | Needs careful tuning. |
-
-Silat can stay as the theme of movement and counters in any option.
-
-### S16. Ordo Sigillum emblem ideas
-Bold, single-colour, symmetrical silhouettes (style of the reference image, not its symbols):
-1. **The Seal:** a round wax seal with a closed eye in the middle and four nails
-   through its edge. "We seal what we see."
-2. **The Chained Lantern:** an iron lantern with chains hanging down, a trapped flame inside.
-3. **The Nailed Circle:** a circle (the spirit world) pinned by a single iron nail
-   with spread wings, mixing military and occult.
-
-Ranks could add small marks (one nail for soldiers, more for officers, a full seal for Binders).
-
-### S17. Emblems for the player's side
-To match the style, the resistance and the spirits could also get sigils:
-- **Resistance:** a keris crossed over a padi stalk.
-- **Naga Tasik Chini:** a coiled naga forming a circle.
-- **Orang Bunian:** a leaf with a hidden eye.
+_(none right now, ask for more!)_
 
 ## Open questions
 - Final game name?
-- Combat style? (see S15)
 - Exact number of pawang questions (max 7)?
 - Final blessing list and balancing?
 
