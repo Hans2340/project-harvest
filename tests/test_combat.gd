@@ -45,20 +45,20 @@ func _initialize() -> void:
 	_check(d.total_damage == 1 + 1 + 1 + 2, "combo damage 1 + 1 + 2 (total %d)" % d.total_damage)
 	_check(not p.is_attacking() and p._anim == 0, "the combo ends after the kick")
 
-	# Auto-target: the dummy is to the right, we face left and stand two tiles away.
+	# Auto-target: the dummy is to the right, we face left, half a tile out of reach.
 	log.clear()
-	var start: Vector2 = d.global_position + Vector2(-90, 0)
+	var start: Vector2 = d.global_position + Vector2(-46, 0)
 	p.global_position = start
 	p._update_facing(Vector2.LEFT)
 	p.attack()
 	await _until(func(): return not p.is_attacking(), 90)
 	_check(log == [[0, true]], "facing away, the jab turns to the dummy and lands (%s)" % [log])
 	_check(p.facing == Vector2.RIGHT, "now facing the dummy")
-	_check(p.global_position.x > start.x + 40, "stepped in toward it (%.0f px)" % (p.global_position.x - start.x))
+	_check(p.global_position.x > start.x + 10, "stepped in toward it (%.0f px)" % (p.global_position.x - start.x))
 
 	# Off the axis: below-right of the dummy. Lines up and lands.
 	log.clear()
-	p.global_position = d.global_position + Vector2(70, 50)
+	p.global_position = d.global_position + Vector2(30, 22)
 	p._update_facing(Vector2.DOWN)
 	p.attack()
 	await _until(func(): return not p.is_attacking(), 90)
@@ -66,7 +66,7 @@ func _initialize() -> void:
 
 	# Out of range: no turning, no stepping, the jab goes the way we face and misses.
 	log.clear()
-	start = d.global_position + Vector2(-200, 0)
+	start = d.global_position + Vector2(-80, 0)
 	p.global_position = start
 	p._update_facing(Vector2.LEFT)
 	p.attack()

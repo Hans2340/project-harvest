@@ -34,9 +34,9 @@ const HIT_REACH := 24.0                ## centre of the hit circle, in front of 
 const HIT_RADIUS := 16.0
 const HITSTOP := 0.07                  ## the strike freezes this long when it lands
 ## Auto-target (langkah): a strike turns to the best target within AUTO_RANGE and steps in
-## to punching distance before it lands. Targets in front (or in the held direction) win over
+## (at most half a tile) to punching distance before it lands. Targets in front (or in the held direction) win over
 ## nearer ones behind. Nothing in range: the strike goes the way you face.
-const AUTO_RANGE := 112.0              ## from the body, about 2.3 tiles
+const AUTO_RANGE := HIT_REACH + 24.0   ## from the body: punching distance plus half a tile of step
 const FRONT_BIAS := 0.55               ## a target in front counts as this much nearer
 const DASH_SPEED := 280.0
 const DASH_MAX := 0.35                 ## seconds of stepping in per strike, at most
