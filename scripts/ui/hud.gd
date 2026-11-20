@@ -1,6 +1,6 @@
 class_name Hud
 extends CanvasLayer
-## On-screen info: day/time, tool hotbar, short messages, and the inventory window.
+## On-screen info: minimap (top-left), clock (top-right), tool hotbar, short messages, inventory window.
 
 @onready var info: Label = $Info
 @onready var message: Label = $Message
@@ -8,13 +8,15 @@ extends CanvasLayer
 
 var hotbar := Hotbar.new()
 var inventory := InventoryUI.new()
+var clock := ClockUI.new()
+var minimap := MinimapUI.new()
 
 
 func _ready() -> void:
 	add_child(hotbar)
+	add_child(clock)
+	add_child(minimap)
 	add_child(inventory)
-	GameState.time_changed.connect(func(_m): _refresh())
-	GameState.day_changed.connect(func(_d): _refresh())
 	message_timer.timeout.connect(func(): message.text = "")
 	_refresh()
 
@@ -29,4 +31,4 @@ func show_message(text: String) -> void:
 
 
 func _refresh() -> void:
-	info.text = "Day %d   %s\n[I] Inventori" % [GameState.day, GameState.time_text()]
+	info.text = "[I] Inventori   [M] Peta"

@@ -1,9 +1,9 @@
 extends Node
 ## Zone travel (autoloaded as `Zones`). Remembers which spawn point to use
-## after a scene change, and sends the player home to bed on a new day.
+## after a scene change, and sends the player home on a new day.
 
-const FARM_SCENE := "res://scenes/world/farm.tscn"
-const BED_SPAWN := "bed"
+const HOME_SCENE := "res://scenes/world/kampung.tscn"
+const HOME_SPAWN := "home"
 
 var next_spawn: String = ""
 var _travelling := false
@@ -34,8 +34,8 @@ func place_player(zone: Node, player: Node2D, fallback: Vector2) -> void:
 	next_spawn = ""
 
 
-## Passing out or sleeping always wakes you in your bed on the farm.
+## Passing out or sleeping always wakes you at home in the kampung.
 func _on_day_changed(_day: int) -> void:
 	var scene := get_tree().current_scene
-	if scene and scene.scene_file_path != FARM_SCENE:
-		travel(FARM_SCENE, BED_SPAWN)
+	if scene and scene.scene_file_path != HOME_SCENE:
+		travel(HOME_SCENE, HOME_SPAWN)

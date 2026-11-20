@@ -25,7 +25,7 @@ func _initialize() -> void:
 	_check(zone._altar_cells.size() == 6, "altar placed")
 	_check(zone.get_node("YSort").get_child_count() > 10, "props placed (%d)" % zone.get_node("YSort").get_child_count())
 	var player = zone.get_node("YSort/Player")
-	_check(player.global_position.distance_to(zone.get_node("Spawns/from_farm").global_position) < 1.0, "player at farm entrance")
+	_check(player.global_position.distance_to(zone.get_node("Spawns/from_kampung").global_position) < 1.0, "player at kampung entrance")
 	print("RESULT: ", "PASS" if ok else "FAIL")
 	quit(0 if ok else 1)
 

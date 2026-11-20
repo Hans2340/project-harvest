@@ -1,6 +1,6 @@
 class_name Mangrove
 extends Node2D
-## Mangrove / swamp zone south of the farm (Bujang Senang's river, later).
+## Mangrove / swamp zone west of the kampung (Bujang Senang's river, later).
 ## Uses the Dark Swamp pack (by Hypnobius) at its native 48 px tile size.
 ##
 ## PROTOTYPE NOTE: built from the ASCII LAYOUT below; water and leafy grass
@@ -46,6 +46,7 @@ const LAYOUT := [
 
 @onready var ground: TileMapLayer = $Ground
 @onready var decor: Node2D = $Decor
+@onready var shadows: Node2D = $Shadows
 @onready var ysort: Node2D = $YSort
 @onready var player: Player = $YSort/Player
 @onready var night: CanvasModulate = $Night
@@ -60,7 +61,7 @@ func _ready() -> void:
 	_build_props()
 	_build_bounds()
 	player.tile_size = TILE
-	Zones.place_player(self, player, $Spawns/from_farm.global_position)
+	Zones.place_player(self, player, $Spawns/from_kampung.global_position)
 	var cam: Camera2D = player.get_node("Camera")
 	cam.limit_left = 0
 	cam.limit_top = 0
@@ -180,6 +181,7 @@ func _add_standing_prop(cell: Vector2i, file: String, blocker: Vector2) -> void:
 	s.offset = Vector2(0, -tex.get_height() / 2.0)
 	s.position = base
 	ysort.add_child(s)
+	shadows.add_child(ShadowUtil.make(base + Vector2(0, -1), Vector2(tex.get_width() + 6, 10)))
 	if blocker != Vector2.ZERO:
 		_add_blocker(base + Vector2(0, -blocker.y / 2.0), blocker)
 
@@ -211,7 +213,9 @@ func _add_altar(cell: Vector2i) -> void:
 	_altar_sprite.hframes = 4
 	_altar_sprite.offset = Vector2(0, -145 / 2.0)
 	_altar_sprite.position = base
+	_altar_sprite.set_meta("minimap", "building")
 	ysort.add_child(_altar_sprite)
+	shadows.add_child(ShadowUtil.make(base + Vector2(0, -10), Vector2(108, 34)))
 	_add_blocker(base + Vector2(0, -30), Vector2(88, 56))
 	var timer := Timer.new()
 	timer.wait_time = 0.18
@@ -243,7 +247,7 @@ func _add_altar(cell: Vector2i) -> void:
 func _build_bounds() -> void:
 	var w := _width() * TILE
 	var h := LAYOUT.size() * TILE
-	var gap: Area2D = $ExitToFarm
+	var gap: Area2D = $ExitToKampung
 	var gap_left := gap.position.x - TILE / 2.0
 	var gap_right := gap.position.x + TILE / 2.0
 	_add_blocker(Vector2(gap_left / 2.0, -8), Vector2(gap_left, 16))

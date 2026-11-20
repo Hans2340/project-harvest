@@ -1,7 +1,7 @@
 class_name Player
 extends CharacterBody2D
 ## Top-down player: 4-direction movement, tool selection, and using the tile in front.
-## The farm decides what a tool does; the player only says "use tool X on cell Y",
+## The zone decides what a tool does; the player only says "use tool X on cell Y",
 ## which keeps it easy to sync over the network for co-op later.
 
 signal tool_changed(tool: int)
@@ -11,7 +11,9 @@ enum Tool { HOE, SEEDS, WATER }
 const TOOL_NAMES := ["Cangkul (hoe)", "Benih padi (seeds)", "Air (watering)"]
 
 @export var speed: float = 90.0
-## Grid size of the current zone (farm = 32, swamp = 48). Set by the zone.
+## Speed while holding Shift.
+@export var run_speed: float = 160.0
+## Grid size of the current zone (48 px for kampung and swamp). Set by the zone.
 @export var tile_size: float = 32.0
 
 var facing := Vector2.DOWN
@@ -25,7 +27,7 @@ func _physics_process(_delta: float) -> void:
 	var input := Vector2.ZERO
 	if can_move:
 		input = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	velocity = input * speed
+	velocity = input * (run_speed if Input.is_action_pressed("run") else speed)
 	move_and_slide()
 	if input != Vector2.ZERO:
 		_update_facing(input)
