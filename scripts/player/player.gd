@@ -21,12 +21,19 @@ const TOOL_NAMES := ["Cangkul (hoe)", "Benih padi (seeds)", "Air (watering)"]
 enum Anim { IDLE, WALK, RUN }
 const ANIM_FRAMES := [4, 8, 8]
 const ANIM_FPS := [5.0, 10.0, 14.0]
+## Running feel: the body lifts 1 px in the airborne half of each stride, and dust kicks up on
+## each footfall (run frames 0 and 4) and when a run starts or stops.
+const RUN_LIFT_FRAMES := [1, 2, 5, 6]
+const RUN_STEP_FRAMES := [0, 4]
+## Sprite offset as set in the scene (feet at the node's origin).
+const SPRITE_OFFSET := Vector2(0, -18)
 
 var facing := Vector2.DOWN
 var current_tool: int = Tool.HOE
 var can_move := true
 var _anim: int = Anim.IDLE
 var _anim_time := 0.0
+var _last_col := -1
 
 @onready var sprite: Sprite2D = $Sprite
 
@@ -43,8 +50,11 @@ func _physics_process(delta: float) -> void:
 		_update_facing(input)
 		anim = Anim.RUN if running else Anim.WALK
 	if anim != _anim:
+		if anim == Anim.RUN or _anim == Anim.RUN:
+			_puff(1.3)   # pushing off into a run, or skidding out of one
 		_anim = anim
 		_anim_time = 0.0
+		_last_col = -1
 	_anim_time += delta * ANIM_FPS[_anim]
 	_update_frame()
 
@@ -85,3 +95,16 @@ func _update_frame() -> void:
 			face = 2
 	var col := int(_anim_time) % int(ANIM_FRAMES[_anim])
 	sprite.frame_coords = Vector2i(col, _anim * 3 + face)
+	var running := _anim == Anim.RUN
+	sprite.offset = SPRITE_OFFSET + (Vector2(0, -1) if running and col in RUN_LIFT_FRAMES else Vector2.ZERO)
+	if running and col != _last_col and col in RUN_STEP_FRAMES:
+		_puff(1.0)
+	_last_col = col
+
+
+## Dust at the feet, drifting back from the way the player faces. It goes on the zone (the
+## player's parent) so it stays where the foot landed.
+func _puff(size: float) -> void:
+	if get_parent() == null:
+		return
+	DustPuff.spawn(get_parent(), global_position + Vector2(0, -1), -facing, size)

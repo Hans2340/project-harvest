@@ -14,7 +14,11 @@ PixelLab id: `0cacaf43-0c25-4e86-867a-86e6834d4195`. `metadata.json` names the s
   - `walk`: `walking-8-frames` (3 generations). **south is skeleton-v3** (3 generations): the
     template turned the character around mid-cycle. Cropped from 64x64 to 56 at (4,5) so the
     head top sits at y=9 like the rest.
-  - `run`: `running-8-frames` (3 generations).
+  - `run`: `running-8-frames` (3 generations). **south is skeleton-v3** (2026-11-20, 4 generations
+    with the pose estimates): the poses come from the run of the free "Adventurer 2D Pixel Art"
+    pack (licence allows use in a game). Skeletons were estimated on its 8 run_down frames, and
+    the limbs' moves relative to shoulders/hips were put on Pendekar's own proportions, with the
+    fists kept at chest height.
 - `player_sheet.png`: 8 columns x 9 rows, used by `scenes/player/player.tscn`. Rows in blocks of
   three facings (down, up, side; left = side flipped): idle (4 frames), walk (8), run (8).
   Preview: `preview_player_sheet.png`.
