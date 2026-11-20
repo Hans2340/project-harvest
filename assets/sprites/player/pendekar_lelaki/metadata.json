@@ -1,19 +1,19 @@
 {
-  "group_id": "943fdacc-633e-45c5-9648-21a920a4fbd7",
+  "group_id": "bd71d46e-66a9-450a-85af-b9004a78509b",
   "states": [
     {
       "character": {
-        "id": "b5396471-9cba-4e8b-9379-62000526f325",
+        "id": "0cacaf43-0c25-4e86-867a-86e6834d4195",
         "name": "Idle",
         "prompt": "young Malay pendekar (silat warrior) man, 15th-century Melaka era, short messy black hair, warm brown skin, loose long-sleeved dark charcoal baju with thin gold trim, wide deep red bengkung sash, red kain samping over the hips, loose black seluar gathered at the ankles, barefoot, empty hands, no headgear, no weapon",
         "size": {
-          "width": 44,
-          "height": 44
+          "width": 56,
+          "height": 56
         },
         "template_id": "mannequin",
         "directions": 8,
         "view": "low top-down",
-        "created_at": "2026-11-20T08:46:36.022365+00:00"
+        "created_at": "2026-11-20T08:48:52.723676+00:00"
       },
       "folder": "Idle",
       "frames": {
@@ -32,5 +32,5 @@
     }
   ],
   "export_version": "3.1",
-  "export_date": "2026-11-20T08:47:49.783668"
+  "export_date": "2026-11-20T08:52:18.837080"
 }
