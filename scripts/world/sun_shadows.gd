@@ -26,7 +26,7 @@ const ASAR_WINDOW := 60
 ## The last day the Asar message was shown, shared across zones.
 static var asar_day := -1
 
-## Each entry: [source Sprite2D, pivot Node2D, shadow Sprite2D, ground depth]
+## Each entry: [source Sprite2D, pivot Node2D, shadow Sprite2D, hinge lift above the feet]
 var _casters: Array = []
 var _lamps: Array[Vector2] = []
 
@@ -42,18 +42,23 @@ func set_lamps(points: Array) -> void:
 		_lamps.append(p)
 
 
-## Gives `src` a cast shadow, hinged on its lowest drawn pixel (its feet). `ground_depth`
-## (world px) is for things drawn with a floor plan, like a house in this 3/4 view: the bottom
-## of the picture is the front of the footprint, so the shadow hinges that far up (mid-footprint)
-## instead, and the part of the picture below the hinge casts nothing.
-func add_caster(src: Sprite2D, ground_depth := 0.0) -> void:
-	var pivot := Node2D.new()
-	var sh := Sprite2D.new()
-	sh.modulate = Color(0, 0, 0, 1)
-	pivot.add_child(sh)
-	add_child(pivot)
-	_casters.append([src, pivot, sh, ground_depth])
-	_sync(src, sh, ground_depth)
+## Gives `src` a cast shadow, hinged on its lowest drawn pixel (its feet).
+##
+## Things drawn with a floor plan, like a house on stilts in this 3/4 view, pass the footprint's
+## screen `depth` (world px): the bottom of the picture is the front stilts, the back stilts stand
+## `depth` higher up. The shadow is then swept across the footprint as `slices` copies, each
+## hinged on its own ground line with the picture below that line cut off. Every stilt's shadow
+## starts at its own foot, and a raised floor throws its shadow under the house, not in front.
+func add_caster(src: Sprite2D, depth := 0.0, slices := 1) -> void:
+	for i in slices:
+		var lift := depth * i / maxf(slices - 1, 1)
+		var pivot := Node2D.new()
+		var sh := Sprite2D.new()
+		sh.modulate = Color(0, 0, 0, 1)
+		pivot.add_child(sh)
+		add_child(pivot)
+		_casters.append([src, pivot, sh, lift])
+		_sync(src, sh, lift)
 
 
 func caster_count() -> int:
@@ -143,12 +148,12 @@ static func _cell(src: Sprite2D) -> Rect2i:
 
 ## Copies what the source shows right now (frame, flip), so animated sprites keep their shadow,
 ## cut off below the hinge line. Returns the hinge's local y (unscaled) in the source.
-func _sync(src: Sprite2D, sh: Sprite2D, ground_depth: float) -> float:
+func _sync(src: Sprite2D, sh: Sprite2D, lift: float) -> float:
 	sh.texture = src.texture
 	if src.texture == null:
 		return 0.0
 	var rect := src.get_rect()
-	var hinge := foot_y(src) - ground_depth / maxf(src.scale.y, 0.001)
+	var hinge := foot_y(src) - lift / maxf(src.scale.y, 0.001)
 	var cell := _cell(src)
 	cell.size.y = clampi(ceili(hinge - rect.position.y), 0, cell.size.y)
 	sh.region_enabled = true
