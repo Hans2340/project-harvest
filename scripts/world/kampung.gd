@@ -90,6 +90,7 @@ const VERTICES := [
 
 var _crop_sprites := {}   ## Vector2i -> Sprite2D
 var ambience := Ambience.new()
+var sun_shadows := SunShadows.new()
 
 @onready var ground: TileMapLayer = $Ground
 @onready var decor: Node2D = $Decor
@@ -102,6 +103,7 @@ var ambience := Ambience.new()
 
 
 func _ready() -> void:
+	shadows.add_child(sun_shadows)
 	_build_ground()
 	_build_jetty()
 	_build_props()
@@ -222,6 +224,7 @@ func _build_props() -> void:
 		s.set_meta("minimap", "building")
 		ysort.add_child(s)
 		shadows.add_child(ShadowUtil.make(base + Vector2(0, -26), Vector2(236, 64)))
+		sun_shadows.add_caster(s)
 		ZoneUtil.add_blocker(self, base + Vector2(0, -40), Vector2(200, 72))
 	for t in PALMS:
 		_add_tree("kelapa_%02d.png" % t[0], t[1], Vector2(16, 10), Vector2(46, 16)).set_meta("tree_kind", "palm")
@@ -253,6 +256,7 @@ func _add_tree(file: String, cell: Vector2i, trunk: Vector2, shadow: Vector2) ->
 	s.set_meta("sway", true)
 	ysort.add_child(s)
 	shadows.add_child(ShadowUtil.make(base + Vector2(0, -2), shadow))
+	sun_shadows.add_caster(s)
 	ZoneUtil.add_blocker(self, base + Vector2(0, -trunk.y / 2.0), trunk)
 	return s
 
@@ -268,6 +272,8 @@ func _standing_prop(cell: Vector2i, file: String, blocker: Vector2) -> void:
 		s.set_meta("sway", true)
 	ysort.add_child(s)
 	shadows.add_child(ShadowUtil.make(base + Vector2(0, -1), Vector2(tex.get_width() + 6, 10)))
+	if not file.contains("tuft"):
+		sun_shadows.add_caster(s)
 	if blocker != Vector2.ZERO:
 		ZoneUtil.add_blocker(self, base + Vector2(0, -blocker.y / 2.0), blocker)
 
@@ -291,9 +297,14 @@ func _build_ambience() -> void:
 		if n.get_meta("tree_kind", "") == "fruit":
 			fruit.append(n)
 	var lamps := []
+	var lamp_ground := []
 	for h in HOUSES:
 		var cell: Vector2i = h[1]
 		lamps.append(Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE - 100))
+		lamp_ground.append(Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE + 8))
+	sun_shadows.set_lamps(lamp_ground)
+	sun_shadows.add_caster(player.sprite)
+	sun_shadows.asar_started.connect(func(): hud.show_message(SunShadows.asar_message()))
 	add_child(ambience)
 	move_child(ambience, decor.get_index() + 1)
 	ambience.setup(self, {"tile": TILE, "map_size": Vector2(_width(), _height()) * TILE,
