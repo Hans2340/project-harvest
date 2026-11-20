@@ -46,6 +46,7 @@ const LAYOUT := [
 
 @onready var ground: TileMapLayer = $Ground
 @onready var decor: Node2D = $Decor
+@onready var shadows: Node2D = $Shadows
 @onready var ysort: Node2D = $YSort
 @onready var player: Player = $YSort/Player
 @onready var night: CanvasModulate = $Night
@@ -180,6 +181,7 @@ func _add_standing_prop(cell: Vector2i, file: String, blocker: Vector2) -> void:
 	s.offset = Vector2(0, -tex.get_height() / 2.0)
 	s.position = base
 	ysort.add_child(s)
+	shadows.add_child(ShadowUtil.make(base + Vector2(0, -1), Vector2(tex.get_width() + 6, 10)))
 	if blocker != Vector2.ZERO:
 		_add_blocker(base + Vector2(0, -blocker.y / 2.0), blocker)
 
@@ -211,7 +213,9 @@ func _add_altar(cell: Vector2i) -> void:
 	_altar_sprite.hframes = 4
 	_altar_sprite.offset = Vector2(0, -145 / 2.0)
 	_altar_sprite.position = base
+	_altar_sprite.set_meta("minimap", "building")
 	ysort.add_child(_altar_sprite)
+	shadows.add_child(ShadowUtil.make(base + Vector2(0, -10), Vector2(108, 34)))
 	_add_blocker(base + Vector2(0, -30), Vector2(88, 56))
 	var timer := Timer.new()
 	timer.wait_time = 0.18

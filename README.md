@@ -23,6 +23,7 @@ A farming RPG made with **Godot 4**.
 | 1 / 2 / 3 | Tool: Cangkul (hoe) / Benih padi (seeds) / Air (water) |
 | E | Use the tool on the highlighted tile · harvest ripe padi · sleep (face your house) |
 | I or Tab | Open / close the inventory (game pauses) · Esc also closes |
+| M | Show / hide the minimap (peta) |
 
 You start at **home in the kampung** (the house top-left of the yard). Plant padi in the
 **sawah** east of the houses (2 + E). The sawah is flooded, so padi grows one stage every night
@@ -47,9 +48,10 @@ godot --headless --path . -s tests/test_zone_travel.gd
 godot --headless --path . -s tests/test_inventory.gd
 godot --headless --path . -s tests/test_kampung.gd
 godot --headless --path . -s tests/test_clock.gd
+godot --headless --path . -s tests/test_minimap_shadows.gd
 ```
 
-Each prints PASS/FAIL: sawah farming, the swamp, travelling between zones, the inventory, the kampung, and the clock.
+Each prints PASS/FAIL: sawah farming, the swamp, travelling between zones, the inventory, the kampung, the clock, and the minimap/shadows.
 
 ## Credits
 

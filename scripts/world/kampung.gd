@@ -92,6 +92,7 @@ var _crop_sprites := {}   ## Vector2i -> Sprite2D
 
 @onready var ground: TileMapLayer = $Ground
 @onready var decor: Node2D = $Decor
+@onready var shadows: Node2D = $Shadows
 @onready var ysort: Node2D = $YSort
 @onready var crops_root: Node2D = $YSort/Crops
 @onready var player: Player = $YSort/Player
@@ -216,12 +217,14 @@ func _build_props() -> void:
 		s.scale = Vector2(HOUSE_SCALE, HOUSE_SCALE)
 		s.offset = Vector2(0, -tex.get_height() / 2.0 + 4)
 		s.position = base
+		s.set_meta("minimap", "building")
 		ysort.add_child(s)
+		shadows.add_child(ShadowUtil.make(base + Vector2(0, -26), Vector2(236, 64)))
 		ZoneUtil.add_blocker(self, base + Vector2(0, -40), Vector2(200, 72))
 	for t in PALMS:
-		_add_tree("kelapa_%02d.png" % t[0], t[1], Vector2(16, 10))
+		_add_tree("kelapa_%02d.png" % t[0], t[1], Vector2(16, 10), Vector2(46, 16))
 	for t in FRUIT_TREES:
-		_add_tree("pokok_buah_%02d.png" % t[0], t[1], Vector2(28, 14))
+		_add_tree("pokok_buah_%02d.png" % t[0], t[1], Vector2(28, 14), Vector2(104, 34))
 	for c in TUFTS:
 		_standing_prop(c, "grass_tuft_small.png", Vector2.ZERO)
 	for c in ROCKS:
@@ -234,7 +237,7 @@ func _build_props() -> void:
 
 
 ## A tree standing on `cell`: sprite base at the cell's bottom, trunk blocks movement.
-func _add_tree(file: String, cell: Vector2i, trunk: Vector2) -> void:
+func _add_tree(file: String, cell: Vector2i, trunk: Vector2, shadow: Vector2) -> void:
 	var tex: Texture2D = load(TREE_DIR + file)
 	var base := Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE - 6)
 	var s := Sprite2D.new()
@@ -243,7 +246,9 @@ func _add_tree(file: String, cell: Vector2i, trunk: Vector2) -> void:
 	s.offset = Vector2(0, -tex.get_height() / 2.0 + 1)
 	s.position = base
 	s.set_meta("tree", true)
+	s.set_meta("minimap", "tree")
 	ysort.add_child(s)
+	shadows.add_child(ShadowUtil.make(base + Vector2(0, -2), shadow))
 	ZoneUtil.add_blocker(self, base + Vector2(0, -trunk.y / 2.0), trunk)
 
 
@@ -255,6 +260,7 @@ func _standing_prop(cell: Vector2i, file: String, blocker: Vector2) -> void:
 	s.offset = Vector2(0, -tex.get_height() / 2.0)
 	s.position = base
 	ysort.add_child(s)
+	shadows.add_child(ShadowUtil.make(base + Vector2(0, -1), Vector2(tex.get_width() + 6, 10)))
 	if blocker != Vector2.ZERO:
 		ZoneUtil.add_blocker(self, base + Vector2(0, -blocker.y / 2.0), blocker)
 
