@@ -106,6 +106,9 @@ func is_raining() -> bool:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("fullscreen"):   # F11
+		var full := DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if full else DisplayServer.WINDOW_MODE_FULLSCREEN)
 	if event.is_action_pressed("debug_weather"):   # F7: toggle rain for testing
 		set_weather("cerah" if is_raining() else "hujan")
 

@@ -24,6 +24,7 @@ A farming RPG made with **Godot 4**.
 | E | Use the tool on the highlighted tile · harvest ripe padi · sleep (face your house) |
 | I or Tab | Open / close the inventory (game pauses) · Esc also closes |
 | M | Show / hide the minimap (peta) |
+| F11 | Toggle fullscreen |
 | F7 | Debug: toggle rain on/off |
 
 You start at **home in the kampung** (the house top-left of the yard). Plant padi in the
@@ -80,7 +81,7 @@ tools/       asset conversion scripts (Python + Pillow)
 
 ## Settings already configured
 
-- 640×360 base resolution (32 px tiles), integer scaling (pixel-art friendly)
+- 640×360 base resolution, integer scaling; window opens at **1920×1080** (exactly 3×, crisp pixels)
 - Nearest-neighbour texture filter, pixel snapping
 - Compatibility renderer (runs on older laptops)
 - Input actions: `move_up/down/left/right` (WASD), `interact` (E)
