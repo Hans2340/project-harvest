@@ -21,6 +21,9 @@
 - **Dark but hopeful.** The cruelty is real, but the story is about the village
   rising back up. Cozy farm moments give relief between the dark parts.
 
+### Team roles
+- **leoxent**: sprites / character art.
+
 ### Multiplayer
 - **Solo, with an optional co-op mode.**
 - Tech note: build with co-op in mind from the start (Godot multiplayer), even
@@ -188,7 +191,66 @@ Notes:
 
 ## 💡 Suggestions (pending approval)
 
-_(none right now, ask for more!)_
+### S18. World structure
+| Option | How it works | Notes |
+|---|---|---|
+| **A. Connected zones** *(recommended)* | The world is split into zones (farm, kampung, forest, river…). Walking off an edge loads the next zone, as in Stardew Valley. | Easiest to build and split between friends; each zone is its own Godot scene. Works well with co-op. |
+| B. One seamless open map | One big continuous map, no loading between areas. | Feels great, but much harder (streaming chunks, co-op syncing). |
+| C. Hub + missions | Farm/kampung hub; travel to separate mission maps. | Simple, but feels less like a living world. |
+
+### S19. The region: a fictional river valley
+The legends come from different real places (Tasik Chini in Pahang, Gunung
+Ledang in Johor/Melaka, Bujang Senang in Sarawak), so the game is set in **one
+invented negeri** that brings them together around a single river system:
+
+```
+            [Gunung Ledang]  (late game, mountain)
+                  |
+          [Highland forest / Orang Bunian]
+                  |
+ [Tasik Chini] ---+--- [Upper river villages]
+                  |
+   [YOUR FARM] - [KAMPUNG] - [Sawah fields]
+                  |
+           [Mangrove & river]  <- Bujang Senang
+                  |
+     [Kuala: river mouth port]  <- Ordo Sigillum fort & ships
+```
+
+- The **river is the backbone**: the main travel route (by perahu) and the story path.
+- The **Ordo Sigillum hold the river mouth** and push upriver as the game goes on.
+- Placeholder name for the region, e.g. **Negeri Sungai Seri** (to be decided).
+
+### S20. Starting zones for the first playable version
+Keep it small at first:
+1. **Player farm**: overgrown land to clear, a small rumah kampung, padi plots, a well.
+2. **Kampung**: about 6–8 houses, a surau, a market area, the old pawang's house, a jetty.
+3. **Forest edge**: foraging, the first spirits, the first Ordo patrol.
+
+Later zones: sawah, river and mangrove, Tasik Chini, highland forest (Bunian),
+Ordo fort at the river mouth, Gunung Ledang.
+
+### S21. Zone size (to keep the art workload sane)
+- One screen = 640×360 = **20×11 tiles** (32 px tiles).
+- Suggested sizes: farm **60×40 tiles** (about 3×4 screens), kampung **80×50**,
+  forest zones **60×60**.
+- Build with Godot **TileMapLayer** layers: ground, paths/water, objects, overhead
+  (tree tops and roofs drawn above the player).
+
+### S22. Map features that support the design
+- **The Ordo spreads**: zones they control change look (banners, burnt fields,
+  checkpoints, patrols). Freeing a zone brings colour back.
+- **Monsoon changes the map**: in Musim Tengkujuh low areas flood, some paths
+  close, and river paths open for the perahu.
+- **Hidden Bunian layer**: a few forest zones have a hidden version, seen with
+  Mata Batin, Langkah Bunian or at certain times (dusk).
+- **Night changes everything**: more spirits, Ordo raids, lit lanterns at the kampung.
+- **Shrines (keramat)**: in each zone, for blessing upgrades and fast travel.
+
+### S23. Co-op on the map
+- Co-op players can be in **different zones** at the same time (like Stardew),
+  or must **stay together** (simpler to build). Suggest: start with *stay in the
+  same zone*, allow splitting later.
 
 ## Open questions
 - Final game name?
