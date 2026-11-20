@@ -21,6 +21,8 @@ const RAIN_FACTOR := 0.2
 const LAMP_RADIUS := 260.0
 const LAMP_HEIGHT := 90.0
 const LAMP_ALPHA := 0.8
+## The foot shadow stays at least this strong (a little less at night), so things never float.
+const FOOT_MIN := 0.6
 ## Silhouette shadows keep at least this much depth down (or up) the screen, so a shadow thrown
 ## straight east or west still reads as a flattened shape, not a line.
 const SILHOUETTE_MIN_Y := 0.3
@@ -30,7 +32,7 @@ const ASAR_WINDOW := 60
 ## The last day the Asar message was shown, shared across zones.
 static var asar_day := -1
 
-## Each entry: [source Sprite2D, pivot Node2D, shadow Sprite2D]
+## Each entry: [source Sprite2D, pivot Node2D, shadow Sprite2D, foot shadow Polygon2D or null]
 var _casters: Array = []
 ## Each entry: [footprint corners on the ground, height, roof overhang, Polygon2D]
 var _boxes: Array = []
@@ -48,14 +50,23 @@ func set_lamps(points: Array) -> void:
 		_lamps.append(p)
 
 
-## Gives `src` a silhouette shadow, hinged on its lowest drawn pixel (its feet).
-func add_caster(src: Sprite2D) -> void:
+## Gives `src` a silhouette shadow, hinged on its lowest drawn pixel (its feet). `foot` (world px)
+## adds a fixed oval shadow under it as well: it grounds things whose lowest pixels are not where
+## they stand (a tree's spreading roots), and it is drawn in the same group as the cast shadow, so
+## the two merge into one shape without a darker overlap.
+func add_caster(src: Sprite2D, foot := Vector2.ZERO) -> void:
 	var pivot := Node2D.new()
 	var sh := Sprite2D.new()
 	sh.modulate = Color(0, 0, 0, 1)
 	pivot.add_child(sh)
 	add_child(pivot)
-	_casters.append([src, pivot, sh])
+	var oval: Polygon2D = null
+	if foot != Vector2.ZERO:
+		oval = Polygon2D.new()
+		oval.color = Color(0, 0, 0, 1)
+		oval.polygon = foot_oval(foot)
+		add_child(oval)
+	_casters.append([src, pivot, sh, oval])
 	_sync(src, sh)
 
 
@@ -96,9 +107,15 @@ func _process(_delta: float) -> void:
 				str_ = lamp[1]
 		var foot := _sync(src, c[2]) * src.scale
 		var pivot: Node2D = c[1]
-		pivot.transform = ground_transform(vec, (src.global_position + foot).round())
+		var ground := (src.global_position + foot).round()
+		pivot.transform = ground_transform(vec, ground)
 		pivot.visible = str_ > 0.01 and src.is_visible_in_tree()
 		(c[2] as Sprite2D).modulate.a = str_
+		var oval: Polygon2D = c[3]
+		if oval != null:
+			oval.position = ground
+			oval.color.a = maxf(str_, FOOT_MIN * (1.0 - 0.4 * night))
+			oval.visible = src.is_visible_in_tree()
 	for b in _boxes:
 		var fp: PackedVector2Array = b[0]
 		var vec := sun_vec
@@ -134,6 +151,17 @@ static func _centre(points: PackedVector2Array) -> Vector2:
 	for p in points:
 		c += p
 	return c / maxf(points.size(), 1)
+
+## A hard-edged oval `size` wide and tall, its bottom edge a little below the ground point so it
+## sits under the feet rather than in front of them.
+static func foot_oval(size: Vector2) -> PackedVector2Array:
+	var pts := PackedVector2Array()
+	var centre := Vector2(0, -size.y * 0.3)
+	for i in 20:
+		var a := TAU * i / 20.0
+		pts.append((centre + Vector2(cos(a) * size.x / 2.0, sin(a) * size.y / 2.0)).round())
+	return pts
+
 
 ## Lays a front-view sprite on the ground: a pixel `z` above its base (local y = -z) lands z * vec
 ## away, while its width stays left-to-right. The sprite is drawn from the front, so turning its

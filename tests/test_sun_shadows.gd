@@ -69,7 +69,11 @@ func _initialize() -> void:
 	_check(pivot.visible and pivot.transform.y.x < 0.0, "night: player shadow falls away from the pelita (east of it -> points east)")
 	z.player.global_position = lamp + Vector2(0, 900)
 	await process_frame
-	_check(not pivot.visible, "night, far from lamps: no shadow")
+	_check(not pivot.visible, "night, far from lamps: no cast shadow")
+	await process_frame   # the player was teleported off the map; let physics settle it
+	await process_frame
+	var foot_oval: Polygon2D = ss._casters[ss.caster_count() - 1][3]
+	_check(foot_oval != null and foot_oval.visible and foot_oval.color.a > 0.3 and foot_oval.position == z.player.sprite.global_position.round(), "night: the player keeps a foot shadow under the feet (%s a=%.2f at %s vs %s)" % [foot_oval != null, foot_oval.color.a if foot_oval else 0.0, foot_oval.position if foot_oval else Vector2.ZERO, z.player.sprite.global_position])
 
 	# Asar notice once per day.
 	SS.asar_day = -1

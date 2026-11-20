@@ -277,7 +277,7 @@ func _add_tree(file: String, cell: Vector2i, trunk: Vector2, shadow: Vector2) ->
 	s.set_meta("minimap", "tree")
 	s.set_meta("sway", true)
 	ysort.add_child(s)
-	sun_shadows.add_caster(s)
+	sun_shadows.add_caster(s, shadow)
 	ZoneUtil.add_blocker(self, base + Vector2(0, -trunk.y / 2.0), trunk)
 	return s
 
@@ -293,7 +293,7 @@ func _standing_prop(cell: Vector2i, file: String, blocker: Vector2) -> void:
 		s.set_meta("sway", true)
 	ysort.add_child(s)
 	if not file.contains("tuft"):
-		sun_shadows.add_caster(s)
+		sun_shadows.add_caster(s, Vector2(tex.get_width() + 6, 10))
 	if blocker != Vector2.ZERO:
 		ZoneUtil.add_blocker(self, base + Vector2(0, -blocker.y / 2.0), blocker)
 
@@ -323,7 +323,7 @@ func _build_ambience() -> void:
 		lamps.append(Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE - 100))
 		lamp_ground.append(Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE + 8))
 	sun_shadows.set_lamps(lamp_ground)
-	sun_shadows.add_caster(player.sprite)
+	sun_shadows.add_caster(player.sprite, Vector2(22, 8))
 	sun_shadows.asar_started.connect(func(): hud.show_message(SunShadows.asar_message()))
 	add_child(ambience)
 	move_child(ambience, decor.get_index() + 1)
