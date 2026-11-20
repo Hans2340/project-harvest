@@ -181,8 +181,6 @@ creature sprites must match it.
 Notes:
 - The reference sheet is a JPG concept and not pixel-perfect. Use it for size,
   proportions, style and colours; final sprites must be clean PNGs.
-- The earlier side-only 24×40 farmer test (`assets/sprites/concept/farmer_side_*.png`)
-  is superseded by this format. Use it for scale and colours only.
 - Minimum animation set per character (to confirm later): idle, walk, attack,
   hurt, death, plus farming actions for the player (hoe, water, harvest).
 

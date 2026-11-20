@@ -9,4 +9,3 @@ are inspiration only: never trace, copy or ship them in the game.**
 | `concept/emblems-ordo-sigillum-ranks.jpg` | **Approved** concept for the Ordo Sigillum emblem and its 3 ranks (Acolyte, Warden, Grandmaster). | Our own concept art. |
 | `concept/emblems-player-factions.jpg` | **Approved** concept for the Resistance, Naga Tasik Chini and Orang Bunian emblems. | Our own concept art; see polish notes in `docs/game-design.md`. |
 | `concept/official-sprite-format-ordo-sigillum.jpg` | ⭐ **Official sprite format reference.** Ordo Sigillum soldiers, Binders and bound spirits. Defines size, view, directions and style for all sprites. | Our own concept art (JPG, not pixel-perfect). Rules: `docs/game-design.md` → Official sprite format. |
-| `concept/farmer-*.png` | Early farmer art tests (large version and side-only 24×40). | Superseded by the official format; scale and colour reference only. |
