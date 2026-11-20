@@ -31,7 +31,7 @@ func _initialize() -> void:
 			houses += 1
 	_check(houses == 4, "4 houses placed")
 	var game_time = root.get_node("GameState").GAME_MINUTES_PER_SECOND
-	_check(is_equal_approx(game_time * 3600.0, 24.0 * 60.0), "1 real hour = 24 game hours")
+	_check(is_equal_approx(game_time * 25.0 * 60.0, 24.0 * 60.0), "25 real minutes = 24 game hours")
 	print("RESULT: ", "PASS" if ok else "FAIL")
 	quit(0 if ok else 1)
 

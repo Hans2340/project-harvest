@@ -30,7 +30,7 @@
     island with a **defiled keramat**. Future home of Bujang Senang.
 - The early placeholder farm zone was removed; farming now happens in the kampung sawah.
 - Planted padi persists across zones; passing out anywhere wakes you at home in the kampung.
-- Time: 1 real hour = 24 in-game hours. Shift = run.
+- Time: 25 real minutes = 24 in-game hours (a 06:00-02:00 day is about 21 real minutes). Shift = run.
 - **Calendar:** 3 monsoon seasons x 28 days (Kemarau, Musim Buah, Tengkujuh), Malay weekdays
   (Isnin...Ahad). Currency: **pitis** (tin coins of the Melaka era). Clock UI top-right.
 

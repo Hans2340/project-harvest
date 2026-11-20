@@ -15,7 +15,7 @@ const DAYS_PER_SEASON := 28
 const WEEKDAYS := ["Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu", "Ahad"]
 const WEEKDAYS_SHORT := ["Isn", "Sel", "Rab", "Kha", "Jum", "Sab", "Aha"]
 
-const GAME_MINUTES_PER_SECOND := 0.4  ## 1 real hour = 24 in-game hours (06:00-02:00 day = 50 real minutes)
+const GAME_MINUTES_PER_SECOND := 0.96  ## 25 real minutes = 24 in-game hours (06:00-02:00 day ~ 21 real minutes)
 
 var day: int = 1
 var minutes: float = DAY_START_MINUTES

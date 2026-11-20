@@ -33,8 +33,8 @@ The **clock** (top-right) shows a sky dial with the sun/moon and a sweeping hand
 (Malay weekday + day of the season), season and weather icons, the time, and your money (pitis).
 Seasons are the monsoons: Kemarau → Musim Buah → Tengkujuh, 28 days each.
 
-Time: **1 real hour = 24 in-game hours**. A day runs 06:00 to 02:00 (50 real minutes); at
-02:00 you pass out and wake at home.
+Time: **25 real minutes = 24 in-game hours**. A day runs 06:00 to 02:00 (about 21 real minutes);
+at 02:00 you pass out and wake at home.
 
 The player sprite and padi/item icons are **placeholders** until the real sprites are ready.
 
