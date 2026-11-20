@@ -239,7 +239,7 @@ func _build_props() -> void:
 	for t in PALMS:
 		_add_tree("kelapa_%02d.png" % t[0], t[1], Vector2(16, 10), Vector2.ZERO).set_meta("tree_kind", "palm")
 	for t in FRUIT_TREES:
-		_add_tree("pokok_buah_%02d.png" % t[0], t[1], Vector2(28, 14), Vector2(124, 60)).set_meta("tree_kind", "fruit")
+		_add_tree("pokok_buah_%02d.png" % t[0], t[1], Vector2(28, 14), Vector2(124, 60), true).set_meta("tree_kind", "fruit")
 	for c in TUFTS:
 		_standing_prop(c, "grass_tuft_small.png", Vector2.ZERO)
 	for c in ROCKS:
@@ -265,7 +265,7 @@ func _house_footprint(s: Sprite2D, feet: Array) -> PackedVector2Array:
 
 
 ## A tree standing on `cell`: sprite base at the cell's bottom, trunk blocks movement.
-func _add_tree(file: String, cell: Vector2i, trunk: Vector2, shadow: Vector2) -> Sprite2D:
+func _add_tree(file: String, cell: Vector2i, trunk: Vector2, shadow: Vector2, oval_only := false) -> Sprite2D:
 	var tex: Texture2D = load(TREE_DIR + file)
 	var base := Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE - 6)
 	var s := Sprite2D.new()
@@ -277,7 +277,7 @@ func _add_tree(file: String, cell: Vector2i, trunk: Vector2, shadow: Vector2) ->
 	s.set_meta("minimap", "tree")
 	s.set_meta("sway", true)
 	ysort.add_child(s)
-	sun_shadows.add_caster(s, shadow)
+	sun_shadows.add_caster(s, shadow, oval_only)
 	ZoneUtil.add_blocker(self, base + Vector2(0, -trunk.y / 2.0), trunk)
 	return s
 

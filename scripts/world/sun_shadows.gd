@@ -23,6 +23,9 @@ const LAMP_HEIGHT := 90.0
 const LAMP_ALPHA := 0.8
 ## The foot shadow stays at least this strong (a little less at night), so things never float.
 const FOOT_MIN := 0.6
+## How far an oval-only shadow slides per unit of shadow vector (world px): about 30 px at
+## 8:30, a few px at noon.
+const OVAL_SHIFT := 50.0
 ## Silhouette shadows keep at least this much depth down (or up) the screen, so a shadow thrown
 ## straight east or west still reads as a flattened shape, not a line.
 const SILHOUETTE_MIN_Y := 0.3
@@ -32,7 +35,8 @@ const ASAR_WINDOW := 60
 ## The last day the Asar message was shown, shared across zones.
 static var asar_day := -1
 
-## Each entry: [source Sprite2D, pivot Node2D, shadow Sprite2D, foot shadow Polygon2D or null]
+## Each entry: [source Sprite2D, pivot Node2D, shadow Sprite2D, foot shadow Polygon2D or null,
+## oval only]
 var _casters: Array = []
 ## Each entry: [footprint corners on the ground, height, roof overhang, Polygon2D]
 var _boxes: Array = []
@@ -51,10 +55,10 @@ func set_lamps(points: Array) -> void:
 
 
 ## Gives `src` a silhouette shadow, hinged on its lowest drawn pixel (its feet). `foot` (world px)
-## adds a fixed oval shadow under it as well: it grounds things whose lowest pixels are not where
-## they stand (a tree's spreading roots), and it is drawn in the same group as the cast shadow, so
-## the two merge into one shape without a darker overlap.
-func add_caster(src: Sprite2D, foot := Vector2.ZERO) -> void:
+## adds an oval shadow under it as well, drawn in the same group so the two merge into one shape.
+## With `oval_only` there is no silhouette: just the oval, sliding a little away from the sun.
+## That suits sprites too complex to lay flat, like the fruit trees' wide canopy and roots.
+func add_caster(src: Sprite2D, foot := Vector2.ZERO, oval_only := false) -> void:
 	var pivot := Node2D.new()
 	var sh := Sprite2D.new()
 	sh.modulate = Color(0, 0, 0, 1)
@@ -66,7 +70,7 @@ func add_caster(src: Sprite2D, foot := Vector2.ZERO) -> void:
 		oval.color = Color(0, 0, 0, 1)
 		oval.polygon = foot_oval(foot)
 		add_child(oval)
-	_casters.append([src, pivot, sh, oval])
+	_casters.append([src, pivot, sh, oval, oval_only and oval != null])
 	_sync(src, sh)
 
 
@@ -109,11 +113,11 @@ func _process(_delta: float) -> void:
 		var pivot: Node2D = c[1]
 		var ground := (src.global_position + foot).round()
 		pivot.transform = ground_transform(vec, ground)
-		pivot.visible = str_ > 0.01 and src.is_visible_in_tree()
+		pivot.visible = str_ > 0.01 and src.is_visible_in_tree() and not c[4]
 		(c[2] as Sprite2D).modulate.a = str_
 		var oval: Polygon2D = c[3]
 		if oval != null:
-			oval.position = ground
+			oval.position = (ground + vec * OVAL_SHIFT * str_).round() if c[4] else ground
 			oval.color.a = maxf(str_, FOOT_MIN * (1.0 - 0.4 * night))
 			oval.visible = src.is_visible_in_tree()
 	for b in _boxes:

@@ -61,6 +61,12 @@ func _initialize() -> void:
 	max_x -= 100.0
 	_check(max_x > 40.0 and max_x < 120.0, "8:30: house shadow reaches %.0f px right of the house (short, not across the screen)" % max_x)
 
+	for c in ss._casters:
+		if c[4]:
+			var ground: Vector2 = (c[0].global_position + SS.foot_point(c[0]) * c[0].scale).round()
+			_check(c[3].position.x > ground.x + 10.0, "9:00: fruit tree oval slides right, away from the morning sun (%+.0f px)" % (c[3].position.x - ground.x))
+			break
+
 	# Night near a pelita: the shadow points away from the lamp.
 	gs.minutes = 21 * 60
 	var lamp: Vector2 = ss._lamps[0]
@@ -79,6 +85,11 @@ func _initialize() -> void:
 			fruit_ovals += 1
 		else:
 			other_ovals += 1
+	var fruit_ok := true
+	for c in ss._casters:
+		if c[3] != null:
+			fruit_ok = fruit_ok and c[4] and not c[1].visible
+	_check(fruit_ok, "fruit trees: oval only, no stretched silhouette")
 	_check(fruit_ovals == 12 and other_ovals == 0, "foot shadows only under the fruit trees (%d fruit, %d other)" % [fruit_ovals, other_ovals])
 
 	# Asar notice once per day.
