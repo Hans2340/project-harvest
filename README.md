@@ -19,31 +19,32 @@ A farming RPG made with **Godot 4**.
 
 | Key | Action |
 |---|---|
-| WASD | Move |
+| WASD | Walk · hold **Shift** to run |
 | 1 / 2 / 3 | Tool: Cangkul (hoe) / Benih padi (seeds) / Air (water) |
-| E | Use tool on the highlighted tile · harvest ripe padi · sleep (face the bed) |
+| E | Use the tool on the highlighted tile · harvest ripe padi · sleep (face your house) |
 | I or Tab | Open / close the inventory (game pauses) · Esc also closes |
 
-Walk **south** off the farm to reach the **mangrove swamp**, or **east** along the path to reach the **kampung**.
+You start at **home in the kampung** (the house top-left of the yard). Plant padi in the
+**sawah** east of the houses (2 + E). The sawah is flooded, so padi grows one stage every night
+without watering and is ripe after 3 nights. Face your house and press E to sleep.
+Walk **west** along the path to reach **Paya Bakau**, the mangrove swamp.
 
-Loop: hoe grass → plant → water → sleep. Watered padi grows one stage per
-night and is ripe after 3 watered nights. 1 real second = 10 in-game minutes;
-at 02:00 you pass out and the next day starts.
+Time: **1 real hour = 24 in-game hours**. A day runs 06:00 to 02:00 (50 real minutes); at
+02:00 you pass out and wake at home.
 
-All art is **placeholder** (`assets/sprites/placeholder/`, `assets/tilesets/placeholder_tiles.png`)
-until the real sprites are ready.
+The player sprite and padi/item icons are **placeholders** until the real sprites are ready.
 
 ## Tests
 
 ```bash
-godot --headless --path . -s tests/test_farm_cycle.gd
+godot --headless --path . -s tests/test_sawah_farming.gd
 godot --headless --path . -s tests/test_mangrove.gd
 godot --headless --path . -s tests/test_zone_travel.gd
 godot --headless --path . -s tests/test_inventory.gd
 godot --headless --path . -s tests/test_kampung.gd
 ```
 
-Each prints PASS/FAIL: the farming cycle, the mangrove zone build, travelling between zones, the inventory, and the kampung.
+Each prints PASS/FAIL: sawah farming, the swamp, travelling between zones, the inventory, and the kampung.
 
 ## Credits
 

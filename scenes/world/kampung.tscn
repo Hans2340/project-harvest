@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/kampung.gd" id="1_kampung"]
 [ext_resource type="TileSet" path="res://resources/tilesets/kampung_tileset.tres" id="2_tiles"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="3_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
 [ext_resource type="Script" path="res://scripts/world/zone_exit.gd" id="5_exit"]
+[ext_resource type="Script" path="res://scripts/ui/tile_highlight.gd" id="6_hl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
 size = Vector2(12, 96)
@@ -17,23 +18,32 @@ tile_set = ExtResource("2_tiles")
 
 [node name="Decor" type="Node2D" parent="."]
 
+[node name="Highlight" type="Node2D" parent="."]
+script = ExtResource("6_hl")
+
 [node name="YSort" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Crops" type="Node2D" parent="YSort"]
 y_sort_enabled = true
 
 [node name="Player" parent="YSort" instance=ExtResource("3_player")]
 
 [node name="Spawns" type="Node2D" parent="."]
 
-[node name="from_farm" type="Marker2D" parent="Spawns"]
-position = Vector2(72, 600)
+[node name="home" type="Marker2D" parent="Spawns"]
+position = Vector2(552, 516)
 
-[node name="ExitToFarm" type="Area2D" parent="."]
+[node name="from_mangrove" type="Marker2D" parent="Spawns"]
+position = Vector2(120, 600)
+
+[node name="ExitToMangrove" type="Area2D" parent="."]
 position = Vector2(6, 576)
 script = ExtResource("5_exit")
-target_scene = "res://scenes/world/farm.tscn"
+target_scene = "res://scenes/world/mangrove.tscn"
 target_spawn = "from_kampung"
 
-[node name="Shape" type="CollisionShape2D" parent="ExitToFarm"]
+[node name="Shape" type="CollisionShape2D" parent="ExitToMangrove"]
 shape = SubResource("RectangleShape2D_exit")
 
 [node name="Night" type="CanvasModulate" parent="."]

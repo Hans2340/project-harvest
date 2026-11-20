@@ -22,14 +22,16 @@ func _initialize() -> void:
 				filled += 1
 	_check(bad == 0, "every cell mixes only supported terrain pairs")
 	_check(filled == w * h, "every cell has a tile (%d/%d)" % [filled, w * h])
-	_check(ground.get_cell_source_id(Vector2i(5, 23)) == 3, "deep river uses blocking water")
-	_check(ground.get_cell_source_id(Vector2i(zone.JETTY_X, 22)) == 4, "jetty cells are walkable")
-	_check(ground.get_cell_source_id(Vector2i(28, 6)) == 1, "sawah tiles present")
+	_check(ground.get_cell_source_id(Vector2i(5, 31)) == 3, "deep river uses blocking water")
+	_check(ground.get_cell_source_id(Vector2i(zone.JETTY_X, 30)) == 4, "jetty cells are walkable")
+	_check(ground.get_cell_source_id(Vector2i(38, 7)) == 1, "sawah tiles present")
 	var houses := 0
 	for c in zone.get_node("YSort").get_children():
 		if c is Sprite2D and c.texture and c.texture.resource_path.contains("rumah_kampung"):
 			houses += 1
 	_check(houses == 4, "4 houses placed")
+	var game_time = root.get_node("GameState").GAME_MINUTES_PER_SECOND
+	_check(is_equal_approx(game_time * 3600.0, 24.0 * 60.0), "1 real hour = 24 game hours")
 	print("RESULT: ", "PASS" if ok else "FAIL")
 	quit(0 if ok else 1)
 

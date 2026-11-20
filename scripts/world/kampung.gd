@@ -1,69 +1,87 @@
 class_name Kampung
 extends Node2D
-## The main kampung, east of the farm. 48 px tiles (PixelLab tilesets in the Dark Swamp style).
+## The main kampung: home, neighbours' houses, sawah and the river. The game starts here.
+## 48 px tiles (PixelLab tilesets in the Dark Swamp style). West path -> Paya Bakau (swamp).
 ##
 ## Terrain is painted on tile CORNERS (VERTICES below, one char per corner), which is how the
-## PixelLab Wang tilesets join up. Each cell looks at its 4 corners and picks the tile whose
-## corners match. A cell may only mix these pairs: grass/dirt, grass/sawah, grass/sand,
-## water/sand (tests check this).
+## PixelLab Wang tilesets join up. Each cell picks the tile whose 4 corners match. A cell may
+## only mix these pairs: grass/dirt, grass/sawah, grass/sand, water/sand (tests check this).
 ##
 ## Corner legend:  g grass   d dirt   s sawah (padi field)   b sand (riverbank)   w river water
+##
+## Farming: plant padi (tool 2) in the sawah; it is flooded, so it grows every night without
+## watering. Press E on ripe padi to harvest. Face your house (the first one) and press E to sleep.
 
 const TILE := 48
-const SAND_WATER_WALKABLE := 4  ## same art as source 3 but no collision (under the jetty)
-const JETTY_X := 15
-const JETTY_ROWS := Vector2i(18, 22)  ## first and last cell row of the jetty
+const HOUSE_SCALE := 2.0                ## PixelLab houses are 144 px; 2x matches the pack's pixel size
+const SAND_WATER_WALKABLE := 4          ## same art as source 3 but no collision (under the jetty)
+const JETTY_X := 18
+const JETTY_ROWS := Vector2i(25, 30)    ## first and last cell row of the jetty
 const KAMPUNG_TINT := Color(0.96, 0.97, 0.93)
 const HOUSE_DIR := "res://assets/sprites/kampung/raw/"
 const PROPS_DIR := "res://assets/tilesets/dark_swamp/generated/props/"
 
 ## terrain pair -> [atlas source, "upper" terrain char] (upper = the terrain whose corners set the mask bits)
-const SETS := {
-	"dg": [0, "d"], "gs": [1, "s"], "bg": [2, "b"], "bw": [3, "b"],
-}
+const SETS := {"dg": [0, "d"], "gs": [1, "s"], "bg": [2, "b"], "bw": [3, "b"]}
 ## a cell that is all one terrain -> [source, mask]
 const SOLID := {"g": [0, 0], "d": [0, 15], "s": [1, 15], "b": [2, 15], "w": [3, 0]}
 
-## [house variant, bottom-centre cell]
+## [house variant, bottom-centre cell]. The first one is the player's home.
 const HOUSES := [
-	[0, Vector2i(11, 9)], [1, Vector2i(19, 9)], [3, Vector2i(19, 13)], [2, Vector2i(5, 8)],
+	[0, Vector2i(11, 9)], [1, Vector2i(24, 9)], [3, Vector2i(11, 18)], [2, Vector2i(24, 18)],
 ]
-const TUFTS := [Vector2i(3, 3), Vector2i(7, 15), Vector2i(23, 2), Vector2i(24, 12), Vector2i(31, 16), Vector2i(2, 16), Vector2i(12, 16)]
-const ROCKS := [Vector2i(9, 17), Vector2i(26, 17), Vector2i(33, 1)]
-const REEDS := [Vector2i(4, 21), Vector2i(10, 22), Vector2i(21, 20), Vector2i(29, 22), Vector2i(33, 20)]
+## Cells you can face to sleep (front of the home house).
+const HOME_DOOR := Rect2i(9, 8, 5, 3)
+
+const TUFTS := [Vector2i(3, 3), Vector2i(2, 17), Vector2i(32, 2), Vector2i(32, 13), Vector2i(45, 24),
+	Vector2i(8, 23), Vector2i(26, 23), Vector2i(40, 23)]
+const ROCKS := [Vector2i(10, 25), Vector2i(29, 25), Vector2i(44, 1), Vector2i(1, 22)]
+const REEDS := [Vector2i(4, 29), Vector2i(11, 30), Vector2i(25, 29), Vector2i(33, 30), Vector2i(42, 29)]
 
 const VERTICES := [
-	"ggggggggggggggggggggggggggggggggggg",
-	"ggggggggggggggggggggggggggggggggggg",
-	"gggggggggggggggddgggggggggggggggggg",
-	"gggggggggggggggddggggggggssssssssgg",
-	"gggggggggggggggddggggggggssssssssgg",
-	"gggggggggddddddddddddddggssssssssgg",
-	"gggggggggddddddddddddddggssssssssgg",
-	"gggggggggddddddddddddddggssssssssgg",
-	"gggggggggddddddddddddddggssssssssgg",
-	"gggggggggddddddddddddddggssssssssgg",
-	"gggggggggddddddddddddddgggggggggggg",
-	"dddddddddddddddddddddddgggssssssggg",
-	"dddddddddddddddddddddddgggssssssggg",
-	"dddddddddddddddddddddddgggssssssggg",
-	"gggggggggddddddddddddddgggssssssggg",
-	"gggggggggggggggddgggggggggssssssggg",
-	"ggggggggggggggggggggggggggggggggggg",
-	"gggggggggggggbbbbbgggggggggggggggbb",
-	"bbbgggggbbbbbbbbbbbbbbbgggggbbbbbbb",
-	"bbbbbbbbbbbbbwwwwwbbbbbbbbbbbbbbbww",
-	"wwwbbbbbwwwwwwwwwwwwwwwbbbbbwwwwwww",
-	"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-	"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-	"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-	"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+	"ggggggggggggggggggggggggggggggggggggggggggggggg",
+	"ggggggggggggggggggggggggggggggggggggggggggggggg",
+	"ggggggggggggggggggggggggggggggggggggggggggggggg",
+	"ggggggdddddddddddddddddddddddddgggggggggggggggg",
+	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
+	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
+	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
+	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
+	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
+	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
+	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
+	"dddddddddddddddddddddddddddddddgggsssssssssssgg",
+	"dddddddddddddddddddddddddddddddgggggggggggggggg",
+	"dddddddddddddddddddddddddddddddgggggggggggggggg",
+	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
+	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
+	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
+	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
+	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
+	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
+	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
+	"gggggggggggggggggdddggggggggggggggsssssssssssgg",
+	"gggggggggggggggggdddggggggggggggggggggggggggggg",
+	"gggggggggggggggggdddggggggggggggggggggggggggggg",
+	"ggggggggggggggggggggggggggggggggggggggggggggggg",
+	"gggggggggggggbbbbbbbgggggggggggggggbbbbbbgggggg",
+	"bbbggggggbbbbbbbbbbbbbbbgggggggbbbbbbbbbbbbbbgg",
+	"bbbbbbbbbbbbbwwwwwwwbbbbbbbbbbbbbbbwwwwwwbbbbbb",
+	"wwwbbbbbbwwwwwwwwwwwwwwwbbbbbbbwwwwwwwwwwwwwwbb",
+	"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+	"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+	"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+	"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
 ]
+
+var _crop_sprites := {}   ## Vector2i -> Sprite2D
 
 @onready var ground: TileMapLayer = $Ground
 @onready var decor: Node2D = $Decor
 @onready var ysort: Node2D = $YSort
+@onready var crops_root: Node2D = $YSort/Crops
 @onready var player: Player = $YSort/Player
+@onready var highlight: TileHighlight = $Highlight
 @onready var night: CanvasModulate = $Night
 @onready var hud: Hud = $HUD
 
@@ -72,12 +90,13 @@ func _ready() -> void:
 	_build_ground()
 	_build_jetty()
 	_build_props()
+	_sync_crops()
 	var w := _width() * TILE
 	var h := _height() * TILE
-	var exit: Area2D = $ExitToFarm
+	var exit: Area2D = $ExitToMangrove
 	ZoneUtil.build_bounds(self, w, h, Rect2(0, exit.position.y - TILE, 0, TILE * 2))
 	player.tile_size = TILE
-	Zones.place_player(self, player, $Spawns/from_farm.global_position)
+	Zones.place_player(self, player, $Spawns/home.global_position)
 	var cam: Camera2D = player.get_node("Camera")
 	cam.limit_left = 0
 	cam.limit_top = 0
@@ -87,9 +106,17 @@ func _ready() -> void:
 	player.use_requested.connect(_on_use_requested)
 	player.tool_changed.connect(hud.set_tool)
 	hud.set_tool(player.current_tool)
+	FarmState.plots_changed.connect(_sync_crops)
+	GameState.day_changed.connect(_on_day_changed)
 	GameState.time_changed.connect(_update_lighting)
 	_update_lighting(int(GameState.minutes))
-	hud.show_message("Kampung")
+	if GameState.day == 1 and FarmState.plots.is_empty():
+		hud.show_message("Kampung. Plant padi in the sawah (2 + E). Shift = run.")
+
+
+func _process(_delta: float) -> void:
+	var c := player.target_cell()
+	highlight.position = Vector2(c * TILE) + Vector2(TILE, TILE) / 2.0
 
 
 func _width() -> int:
@@ -102,6 +129,20 @@ func _height() -> int:
 
 func _corner(x: int, y: int) -> String:
 	return (VERTICES[y] as String)[x]
+
+
+func _in_map(cell: Vector2i) -> bool:
+	return cell.x >= 0 and cell.y >= 0 and cell.x < _width() and cell.y < _height()
+
+
+## True if all 4 corners of the cell are sawah (a full paddy tile).
+func is_sawah(cell: Vector2i) -> bool:
+	if not _in_map(cell):
+		return false
+	for d in [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]:
+		if _corner(cell.x + d.x, cell.y + d.y) != "s":
+			return false
+	return true
 
 
 ## Returns [source, atlas coords] for a cell, or [] if its corners mix an unsupported pair.
@@ -128,6 +169,8 @@ func tile_for(cell: Vector2i) -> Array:
 	return [source, Vector2i(mask % 4, mask / 4)]
 
 
+# ---------------------------------------------------------------- building
+
 func _build_ground() -> void:
 	for y in _height():
 		for x in _width():
@@ -150,9 +193,8 @@ func _build_jetty() -> void:
 	strip.centered = false
 	strip.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	strip.region_enabled = true
-	var rows := JETTY_ROWS.y - JETTY_ROWS.x + 1
-	strip.region_rect = Rect2(0, 0, 62, rows * TILE)
-	strip.position = Vector2(JETTY_X * TILE + TILE / 2.0 - 31, JETTY_ROWS.x * TILE + 12)
+	strip.region_rect = Rect2(0, 0, 62, (JETTY_ROWS.y - JETTY_ROWS.x + 1) * TILE)
+	strip.position = Vector2(JETTY_X * TILE + TILE / 2.0 - 31, JETTY_ROWS.x * TILE + 24)
 	decor.add_child(strip)
 
 
@@ -163,10 +205,11 @@ func _build_props() -> void:
 		var base := Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE)
 		var s := Sprite2D.new()
 		s.texture = tex
-		s.offset = Vector2(0, -tex.get_height() / 2.0 + 6)
+		s.scale = Vector2(HOUSE_SCALE, HOUSE_SCALE)
+		s.offset = Vector2(0, -tex.get_height() / 2.0 + 4)
 		s.position = base
 		ysort.add_child(s)
-		ZoneUtil.add_blocker(self, base + Vector2(0, -22), Vector2(100, 34))
+		ZoneUtil.add_blocker(self, base + Vector2(0, -40), Vector2(200, 72))
 	for c in TUFTS:
 		_standing_prop(c, "grass_tuft_small.png", Vector2.ZERO)
 	for c in ROCKS:
@@ -190,16 +233,73 @@ func _standing_prop(cell: Vector2i, file: String, blocker: Vector2) -> void:
 		ZoneUtil.add_blocker(self, base + Vector2(0, -blocker.y / 2.0), blocker)
 
 
-func _on_use_requested(_tool: int, cell: Vector2i) -> void:
-	if cell.y >= 0 and cell.y < _height() and cell.x >= 0 and cell.x < _width():
-		var c := _corner(cell.x, cell.y) + _corner(cell.x + 1, cell.y + 1)
-		if c.contains("s"):
-			hud.show_message("Sawah. Farming here comes later.")
-			return
-		if c.contains("w"):
-			hud.show_message("The river runs slow and brown.")
-			return
-	hud.show_message("The kampung is quiet.")
+# ---------------------------------------------------------------- farming
+
+## Redraw padi sprites from FarmState.
+func _sync_crops() -> void:
+	for cell in _crop_sprites.keys():
+		if not FarmState.plots.has(cell) or FarmState.plots[cell].crop == "":
+			_crop_sprites[cell].queue_free()
+			_crop_sprites.erase(cell)
+	for cell in FarmState.plots:
+		var plot: Dictionary = FarmState.plots[cell]
+		var crop := FarmState.crop_data(plot.crop)
+		if crop == null:
+			continue
+		var sprite: Sprite2D = _crop_sprites.get(cell)
+		if sprite == null:
+			sprite = Sprite2D.new()
+			sprite.offset = Vector2(0, -16)
+			sprite.position = Vector2(cell.x * TILE + TILE / 2.0, cell.y * TILE + TILE - 6)
+			crops_root.add_child(sprite)
+			_crop_sprites[cell] = sprite
+		sprite.texture = crop.texture
+		sprite.hframes = crop.stage_count
+		sprite.frame = plot.stage
+
+
+func _on_use_requested(tool: int, cell: Vector2i) -> void:
+	if HOME_DOOR.has_point(cell):
+		hud.show_message("You sleep until morning...")
+		GameState.advance_day()
+		return
+	if FarmState.is_ripe(cell):
+		var crop := FarmState.crop_data(FarmState.plots[cell].crop)
+		FarmState.harvest(cell)
+		GameState.add_item(crop.harvest_item, crop.harvest_amount)
+		hud.show_message("Harvested %d %s!" % [crop.harvest_amount, crop.display_name])
+		return
+	if is_sawah(cell):
+		match tool:
+			Player.Tool.SEEDS:
+				_plant(cell, "padi")
+			_:
+				hud.show_message("The sawah is already flooded and ready. Use seeds (2).")
+		return
+	if _in_map(cell) and (_corner(cell.x, cell.y) + _corner(cell.x + 1, cell.y + 1)).contains("w"):
+		hud.show_message("The river runs slow and brown.")
+	elif tool == Player.Tool.SEEDS:
+		hud.show_message("Padi grows in the sawah, east of the houses.")
+
+
+func _plant(cell: Vector2i, crop_id: String) -> void:
+	if FarmState.plots.has(cell) and FarmState.plots[cell].crop != "":
+		return
+	var crop := FarmState.crop_data(crop_id)
+	if not GameState.take_item(crop.seed_item):
+		hud.show_message("No %s seeds left." % crop.display_name)
+		return
+	if not FarmState.plots.has(cell):
+		FarmState.till(cell, true)
+	FarmState.plant(cell, crop_id)
+
+
+# ---------------------------------------------------------------- day cycle
+
+func _on_day_changed(new_day: int) -> void:
+	player.global_position = $Spawns/home.global_position
+	player.get_node("Camera").reset_smoothing()
+	hud.show_message("Day %d begins." % new_day)
 
 
 func _update_lighting(minutes: int) -> void:

@@ -9,7 +9,8 @@ const CROPS := {
 	"padi": preload("res://resources/crops/padi.tres"),
 }
 
-## Vector2i -> { "crop": String ("" = empty), "stage": int, "growth": int, "watered": bool }
+## Vector2i -> { "crop": String ("" = empty), "stage": int, "growth": int, "watered": bool, "irrigated": bool }
+## Plot cells are kampung tile cells (48 px). Irrigated plots (sawah) grow every night without watering.
 var plots := {}
 
 
@@ -21,8 +22,8 @@ func crop_data(id: String) -> CropData:
 	return CROPS.get(id)
 
 
-func till(cell: Vector2i) -> void:
-	plots[cell] = {"crop": "", "stage": 0, "growth": 0, "watered": false}
+func till(cell: Vector2i, irrigated := false) -> void:
+	plots[cell] = {"crop": "", "stage": 0, "growth": 0, "watered": false, "irrigated": irrigated}
 	plots_changed.emit()
 
 
@@ -61,7 +62,7 @@ func _on_day_changed(_day: int) -> void:
 	for cell in plots:
 		var plot: Dictionary = plots[cell]
 		var crop := crop_data(plot.crop)
-		if crop != null and plot.watered and plot.stage < crop.stage_count - 1:
+		if crop != null and (plot.watered or plot.get("irrigated", false)) and plot.stage < crop.stage_count - 1:
 			plot.growth += 1
 			if plot.growth >= crop.days_per_stage:
 				plot.growth = 0

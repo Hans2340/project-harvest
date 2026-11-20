@@ -23,13 +23,14 @@
 
 ### World & zones *(prototype)*
 - **Connected zones** (walk off an edge into the next zone). Built so far:
-  - **Farm** (32 px tiles), the player's land. South path → mangrove, east path → kampung.
-  - **Kampung** (48 px tiles, PixelLab tilesets in the swamp style): dirt yard with 4 rumah
-    kampung, sawah fields, sandy riverbank with a jetty, river.
-  - **Paya Bakau, the mangrove swamp** (48 px tiles, Dark Swamp pack). River with boardwalks,
-    an island with a **defiled keramat** (red-flame altar marked with the Ordo's black seal). Future
-    home of Bujang Senang.
-- Farm plots persist across zones; passing out anywhere wakes you in bed on the farm.
+  - **Kampung**, the main place and the player's home (48 px tiles, PixelLab tilesets in the swamp
+    style): dirt yard with 4 rumah kampung (2x scale), sawah fields where padi is planted, sandy
+    riverbank with a jetty, river. West path → swamp.
+  - **Paya Bakau, the mangrove swamp** (48 px tiles, Dark Swamp pack): river with boardwalks and an
+    island with a **defiled keramat**. Future home of Bujang Senang.
+- The early placeholder farm zone was removed; farming now happens in the kampung sawah.
+- Planted padi persists across zones; passing out anywhere wakes you at home in the kampung.
+- Time: 1 real hour = 24 in-game hours. Shift = run.
 
 ### Team roles
 - **leoxent**: sprites / character art.

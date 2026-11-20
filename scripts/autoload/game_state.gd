@@ -8,7 +8,7 @@ signal items_changed
 
 const DAY_START_MINUTES := 6 * 60   ## 06:00
 const DAY_END_MINUTES := 26 * 60    ## 02:00 next day: pass out
-const GAME_MINUTES_PER_SECOND := 10.0  ## 1 real second = 10 in-game minutes (~33 min per day)
+const GAME_MINUTES_PER_SECOND := 0.4  ## 1 real hour = 24 in-game hours (06:00-02:00 day = 50 real minutes)
 
 var day: int = 1
 var minutes: float = DAY_START_MINUTES

@@ -6,7 +6,7 @@ var ok := true
 
 
 func _initialize() -> void:
-	change_scene_to_file("res://scenes/world/farm.tscn")
+	change_scene_to_file("res://scenes/world/kampung.tscn")
 	for i in 3:
 		await process_frame
 	var hud = current_scene.get_node("HUD")

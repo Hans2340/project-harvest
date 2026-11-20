@@ -1,6 +1,6 @@
 class_name Mangrove
 extends Node2D
-## Mangrove / swamp zone south of the farm (Bujang Senang's river, later).
+## Mangrove / swamp zone west of the kampung (Bujang Senang's river, later).
 ## Uses the Dark Swamp pack (by Hypnobius) at its native 48 px tile size.
 ##
 ## PROTOTYPE NOTE: built from the ASCII LAYOUT below; water and leafy grass
@@ -60,7 +60,7 @@ func _ready() -> void:
 	_build_props()
 	_build_bounds()
 	player.tile_size = TILE
-	Zones.place_player(self, player, $Spawns/from_farm.global_position)
+	Zones.place_player(self, player, $Spawns/from_kampung.global_position)
 	var cam: Camera2D = player.get_node("Camera")
 	cam.limit_left = 0
 	cam.limit_top = 0
@@ -243,7 +243,7 @@ func _add_altar(cell: Vector2i) -> void:
 func _build_bounds() -> void:
 	var w := _width() * TILE
 	var h := LAYOUT.size() * TILE
-	var gap: Area2D = $ExitToFarm
+	var gap: Area2D = $ExitToKampung
 	var gap_left := gap.position.x - TILE / 2.0
 	var gap_right := gap.position.x + TILE / 2.0
 	_add_blocker(Vector2(gap_left / 2.0, -8), Vector2(gap_left, 16))
