@@ -26,7 +26,7 @@ const ASAR_WINDOW := 60
 ## The last day the Asar message was shown, shared across zones.
 static var asar_day := -1
 
-## Each entry: [source Sprite2D, pivot Node2D, shadow Sprite2D]
+## Each entry: [source Sprite2D, pivot Node2D, shadow Sprite2D, ground depth]
 var _casters: Array = []
 var _lamps: Array[Vector2] = []
 
@@ -42,15 +42,18 @@ func set_lamps(points: Array) -> void:
 		_lamps.append(p)
 
 
-## Gives `src` a cast shadow. The shadow starts at src's position (its feet).
-func add_caster(src: Sprite2D) -> void:
+## Gives `src` a cast shadow, hinged on its lowest drawn pixel (its feet). `ground_depth`
+## (world px) is for things drawn with a floor plan, like a house in this 3/4 view: the bottom
+## of the picture is the front of the footprint, so the shadow hinges that far up (mid-footprint)
+## instead, and the part of the picture below the hinge casts nothing.
+func add_caster(src: Sprite2D, ground_depth := 0.0) -> void:
 	var pivot := Node2D.new()
 	var sh := Sprite2D.new()
 	sh.modulate = Color(0, 0, 0, 1)
 	pivot.add_child(sh)
 	add_child(pivot)
-	_casters.append([src, pivot, sh])
-	_sync(src, pivot, sh)
+	_casters.append([src, pivot, sh, ground_depth])
+	_sync(src, sh, ground_depth)
 
 
 func caster_count() -> int:
@@ -74,9 +77,9 @@ func _process(_delta: float) -> void:
 			if lamp[1] > str_:
 				vec = lamp[0]
 				str_ = lamp[1]
-		_sync(src, c[1], c[2])
+		var hinge := _sync(src, c[2], c[3]) * src.scale.y
 		var pivot: Node2D = c[1]
-		pivot.transform = ground_transform(vec, src.global_position.round())
+		pivot.transform = ground_transform(vec, (src.global_position + Vector2(0, hinge)).round())
 		pivot.visible = str_ > 0.01 and src.is_visible_in_tree()
 		(c[2] as Sprite2D).modulate.a = str_
 	_check_asar()
@@ -92,19 +95,74 @@ static func ground_transform(vec: Vector2, origin: Vector2) -> Transform2D:
 	return Transform2D(across, -vec, origin)
 
 
-## Copies what the source shows right now (frame, flip), so animated sprites keep their shadow.
-func _sync(src: Sprite2D, _pivot: Node2D, sh: Sprite2D) -> void:
+## Local y (unscaled) of the lowest opaque pixel row the sprite draws right now: where it meets
+## the ground. Cached per texture and frame.
+static func foot_y(src: Sprite2D) -> float:
+	var tex := src.texture
+	if tex == null:
+		return 0.0
+	var key := "%d:%d:%s:%s" % [tex.get_rid().get_id(), src.frame, src.region_enabled, src.region_rect]
+	if _foot_cache.has(key):
+		return _foot_cache[key]
+	var rect := src.get_rect()
+	var cell := _cell(src)
+	var inset := 0
+	var img: Image = _image_cache.get(tex.get_rid().get_id())
+	if img == null:
+		img = tex.get_image()
+		if img != null and img.is_compressed():
+			img.decompress()
+		_image_cache[tex.get_rid().get_id()] = img
+	if img != null:
+		var found := false
+		for row in range(cell.size.y - 1, -1, -1):
+			for x in cell.size.x:
+				if img.get_pixel(cell.position.x + x, cell.position.y + row).a > 0.5:
+					found = true
+					break
+			if found:
+				inset = cell.size.y - 1 - row
+				break
+	var foot := rect.end.y - inset
+	_foot_cache[key] = foot
+	return foot
+
+
+static var _foot_cache := {}
+static var _image_cache := {}
+
+
+## The part of the texture the sprite draws right now.
+static func _cell(src: Sprite2D) -> Rect2i:
+	if src.region_enabled:
+		return Rect2i(src.region_rect)
+	var w := src.texture.get_width() / src.hframes
+	var h := src.texture.get_height() / src.vframes
+	return Rect2i((src.frame % src.hframes) * w, (src.frame / src.hframes) * h, w, h)
+
+
+## Copies what the source shows right now (frame, flip), so animated sprites keep their shadow,
+## cut off below the hinge line. Returns the hinge's local y (unscaled) in the source.
+func _sync(src: Sprite2D, sh: Sprite2D, ground_depth: float) -> float:
 	sh.texture = src.texture
-	sh.centered = src.centered
-	sh.offset = src.offset
+	if src.texture == null:
+		return 0.0
+	var rect := src.get_rect()
+	var hinge := foot_y(src) - ground_depth / maxf(src.scale.y, 0.001)
+	var cell := _cell(src)
+	cell.size.y = clampi(ceili(hinge - rect.position.y), 0, cell.size.y)
+	sh.region_enabled = true
+	sh.region_rect = Rect2(cell)
+	sh.hframes = 1
+	sh.vframes = 1
+	sh.frame = 0
+	sh.centered = false
+	sh.offset = rect.position
 	sh.scale = src.scale
 	sh.flip_h = src.flip_h
 	sh.flip_v = src.flip_v
-	sh.hframes = src.hframes
-	sh.vframes = src.vframes
-	sh.frame = src.frame
-	sh.region_enabled = src.region_enabled
-	sh.region_rect = src.region_rect
+	sh.position = Vector2(0, -hinge * src.scale.y)
+	return hinge
 
 
 ## [vector, strength] of the shadow from the nearest pelita at `pos`.

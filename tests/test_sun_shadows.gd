@@ -33,7 +33,11 @@ func _initialize() -> void:
 	_check(ss.caster_count() >= 20, "kampung: houses, trees, rocks and the player cast shadows (%d)" % ss.caster_count())
 	var player_sh: Sprite2D = ss._casters[ss.caster_count() - 1][2]
 	var pivot: Node2D = ss._casters[ss.caster_count() - 1][1]
-	_check(player_sh.texture == z.player.sprite.texture and player_sh.frame == z.player.sprite.frame, "player shadow copies the player's sprite and frame")
+	var ps: Sprite2D = z.player.sprite
+	_check(player_sh.texture == ps.texture and player_sh.region_rect.position == Vector2(SS._cell(ps).position), "player shadow copies the player's sprite and current frame")
+	var foot: float = SS.foot_y(z.player.sprite)
+	var feet: Vector2 = z.player.sprite.global_position + Vector2(0, foot)
+	_check(foot >= 0.0 and pivot.position.distance_to(feet.round()) < 0.5 and player_sh.position.y == -foot, "player shadow hinges on the player's feet (foot line %.0f px below origin)" % foot)
 	_check(pivot.visible and pivot.transform.y.x > 0.0, "9:00: player shadow is on and points west (y axis leans right, so height maps left)")
 
 	# Night near a pelita: the shadow points away from the lamp.

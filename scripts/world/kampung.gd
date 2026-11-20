@@ -224,7 +224,7 @@ func _build_props() -> void:
 		s.set_meta("minimap", "building")
 		ysort.add_child(s)
 		shadows.add_child(ShadowUtil.make(base + Vector2(0, -26), Vector2(236, 64)))
-		sun_shadows.add_caster(s)
+		sun_shadows.add_caster(s, 40.0)
 		ZoneUtil.add_blocker(self, base + Vector2(0, -40), Vector2(200, 72))
 	for t in PALMS:
 		_add_tree("kelapa_%02d.png" % t[0], t[1], Vector2(16, 10), Vector2(46, 16)).set_meta("tree_kind", "palm")
