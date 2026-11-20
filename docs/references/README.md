@@ -1,7 +1,7 @@
 # Reference images
 
-Mood-board and style references. **Inspiration only. Do not trace, copy or
-ship any of these in the game.**
+Mood-board, style references and our own concept art. **Third-party images
+are inspiration only: never trace, copy or ship them in the game.**
 
 | File | What it's for | Notes |
 |---|---|---|
