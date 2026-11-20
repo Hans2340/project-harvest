@@ -1,19 +1,21 @@
 class_name SunShadows
 extends CanvasGroup
-## Cast shadows: each tall sprite (tree, house, rock, player) gets a black copy of itself laid on
-## the ground and stretched away from the sun, so the shadow has the object's own shape and moves
-## with the time of day. At night, objects near a pelita lamp cast a short shadow away from it.
+## Cast shadows that move with the sun. Trees, rocks and the player get a black copy of their own
+## sprite laid on the ground away from the sun (their silhouette). Houses get a solid box shadow:
+## their footprint pulled towards the shadow direction, short and hard-edged. At night, things
+## near a pelita lamp cast a short shadow away from it.
 ##
 ## All copies are drawn inside this CanvasGroup and the group is faded as a whole, so where two
 ## shadows overlap the ground does not get darker. The round contact shadows from ShadowUtil stay
 ## under everything.
 ##
-## A zone adds one under its Shadows node, then calls add_caster() for each sprite.
+## A zone adds one under its Shadows node, then calls add_caster() for each sprite and add_box()
+## for each building.
 
 signal asar_started
 
 ## Darkness of a full-strength shadow.
-const ALPHA := 0.3
+const ALPHA := 0.45
 ## Shadows on a rainy (overcast) day.
 const RAIN_FACTOR := 0.2
 ## Pelita lamps: reach, height of the flame above the ground, and how strong their shadows get.
@@ -26,8 +28,10 @@ const ASAR_WINDOW := 60
 ## The last day the Asar message was shown, shared across zones.
 static var asar_day := -1
 
-## Each entry: [source Sprite2D, pivot Node2D, shadow Sprite2D, hinge lift above the feet]
+## Each entry: [source Sprite2D, pivot Node2D, shadow Sprite2D]
 var _casters: Array = []
+## Each entry: [footprint corners on the ground, height, roof overhang, Polygon2D]
+var _boxes: Array = []
 var _lamps: Array[Vector2] = []
 
 
@@ -42,23 +46,29 @@ func set_lamps(points: Array) -> void:
 		_lamps.append(p)
 
 
-## Gives `src` a cast shadow, hinged on its lowest drawn pixel (its feet).
-##
-## Things drawn with a floor plan, like a house on stilts in this 3/4 view, pass the footprint's
-## screen `depth` (world px): the bottom of the picture is the front stilts, the back stilts stand
-## `depth` higher up. The shadow is then swept across the footprint as `slices` copies, each
-## hinged on its own ground line with the picture below that line cut off. Every stilt's shadow
-## starts at its own foot, and a raised floor throws its shadow under the house, not in front.
-func add_caster(src: Sprite2D, depth := 0.0, slices := 1) -> void:
-	for i in slices:
-		var lift := depth * i / maxf(slices - 1, 1)
-		var pivot := Node2D.new()
-		var sh := Sprite2D.new()
-		sh.modulate = Color(0, 0, 0, 1)
-		pivot.add_child(sh)
-		add_child(pivot)
-		_casters.append([src, pivot, sh, lift])
-		_sync(src, sh, lift)
+## Gives `src` a silhouette shadow, hinged on its lowest drawn pixel (its feet).
+func add_caster(src: Sprite2D) -> void:
+	var pivot := Node2D.new()
+	var sh := Sprite2D.new()
+	sh.modulate = Color(0, 0, 0, 1)
+	pivot.add_child(sh)
+	add_child(pivot)
+	_casters.append([src, pivot, sh])
+	_sync(src, sh)
+
+
+## Gives a building a solid box shadow. `footprint` is its floor plan on the ground (the corner
+## stilts' feet, world px, in order around it), `height` how tall it stands to the eaves and
+## `overhang` how far the roof sticks out past the walls.
+func add_box(footprint: PackedVector2Array, height: float, overhang := 0.0) -> void:
+	var poly := Polygon2D.new()
+	poly.color = Color(0, 0, 0, 1)
+	add_child(poly)
+	_boxes.append([footprint, height, overhang, poly])
+
+
+func box_count() -> int:
+	return _boxes.size()
 
 
 func caster_count() -> int:
@@ -82,13 +92,46 @@ func _process(_delta: float) -> void:
 			if lamp[1] > str_:
 				vec = lamp[0]
 				str_ = lamp[1]
-		var hinge := _sync(src, c[2], c[3]) * src.scale.y
+		var hinge := _sync(src, c[2]) * src.scale.y
 		var pivot: Node2D = c[1]
 		pivot.transform = ground_transform(vec, (src.global_position + Vector2(0, hinge)).round())
 		pivot.visible = str_ > 0.01 and src.is_visible_in_tree()
 		(c[2] as Sprite2D).modulate.a = str_
+	for b in _boxes:
+		var fp: PackedVector2Array = b[0]
+		var vec := sun_vec
+		var str_ := sun_str
+		if night > 0.0:
+			var lamp := _lamp_shadow(_centre(fp), night)
+			if lamp[1] > str_:
+				vec = lamp[0]
+				str_ = lamp[1]
+		var poly: Polygon2D = b[3]
+		poly.polygon = box_polygon(fp, b[1], b[2], vec)
+		poly.color.a = str_
+		poly.visible = str_ > 0.01
 	_check_asar()
 
+
+## The shadow of a box standing on `footprint`: the floor plan joined to the roof outline (the
+## plan grown by the overhang) moved `height * vec` across the ground, rounded to whole pixels.
+static func box_polygon(footprint: PackedVector2Array, height: float, overhang: float, vec: Vector2) -> PackedVector2Array:
+	var c := _centre(footprint)
+	var off := vec * height
+	var pts := PackedVector2Array()
+	for p in footprint:
+		pts.append(p.round())
+		var out := (p - c).normalized() * overhang
+		out.y *= Sun.GROUND_Y
+		pts.append((p + out + off).round())
+	return Geometry2D.convex_hull(pts)
+
+
+static func _centre(points: PackedVector2Array) -> Vector2:
+	var c := Vector2.ZERO
+	for p in points:
+		c += p
+	return c / maxf(points.size(), 1)
 
 ## Lays a sprite on the ground: a pixel `z` above the feet (local y = -z) lands z * vec away,
 ## and the sprite's width turns to lie across the shadow (foreshortened like the ground), so a
@@ -148,12 +191,12 @@ static func _cell(src: Sprite2D) -> Rect2i:
 
 ## Copies what the source shows right now (frame, flip), so animated sprites keep their shadow,
 ## cut off below the hinge line. Returns the hinge's local y (unscaled) in the source.
-func _sync(src: Sprite2D, sh: Sprite2D, lift: float) -> float:
+func _sync(src: Sprite2D, sh: Sprite2D) -> float:
 	sh.texture = src.texture
 	if src.texture == null:
 		return 0.0
 	var rect := src.get_rect()
-	var hinge := foot_y(src) - lift / maxf(src.scale.y, 0.001)
+	var hinge := foot_y(src)
 	var cell := _cell(src)
 	cell.size.y = clampi(ceili(hinge - rect.position.y), 0, cell.size.y)
 	sh.region_enabled = true
@@ -181,7 +224,7 @@ func _lamp_shadow(pos: Vector2, night: float) -> Array:
 		if s <= best[1]:
 			continue
 		var dir := (pos - l) / d
-		var v := dir * clampf(d / LAMP_HEIGHT, 0.35, 2.0)
+		var v := dir * clampf(d / LAMP_HEIGHT, 0.25, Sun.MAX_LENGTH)
 		v.y *= Sun.GROUND_Y
 		if absf(v.y) < Sun.MIN_Y:
 			v.y = Sun.MIN_Y if v.y >= 0.0 else -Sun.MIN_Y

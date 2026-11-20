@@ -15,8 +15,11 @@ const DECLINATION := [18.0, 6.0, -18.0]
 const GROUND_Y := 0.6
 ## A shadow straight east or west would be a flat line in this view; keep a little depth.
 const MIN_Y := 0.12
-## Longest shadow, in object heights (the low morning and evening sun).
-const MAX_LENGTH := 2.6
+## Drawn shadows are shorter than real ones, so they stay close to what casts them (game style):
+## the real length is eased towards MAX_LENGTH, reaching about 0.2 at a Kemarau noon, 0.6 at
+## 8:30 and 0.8 near sunset. Asar still uses the real length (length_ratio).
+const MAX_LENGTH := 0.8
+const LENGTH_EASE := 1.2
 ## Sun altitude (degrees) where shadows reach full strength, at both ends of the day.
 const FULL_STRENGTH_ALTITUDE := 12.0
 
@@ -53,14 +56,13 @@ static func raw_vector(hours: float, season: int) -> Vector2:
 	return Vector2(sin(h) * cos(d), sin(d)) / up
 
 
-## The shadow to draw: screen offset per pixel of height (capped and kept readable).
+## The shadow to draw: screen offset per pixel of height (shortened, foreshortened, readable).
 static func shadow_vector(hours: float, season: int) -> Vector2:
-	var v := raw_vector(hours, season)
-	if v == Vector2.ZERO:
+	var raw := raw_vector(hours, season)
+	if raw == Vector2.ZERO:
 		return Vector2(0, MIN_Y)
+	var v := raw.normalized() * MAX_LENGTH * (1.0 - exp(-raw.length() / LENGTH_EASE))
 	v.y *= GROUND_Y
-	if v.length() > MAX_LENGTH:
-		v = v.normalized() * MAX_LENGTH
 	if absf(v.y) < MIN_Y:
 		v.y = MIN_Y if v.y >= 0.0 else -MIN_Y
 	return v
