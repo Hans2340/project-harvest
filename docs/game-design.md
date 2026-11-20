@@ -271,7 +271,7 @@ cheapest way that still looks right:
 
 | Slot | How | Animation cost |
 |---|---|---|
-| **Body + outfit** (farmer, Hulubalang, baju rantai…) | One full sprite per outfit, skin included. Keep the number of outfits small. | High: 8 animations × 3 directions per outfit |
+| **Body + outfit** (Hulubalang, Pendekar, Bayang, Pawang) | One full sprite per outfit, skin included. Keep the number of outfits small. | High: 8 animations × 3 directions per outfit |
 | **Skin, cloth and hair colours** | **Palette swap** shader in Godot | Almost free |
 | **Headgear** (tengkolok, ketopong, selendang, bayang mask) | Static layer, 3 directions, pinned to a **head anchor** per frame | Low: 3 images per item |
 | **Weapons** (keris, tombak, sumpit, perisai) | Static layer, pinned and rotated on a **hand anchor** per frame | Low: 1–3 images per item |
@@ -287,8 +287,11 @@ weapons swap layers; colour variants make one shape feel like several items
 **Male and female**
 - Same skeleton, height and anchor points, so every headgear, weapon and palette
   works on both. Only body shape, hair and clothing differ.
-- Body + outfit sprites double: 5 outfits (farmer + 4 classes) × 2 = **10 bodies,
-  ~240 animations** for the player.
+- Body + outfit sprites double: 4 class outfits × 2 = **8 bodies,
+  ~192 animations** for the player.
+- **Petani (farmer) is not a player outfit.** Farmers are **NPCs** the player can
+  talk to and interact with, not playable characters (decided by leoxent,
+  2026-11-20). Their sprites come from the NPC budget, not the player set.
 - Each headgear item is tagged *male / female / both* (e.g. tengkolok = male,
   selendang = female, ketopong = both).
 - Women are real fighters: practical, era-appropriate clothing (baju panjang,
@@ -317,6 +320,10 @@ weapons swap layers; colour variants make one shape feel like several items
 4. Animate the new outfit with the **same skeleton**. Do frames line up with the base?
 
 If step 4 fails, fall back to fewer outfits plus more palette variants.
+
+Test run 2026-11-20 (17 generations): all four steps passed, with notes. The
+test used farmer bodies as stand-in bases, so those sprites are NPC material, not
+player art. Results: `assets/sprites/player/s24_test/README.md`.
 
 ## Open questions
 - Final game name?

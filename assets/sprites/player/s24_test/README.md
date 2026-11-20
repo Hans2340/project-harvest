@@ -1,6 +1,10 @@
 # S24 test batch (PixelLab, Plan A)
 
-Test for S24 player customisation (`docs/game-design.md`). Generated 2026-11-20 on the
+Test for S24 player customisation (`docs/game-design.md`).
+
+> **Note:** the petani (farmer) is an interactable **NPC**, not a playable outfit. The farmer
+> sprites here were only stand-in bases for the pipeline test. Use them as NPC drafts, not
+> player art. Generated 2026-11-20 on the
 PixelLab trial (17 of 40 generations). Previews: `preview_s24_test.png` (rows: rotations, run
 south, for each set) and `preview_run_south.gif`.
 
