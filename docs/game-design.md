@@ -15,9 +15,18 @@
   Senang, Orang Bunian, Puteri Gunung Ledang.
 - **Art style:** Similar to / inspired by **Stoneshard**.
 
-### Main villain: the Penjajah *(was S1, S2)*
+### Tone *(was S10)*
+- **Dark but hopeful.** The cruelty is real, but the story is about the village
+  rising back up. Cozy farm moments give relief between the dark parts.
+
+### Main villain: the Penjajah *(was S1, S2, S8)*
 - A **fictional empire**, inspired by real colonisers (Portuguese, British,
-  Japanese) but invented. Name and identity TBD (see S8).
+  Japanese) but invented. Name TBD (see S11).
+- **Occult empire with military equipment** *(S8)*: they came here *for* the
+  spirits. Spirit-binding is their real source of power, backed by a modern
+  army: soldiers, muskets/rifles, cannons, forts.
+  - Visual idea: uniformed soldiers carrying talismans, binding cages and ritual
+    gear next to their guns.
 - They **capture or bind local spirits** and use them as underlings:
   *pelesit / polong*, *toyol*, *hantu raya*, *pontianak*, *penanggal*,
   *harimau jadian*.
@@ -48,6 +57,11 @@ The Penjajah are **openly cruel**, not just strict:
   consequences** for the village (villagers can be hurt, leave, or join the
   resistance).
 
+### Player character *(was S9)*
+- At the start, an **NPC asks the player questions**, and the answers decide
+  the character's origin and background. The questions and possible origins
+  are TBD (see S12).
+
 ### Combat & magic *(was S6)*
 - **Silat** combat; weapons: keris, parang, tombak, golok.
 - **Pawang / bomoh** magic: charms (azimat), spirit offerings, protecting crops.
@@ -66,22 +80,21 @@ The Penjajah are **openly cruel**, not just strict:
 
 ## 💡 Suggestions (pending approval)
 
-### S8. Identity of the fictional empire
-Pick a direction (name can come later):
-- **Sea empire of merchants** — trading company with a private army
-  (like the East India companies). Cold, greedy, bureaucratic.
-- **Militaristic empire** — soldiers, forts, strict order. Brutal and disciplined.
-- **Occult empire** — they came *for* the spirits; binding magic is their real
-  power source. Ties directly into S2.
+### S11. Empire name & look
+- Name style: an invented name that sounds foreign to the Nusantara setting
+  but isn't a real country. Examples to react to: *the Ordo Vellum*,
+  *the Grey Dominion*, *the Ashen Crown*.
+- Signature colour for their soldiers and banners (e.g. pale grey or
+  bone-white), so they stand out against the warm kampung palette.
 
-### S9. Player character & starting situation
-- **Returning child of the village** — comes home to find the family farm seized; rebuilds it.
-- **Pawang's apprentice** — inherits a farm and a duty to protect the spirits.
-- **Escaped labourer** — fled a Penjajah plantation, hiding and farming on the forest edge.
-
-### S10. Tone
-- **Dark but hopeful** — cruelty is real, but the story is about the village
-  rising back up. Cozy farm moments as relief between the dark parts.
+### S12. The opening NPC questions (origin system)
+- **Who asks?** An old pawang, a dying grandparent, or Bujang Senang speaking in a dream.
+- **Possible origins the answers lead to:**
+  - Returning child of the village: the family farm has been seized.
+  - Pawang's apprentice: can see spirits from the start.
+  - Escaped plantation labourer: starts in hiding and is wanted by the Penjajah.
+- **What the origin changes:** starting skills, starting farm location, and
+  how the villagers and the Penjajah first react to you.
 - **Fully grim** — permadeath-style stakes, losses are permanent.
 
 ---
