@@ -19,10 +19,18 @@ PixelLab id: `0cacaf43-0c25-4e86-867a-86e6834d4195`. `metadata.json` names the s
     pack (licence allows use in a game). Skeletons were estimated on its 8 run_down frames, and
     the limbs' moves relative to shoulders/hips were put on Pendekar's own proportions, with the
     fists kept at chest height. east and north stay the template run for now.
-- `player_sheet.png`: 8 columns x 9 rows, used by `scenes/player/player.tscn`. Rows in blocks of
+- `player_sheet.png`: 8 columns x 18 rows, used by `scenes/player/player.tscn`. Rows in blocks of
   three facings (down, up, side; left = side flipped): idle (4 frames), walk (8), run (8).
   Preview: `preview_player_sheet.png`.
 - Previews for both Pendekar: `../preview_pendekar.png`, `../preview_pendekar_run.gif`.
 
 Idle feet are pinned (2026-11-20): every idle frame takes frame 0's bottom 4 rows, so the
 feet stay planted while the upper body breathes.
+
+Silat combo (2026-11-20, template mode, 9 generations per character + 1 for the north kick):
+- `atk1_jab` (`lead-jab`, 3 frames), `atk2_cross` (`cross-punch`, 6 frames), `atk3_kick`
+  (`roundhouse-kick`, 7 frames) in south, east, north (`base/animations/<name>/<dir>/`).
+- **north kick is `high-kick`** (PixelLab animation `atk3_kick_north`): the roundhouse turned the
+  character to face the camera mid-spin.
+- In `player_sheet.png` rows 9-17 (8 columns x 18 rows now): blocks of three facings
+  (down, up, side) for jab, cross, kick. Hit frames (fist/foot furthest out): 1, 5, 4.

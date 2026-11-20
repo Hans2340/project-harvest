@@ -61,6 +61,8 @@ const FRUIT_TREES := [   # pokok buah (durian / rambutan): kampung edges
 const TUFTS := [Vector2i(3, 3), Vector2i(2, 17), Vector2i(32, 2), Vector2i(32, 13), Vector2i(45, 24),
 	Vector2i(8, 23), Vector2i(26, 23), Vector2i(40, 23)]
 const ROCKS := [Vector2i(10, 25), Vector2i(29, 25), Vector2i(44, 1), Vector2i(1, 22)]
+## Patung latihan for the silat combo, in the yard beside the home house.
+const DUMMY_CELL := Vector2i(15, 11)
 const REEDS := [Vector2i(4, 29), Vector2i(11, 30), Vector2i(25, 29), Vector2i(33, 30), Vector2i(42, 29)]
 
 const VERTICES := [
@@ -102,6 +104,7 @@ const VERTICES := [
 var _crop_sprites := {}   ## Vector2i -> Sprite2D
 var ambience := Ambience.new()
 var sun_shadows := SunShadows.new()
+var dummy := TrainingDummy.new()
 
 @onready var ground: TileMapLayer = $Ground
 @onready var decor: Node2D = $Decor
@@ -244,6 +247,10 @@ func _build_props() -> void:
 		_standing_prop(c, "grass_tuft_small.png", Vector2.ZERO)
 	for c in ROCKS:
 		_standing_prop(c, "rock.png", Vector2(28, 12))
+	dummy.position = Vector2(DUMMY_CELL.x * TILE + TILE / 2.0, DUMMY_CELL.y * TILE + TILE - 8)
+	ysort.add_child(dummy)
+	sun_shadows.add_caster(dummy.sprite)
+	ZoneUtil.add_blocker(self, dummy.position + Vector2(0, -5), Vector2(22, 10))
 	for c in REEDS:
 		var r := Sprite2D.new()
 		r.texture = load(PROPS_DIR + ("water_reeds_a.png" if c.x % 2 == 0 else "water_reeds_b.png"))

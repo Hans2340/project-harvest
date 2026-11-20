@@ -30,7 +30,7 @@ func _initialize() -> void:
 	_check(gs.character == "pendekar_perempuan", "picking Pendekar perempuan sets the character")
 	_check(p.sprite.texture != lelaki and p.sprite.texture.resource_path.contains("pendekar_perempuan"),
 		"the player's sheet swaps to hers")
-	_check(p.sprite.hframes == 8 and p.sprite.vframes == 9, "same 8x9 sheet layout")
+	_check(p.sprite.hframes == 8 and p.sprite.vframes == 18, "same 8x18 sheet layout")
 
 	change_scene_to_file("res://scenes/world/mangrove.tscn")
 	for i in 4:

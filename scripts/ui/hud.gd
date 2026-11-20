@@ -36,4 +36,4 @@ func show_message(text: String) -> void:
 
 
 func _refresh() -> void:
-	info.text = "[I] Inventori   [M] Peta" + ("   [F1] Dev" if dev_tools else "")
+	info.text = "[J] Silat   [I] Inventori   [M] Peta" + ("   [F1] Dev" if dev_tools else "")

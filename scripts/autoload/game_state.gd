@@ -29,7 +29,7 @@ var items := {
 var clock_running := true
 
 ## Playable characters: id -> display name. Each has `assets/sprites/player/<id>/player_sheet.png`
-## in the same 8x9 layout. Picked from the dev tools (F1) for now.
+## in the same 8x18 layout. Picked from the dev tools (F1) for now.
 const CHARACTERS := {
 	"pendekar_lelaki": "Pendekar lelaki",
 	"pendekar_perempuan": "Pendekar perempuan",
