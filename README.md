@@ -22,6 +22,7 @@ A farming RPG made with **Godot 4**.
 | WASD | Move |
 | 1 / 2 / 3 | Tool: Cangkul (hoe) / Benih padi (seeds) / Air (water) |
 | E | Use tool on the highlighted tile · harvest ripe padi · sleep (face the bed) |
+| I or Tab | Open / close the inventory (game pauses) · Esc also closes |
 
 Walk south off the farm along the path to reach the **mangrove swamp**; walk back north to return.
 
@@ -38,9 +39,10 @@ until the real sprites are ready.
 godot --headless --path . -s tests/test_farm_cycle.gd
 godot --headless --path . -s tests/test_mangrove.gd
 godot --headless --path . -s tests/test_zone_travel.gd
+godot --headless --path . -s tests/test_inventory.gd
 ```
 
-Each prints PASS/FAIL: the farming cycle, the mangrove zone build, and travelling between zones.
+Each prints PASS/FAIL: the farming cycle, the mangrove zone build, travelling between zones, and the inventory.
 
 ## Credits
 
