@@ -1,0 +1,91 @@
+{
+  "group_id": "c9c7edf4-ec7f-4930-ab16-b04ac0f1361f",
+  "states": [
+    {
+      "character": {
+        "id": "2d4c2811-7c2d-4276-9b12-d080f1cf22f6",
+        "name": "Idle",
+        "prompt": "young Malay village farmer man, 15th-century Malay world, simple brown baju, checkered kain sarung at the waist, short black hair, barefoot, empty hands, standing straight, earthy muted colours",
+        "size": {
+          "width": 40,
+          "height": 40
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-11-20T08:23:39.563428+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {
+          "run": {
+            "south": [
+              "Idle/animations/run/south/frame_000.png",
+              "Idle/animations/run/south/frame_001.png",
+              "Idle/animations/run/south/frame_002.png",
+              "Idle/animations/run/south/frame_003.png",
+              "Idle/animations/run/south/frame_004.png",
+              "Idle/animations/run/south/frame_005.png",
+              "Idle/animations/run/south/frame_006.png",
+              "Idle/animations/run/south/frame_007.png"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "character": {
+        "id": "8039e9b1-d994-4276-9e3e-1dcafb97a9a1",
+        "name": "Hulubalang",
+        "prompt": "young Malay man, 15th-century Malay world, dark iron chainmail baju rantai over a black baju, red kain samping at the waist, dark trousers, barefoot, short black hair, empty hands, dark iron and red colours",
+        "size": {
+          "width": 40,
+          "height": 40
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-11-20T08:28:43.341638+00:00"
+      },
+      "folder": "Hulubalang",
+      "frames": {
+        "rotations": {
+          "south": "Hulubalang/rotations/south.png",
+          "south-east": "Hulubalang/rotations/south-east.png",
+          "east": "Hulubalang/rotations/east.png",
+          "north-east": "Hulubalang/rotations/north-east.png",
+          "north": "Hulubalang/rotations/north.png",
+          "north-west": "Hulubalang/rotations/north-west.png",
+          "west": "Hulubalang/rotations/west.png",
+          "south-west": "Hulubalang/rotations/south-west.png"
+        },
+        "animations": {
+          "run": {
+            "south": [
+              "Hulubalang/animations/run/south/frame_000.png",
+              "Hulubalang/animations/run/south/frame_001.png",
+              "Hulubalang/animations/run/south/frame_002.png",
+              "Hulubalang/animations/run/south/frame_003.png",
+              "Hulubalang/animations/run/south/frame_004.png",
+              "Hulubalang/animations/run/south/frame_005.png",
+              "Hulubalang/animations/run/south/frame_006.png",
+              "Hulubalang/animations/run/south/frame_007.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-11-20T08:30:42.686497"
+}
