@@ -33,6 +33,13 @@ const LUNGE := [35.0, 50.0, 70.0]      ## px/s forward until the hit frame
 const HIT_REACH := 24.0                ## centre of the hit circle, in front of the body
 const HIT_RADIUS := 16.0
 const HITSTOP := 0.07                  ## the strike freezes this long when it lands
+## Auto-target (langkah): a strike turns to the best target within AUTO_RANGE and steps in
+## to punching distance before it lands. Targets in front (or in the held direction) win over
+## nearer ones behind. Nothing in range: the strike goes the way you face.
+const AUTO_RANGE := 112.0              ## from the body, about 2.3 tiles
+const FRONT_BIAS := 0.55               ## a target in front counts as this much nearer
+const DASH_SPEED := 280.0
+const DASH_MAX := 0.35                 ## seconds of stepping in per strike, at most
 ## Running feel: the body lifts 1 px in the airborne half of each stride, and dust kicks up on
 ## each footfall (run frames 0 and 4) and when a run starts or stops.
 const RUN_LIFT_FRAMES := [1, 2, 5, 6]
@@ -50,6 +57,8 @@ var _combo := -1        ## index into COMBO while attacking, -1 otherwise
 var _queued := false
 var _hit_done := false
 var _hitstop := 0.0
+var _target: Node2D = null   ## the strike's auto-target, if any
+var _dash_time := 0.0
 
 @onready var sprite: Sprite2D = $Sprite
 
@@ -123,6 +132,10 @@ func _start_strike(step: int) -> void:
 	var input := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if input != Vector2.ZERO:
 		_update_facing(input)   # each strike can turn to a new target
+	_target = pick_target(facing if input == Vector2.ZERO else input.normalized())
+	if _target:
+		_update_facing(_target.hit_center() - _body_centre())
+	_dash_time = 0.0
 	_combo = step
 	_queued = false
 	_hit_done = false
@@ -136,9 +149,11 @@ func _attack_process(delta: float) -> void:
 	if _hitstop > 0.0:
 		_hitstop -= delta
 		return
+	if _step_in(delta):
+		return
 	var a: int = COMBO[_combo]
 	_anim_time += delta * ANIM_FPS[a]
-	var lunging: bool = _anim_time < HIT_FRAME[_combo] and not _target_in_reach()
+	var lunging: bool = _target == null and _anim_time < HIT_FRAME[_combo] and not _target_in_reach()
 	velocity = facing * LUNGE[_combo] if lunging else Vector2.ZERO
 	move_and_slide()
 	if not _hit_done and _anim_time >= HIT_FRAME[_combo]:
@@ -155,9 +170,56 @@ func _attack_process(delta: float) -> void:
 	_update_frame()
 
 
+## The best hittable within AUTO_RANGE: nearest, with the ones in the `front` direction
+## counted nearer. Null when nothing is in range.
+func pick_target(front: Vector2) -> Node2D:
+	var best: Node2D = null
+	var best_score := INF
+	var me := _body_centre()
+	for n in get_tree().get_nodes_in_group("hittable"):
+		var to: Vector2 = n.hit_center() - me
+		var d := to.length()
+		if d > AUTO_RANGE:
+			continue
+		var score := d * (FRONT_BIAS if d > 0.0 and to.normalized().dot(front) > 0.5 else 1.0)
+		if score < best_score:
+			best_score = score
+			best = n
+	return best
+
+
+## Step in toward the target until its centre sits in our hit circle, holding the wind-up
+## frame. Returns true while stepping (the strike waits). Follows a moving target.
+func _step_in(delta: float) -> bool:
+	if _target == null or _dash_time >= DASH_MAX:
+		return false
+	if not is_instance_valid(_target):
+		_target = null
+		return false
+	var to := _stand_point() - global_position
+	if to.length() <= 3.0:
+		_dash_time = DASH_MAX   # in place: no more stepping this strike
+		return false
+	_dash_time += delta
+	velocity = to.normalized() * minf(DASH_SPEED, to.length() / delta)
+	move_and_slide()
+	_update_frame()
+	return true
+
+
+## Where to stand so the target's centre is the middle of our hit circle (lines us up on the
+## axis we face, since the sprite only faces four ways).
+func _stand_point() -> Vector2:
+	return _target.hit_center() - Vector2(0, -16) - facing * HIT_REACH
+
+
+func _body_centre() -> Vector2:
+	return global_position + Vector2(0, -16)
+
+
 ## The hit circle in front of the body: where fists and feet land.
 func _hit_circle_centre() -> Vector2:
-	return global_position + Vector2(0, -16) + facing * HIT_REACH
+	return _body_centre() + facing * HIT_REACH
 
 
 ## Something is already close enough to hit: stop the lunge so we don't walk into it.
