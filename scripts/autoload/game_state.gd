@@ -7,6 +7,7 @@ signal time_changed(minutes: int)
 signal items_changed
 signal gold_changed(gold: int)
 signal weather_changed(weather: String)
+signal character_changed(id: String)
 
 const DAY_START_MINUTES := 6 * 60   ## 06:00
 const DAY_END_MINUTES := 26 * 60    ## 02:00 next day: pass out
@@ -26,6 +27,25 @@ var items := {
 	"padi": 0,
 }
 var clock_running := true
+
+## Playable characters: id -> display name. Each has `assets/sprites/player/<id>/player_sheet.png`
+## in the same 8x9 layout. Picked from the dev tools (F1) for now.
+const CHARACTERS := {
+	"pendekar_lelaki": "Pendekar lelaki",
+	"pendekar_perempuan": "Pendekar perempuan",
+}
+var character := "pendekar_lelaki"
+
+
+func set_character(id: String) -> void:
+	if not CHARACTERS.has(id) or id == character:
+		return
+	character = id
+	character_changed.emit(id)
+
+
+static func character_sheet(id: String) -> Texture2D:
+	return load("res://assets/sprites/player/%s/player_sheet.png" % id)
 
 
 func _process(delta: float) -> void:
@@ -107,10 +127,17 @@ func is_raining() -> bool:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("fullscreen"):   # F11
-		var full := DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if full else DisplayServer.WINDOW_MODE_FULLSCREEN)
+		toggle_fullscreen()
 	if event.is_action_pressed("debug_weather"):   # F7: toggle rain for testing
 		set_weather("cerah" if is_raining() else "hujan")
+
+
+## Windows keeps the taskbar on top of a plain (borderless) fullscreen window, so use exclusive
+## fullscreen, which covers the whole screen.
+func toggle_fullscreen() -> void:
+	var mode := DisplayServer.window_get_mode()
+	var full := mode == DisplayServer.WINDOW_MODE_FULLSCREEN or mode == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if full else DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 
 
 func add_gold(amount: int) -> void:

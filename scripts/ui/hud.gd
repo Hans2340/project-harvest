@@ -10,6 +10,7 @@ var hotbar := Hotbar.new()
 var inventory := InventoryUI.new()
 var clock := ClockUI.new()
 var minimap := MinimapUI.new()
+var dev_tools: DevToolsUI = null   ## F1, debug builds only
 
 
 func _ready() -> void:
@@ -18,6 +19,9 @@ func _ready() -> void:
 	add_child(clock)
 	add_child(minimap)
 	add_child(inventory)
+	if OS.is_debug_build():
+		dev_tools = DevToolsUI.new()
+		add_child(dev_tools)
 	message_timer.timeout.connect(func(): message.text = "")
 	_refresh()
 
@@ -32,4 +36,4 @@ func show_message(text: String) -> void:
 
 
 func _refresh() -> void:
-	info.text = "[I] Inventori   [M] Peta"
+	info.text = "[I] Inventori   [M] Peta" + ("   [F1] Dev" if dev_tools else "")

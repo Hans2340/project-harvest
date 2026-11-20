@@ -38,6 +38,20 @@ var _last_col := -1
 @onready var sprite: Sprite2D = $Sprite
 
 
+func _ready() -> void:
+	var gs := get_node_or_null("/root/GameState")
+	if gs:
+		_apply_character(gs.character)
+		gs.character_changed.connect(_apply_character)
+
+
+## Swap to another character's sheet (same 8x9 layout), keeping the current frame.
+func _apply_character(id: String) -> void:
+	var tex: Texture2D = GameState.character_sheet(id)
+	if tex:
+		sprite.texture = tex
+
+
 func _physics_process(delta: float) -> void:
 	var input := Vector2.ZERO
 	if can_move:

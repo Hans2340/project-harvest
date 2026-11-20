@@ -11,3 +11,8 @@ PixelLab id: `1ca2d0cf-7230-4292-8b84-f0a1e050092e`. `metadata.json` names the s
   - **south: skeleton-v3** (3 generations). The template run lost the trousers (bare shins).
     Skeleton-v3 comes out on a 64x64 canvas, so it was cropped to 56 at (4,6) to put the head
     top at y=9 like the base. PixelLab also keeps it as a separate animation `run_sk`.
+- Idle (`breathing-idle`, 4 frames) and walk (`walking-8-frames`) in south, north, east, template
+  mode, 2026-11-20 (6 generations). Walk south frame 7 turned her around, so it is a copy of
+  frame 3. Idle feet pinned to frame 0 (bottom 4 rows), as for the lelaki.
+- `player_sheet.png`: same 8x9 layout as the lelaki (idle / walk / run x down, up, side).
+  Picked in game from the dev tools (F1). Preview: `preview_player_sheet.png`.
