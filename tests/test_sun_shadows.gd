@@ -8,8 +8,8 @@ var ok := true
 func _initialize() -> void:
 	var kemarau := 0
 	var tengkujuh := 2
-	_check(Sun.shadow_vector(8.5, kemarau).x < -0.5, "morning: long shadow to the west (left)")
-	_check(Sun.shadow_vector(17.5, kemarau).x > 0.5, "afternoon: long shadow to the east (right)")
+	_check(Sun.shadow_vector(8.5, kemarau).x > 0.5, "morning: sun rises on the left of the HUD dial, shadow falls right")
+	_check(Sun.shadow_vector(17.5, kemarau).x < -0.5, "afternoon: sun sets on the right, shadow falls left")
 	_check(Sun.raw_vector(Sun.SOLAR_NOON, kemarau).length() < 0.4, "noon: short shadow (sun nearly overhead)")
 	_check(Sun.shadow_vector(Sun.SOLAR_NOON, kemarau).y > 0.0, "Kemarau: sun in the north, shadows fall south (down)")
 	_check(Sun.shadow_vector(Sun.SOLAR_NOON, tengkujuh).y < 0.0, "Tengkujuh: sun in the south, shadows fall north (up)")
@@ -38,18 +38,18 @@ func _initialize() -> void:
 	var foot: float = SS.foot_y(z.player.sprite)
 	var feet: Vector2 = z.player.sprite.global_position + Vector2(0, foot)
 	_check(foot >= 0.0 and pivot.position.distance_to(feet.round()) < 0.5 and player_sh.position.y == -foot, "player shadow hinges on the player's feet (foot line %.0f px below origin)" % foot)
-	_check(pivot.visible and pivot.transform.y.x > 0.0, "9:00: player shadow is on and points west (y axis leans right, so height maps left)")
+	_check(pivot.visible and pivot.transform.y.x < 0.0, "9:00: player shadow is on and points right (y axis leans left, so height maps right)")
 
 	_check(ss.box_count() == 4, "kampung: every house has a box shadow")
 	var fp := PackedVector2Array([Vector2(0, 0), Vector2(100, -50), Vector2(30, -80), Vector2(-70, -30)])
 	var noon_poly: PackedVector2Array = SS.box_polygon(fp, 120.0, 12.0, Sun.shadow_vector(Sun.SOLAR_NOON, kemarau))
 	_check(Geometry2D.is_point_in_polygon(Vector2(15, -40), noon_poly), "noon: house shadow lies under the house")
 	var morning_poly: PackedVector2Array = SS.box_polygon(fp, 120.0, 12.0, Sun.shadow_vector(8.5, kemarau))
-	var min_x := INF
+	var max_x := -INF
 	for p in morning_poly:
-		min_x = minf(min_x, p.x)
-	min_x += 70.0
-	_check(min_x < -40.0 and min_x > -120.0, "8:30: house shadow reaches %.0f px left of the house (short, not across the screen)" % -min_x)
+		max_x = maxf(max_x, p.x)
+	max_x -= 100.0
+	_check(max_x > 40.0 and max_x < 120.0, "8:30: house shadow reaches %.0f px right of the house (short, not across the screen)" % max_x)
 
 	# Night near a pelita: the shadow points away from the lamp.
 	gs.minutes = 21 * 60

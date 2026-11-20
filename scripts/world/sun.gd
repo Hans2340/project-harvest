@@ -2,7 +2,10 @@ class_name Sun
 extends RefCounted
 ## Where the sun is, as seen from Melaka (about 2 degrees north, so the sun passes almost
 ## straight overhead). Gives the ground shadow of a vertical object as a screen vector per pixel
-## of height: x = east (right), y = south (down). Pure maths, no nodes.
+## of height. Pure maths, no nodes.
+##
+## Screen directions follow the HUD sky dial, where the sun rises on the left and sets on the
+## right: east is left, so morning shadows fall right and afternoon shadows fall left. North is up.
 ##
 ## Solar noon is 12:30, matching the sun on the HUD clock: sunrise about 6:30, sunset about
 ## 18:30, Asar about 15:30-16:00 depending on the season.
@@ -52,8 +55,9 @@ static func raw_vector(hours: float, season: int) -> Vector2:
 	var up := cos(d) * cos(h)
 	if up <= 0.0:
 		return Vector2.ZERO
-	# Sun direction: east = -sin(h)cos(d), north = sin(d), up. The shadow goes the other way.
-	return Vector2(sin(h) * cos(d), sin(d)) / up
+	# The shadow points away from the sun: west in the morning (h < 0), east in the afternoon.
+	# East is screen left (see the note at the top), so the morning shadow has x > 0.
+	return Vector2(-sin(h) * cos(d), sin(d)) / up
 
 
 ## The shadow to draw: screen offset per pixel of height (shortened, foreshortened, readable).
