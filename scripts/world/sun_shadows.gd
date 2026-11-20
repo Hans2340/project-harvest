@@ -156,7 +156,7 @@ static func _centre(points: PackedVector2Array) -> Vector2:
 ## sits under the feet rather than in front of them.
 static func foot_oval(size: Vector2) -> PackedVector2Array:
 	var pts := PackedVector2Array()
-	var centre := Vector2(0, -size.y * 0.3)
+	var centre := Vector2(0, -size.y * 0.2)
 	for i in 20:
 		var a := TAU * i / 20.0
 		pts.append((centre + Vector2(cos(a) * size.x / 2.0, sin(a) * size.y / 2.0)).round())

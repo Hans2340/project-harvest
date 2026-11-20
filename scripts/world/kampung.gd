@@ -239,7 +239,7 @@ func _build_props() -> void:
 	for t in PALMS:
 		_add_tree("kelapa_%02d.png" % t[0], t[1], Vector2(16, 10), Vector2(46, 16)).set_meta("tree_kind", "palm")
 	for t in FRUIT_TREES:
-		_add_tree("pokok_buah_%02d.png" % t[0], t[1], Vector2(28, 14), Vector2(104, 34)).set_meta("tree_kind", "fruit")
+		_add_tree("pokok_buah_%02d.png" % t[0], t[1], Vector2(28, 14), Vector2(124, 60)).set_meta("tree_kind", "fruit")
 	for c in TUFTS:
 		_standing_prop(c, "grass_tuft_small.png", Vector2.ZERO)
 	for c in ROCKS:
