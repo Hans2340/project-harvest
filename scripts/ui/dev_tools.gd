@@ -51,7 +51,7 @@ func _button(text: String, action: Callable) -> Button:
 	var b := Button.new()
 	b.text = text
 	b.focus_mode = Control.FOCUS_NONE   # keep WASD/E for the game
-	b.add_theme_font_size_override("font_size", 8)
+	b.add_theme_font_size_override("font_size", UiSkin.FONT_SIZE)
 	b.custom_minimum_size = Vector2(0, 13)
 	b.pressed.connect(action)
 	_panel.add_child(b)

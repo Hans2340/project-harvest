@@ -44,12 +44,23 @@ static func nine(region: Rect2, margin: int, margin_v: int = -1) -> NinePatchRec
 	return n
 
 
-static func label(text: String, size: int = 10, color := TEXT) -> Label:
+## The UI font (Micro 5, see `assets/fonts/README.md`) is a pixel font that is only crisp at
+## its native size or a whole multiple of it.
+const FONT_SIZE := 11
+const FONT_SIZE_BIG := 22
+
+
+## Pixel-font size for a requested size: headings (16 and up) get 2x, everything else 1x.
+static func font_px(size: int) -> int:
+	return FONT_SIZE_BIG if size >= 16 else FONT_SIZE
+
+
+static func label(text: String, size: int = FONT_SIZE, color := TEXT) -> Label:
 	var l := Label.new()
 	l.text = text
-	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_font_size_override("font_size", font_px(size))
 	l.add_theme_color_override("font_color", color)
 	l.add_theme_color_override("font_outline_color", OUTLINE)
-	l.add_theme_constant_override("outline_size", 3)
+	l.add_theme_constant_override("outline_size", 2)
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return l
