@@ -36,6 +36,18 @@ func _initialize() -> void:
 	gs.time_changed.emit(int(gs.minutes))
 	_check(clock._time.text == gs.time_text_12h() and clock._date.text == "Isn. 1", "clock labels update")
 
+	# Style switch (dev tools): rebuilds the clock, labels still live, saved in settings.
+	var before: String = gs.clock_style
+	var other := "kayu" if before == "lama" else "lama"
+	gs.set_clock_style(other)
+	await process_frame
+	_check(clock.style == other and clock._dial.kayu == (other == "kayu"), "clock rebuilt in the %s style" % other)
+	_check(clock._gold.text == "500" and clock._time.text == gs.time_text_12h(), "labels still filled after the switch")
+	var cfg := ConfigFile.new()
+	cfg.load(gs.SETTINGS_PATH)
+	_check(cfg.get_value("ui", "clock_style", "") == other, "style saved to settings")
+	gs.set_clock_style(before)
+
 	print("RESULT: ", "PASS" if ok else "FAIL")
 	quit(0 if ok else 1)
 

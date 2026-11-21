@@ -1,12 +1,13 @@
 class_name DevToolsUI
 extends Control
 ## Developer tools window for testing, toggled with F1: pick the player character, toggle rain,
-## and switch fullscreen. Only in debug builds (the editor and debug exports).
+## switch fullscreen and the clock style. Only in debug builds (the editor and debug exports).
 
 const KEY := KEY_F1
 
 var _panel := VBoxContainer.new()
 var _char_buttons := {}
+var _clock_button: Button
 
 
 func _ready() -> void:
@@ -21,7 +22,7 @@ func _ready() -> void:
 	box.offset_left = -170
 	box.offset_right = -6
 	box.offset_top = 90
-	box.offset_bottom = 240
+	box.offset_bottom = 256
 	add_child(box)
 	var frame := UiSkin.nine(UiSkin.PANEL_DARK, 12)
 	frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -42,8 +43,12 @@ func _ready() -> void:
 	_panel.add_child(UiSkin.label("Lain-lain", 8))
 	_button("Hujan / cerah  [F7]", func(): GameState.set_weather("cerah" if GameState.is_raining() else "hujan"))
 	_button("Fullscreen  [F11]", GameState.toggle_fullscreen)
+	_clock_button = _button("", func():
+		var styles := GameState.CLOCK_STYLES.keys()
+		GameState.set_clock_style(styles[(styles.find(GameState.clock_style) + 1) % styles.size()]))
 
 	GameState.character_changed.connect(func(_id): _refresh())
+	GameState.clock_style_changed.connect(func(_s): _refresh())
 	_refresh()
 
 
@@ -59,6 +64,7 @@ func _button(text: String, action: Callable) -> Button:
 
 
 func _refresh() -> void:
+	_clock_button.text = GameState.CLOCK_STYLES[GameState.clock_style] + "  (tukar)"
 	for id in _char_buttons:
 		var b: Button = _char_buttons[id]
 		var on: bool = id == GameState.character

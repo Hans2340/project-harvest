@@ -8,6 +8,7 @@ signal items_changed
 signal gold_changed(gold: int)
 signal weather_changed(weather: String)
 signal character_changed(id: String)
+signal clock_style_changed(style: String)
 
 const DAY_START_MINUTES := 6 * 60   ## 06:00
 const DAY_END_MINUTES := 26 * 60    ## 02:00 next day: pass out
@@ -42,6 +43,32 @@ func set_character(id: String) -> void:
 		return
 	character = id
 	character_changed.emit(id)
+
+
+## Look of the top-right clock, picked from the dev tools (F1) until the team settles on one:
+## "lama" = the Dark Ages pack panels, "kayu" = carved wood and gold with the keris hand.
+const CLOCK_STYLES := {"lama": "Jam: lama", "kayu": "Jam: kayu ukir"}
+const SETTINGS_PATH := "user://settings.cfg"
+var clock_style := "lama"
+
+
+func set_clock_style(style: String) -> void:
+	if not CLOCK_STYLES.has(style) or style == clock_style:
+		return
+	clock_style = style
+	clock_style_changed.emit(style)
+	var cfg := ConfigFile.new()
+	cfg.load(SETTINGS_PATH)
+	cfg.set_value("ui", "clock_style", style)
+	cfg.save(SETTINGS_PATH)
+
+
+func _load_settings() -> void:
+	var cfg := ConfigFile.new()
+	if cfg.load(SETTINGS_PATH) == OK:
+		var style: String = cfg.get_value("ui", "clock_style", clock_style)
+		if CLOCK_STYLES.has(style):
+			clock_style = style
 
 
 static func character_sheet(id: String) -> Texture2D:
@@ -146,6 +173,7 @@ const TITLE_BAR := 40   ## px kept free above the window for its title bar
 
 
 func _ready() -> void:
+	_load_settings()
 	fit_window()
 
 
