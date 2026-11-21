@@ -43,6 +43,39 @@ const HOUSE_EAVES := 120.0
 const HOUSE_OVERHANG := 12.0
 ## Cells you can face to sleep (front of the home house).
 const HOME_DOOR := Rect2i(9, 8, 5, 3)
+## Who lives in each house (same order as HOUSES) and what you hear at the door (E).
+const HOUSE_PEOPLE := [
+	{"name": "Rumah kamu", "lines": []},
+	{"name": "Rumah Mak Som", "lines": [
+		"Mak Som calls from inside: \"Padi growing well, nak?\"",
+		"Someone is pounding chillies inside. It smells of sambal.",
+		"Mak Som: \"Don't stay out after Maghrib. The forest is not kind at night.\""]},
+	{"name": "Rumah Pak Hamid", "lines": [
+		"The door is shut. You hear a parang being sharpened.",
+		"Pak Hamid grunts: \"The tax men came by the river again.\"",
+		"A fishing net hangs drying by the stairs."]},
+	{"name": "Rumah Tok Pawang", "lines": [
+		"A faint smell of kemenyan drifts out. Someone is murmuring softly.",
+		"An old voice: \"Not yet, child. Come back when the time is right.\"",
+		"Dried leaves and roots hang under the eaves."]},
+]
+const PAWANG_HOUSE := 3   ## index in HOUSES
+## North path out of the kampung, toward Hutan Pinggir (not built yet).
+const FOREST_PATH_X := 18
+
+## Kampung details (PixelLab, drawn at 1x: the same pixel size as the Pendekar).
+const KPROPS_DIR := "res://assets/sprites/kampung/props/"
+## Fence lines along the sawah bunds: [row, first cell, last cell] (two segments per cell).
+const FENCE_LINES := [[3, 34, 44], [11, 34, 44], [13, 34, 44], [21, 34, 44]]
+## [file prefix, variant count, cells]
+const KAMPUNG_PROPS := [
+	["kayu_api", 8, [Vector2i(8, 9), Vector2i(21, 9), Vector2i(8, 18), Vector2i(27, 18), Vector2i(16, 3)]],
+	["tempayan", 8, [Vector2i(14, 10), Vector2i(27, 10), Vector2i(14, 19), Vector2i(28, 19), Vector2i(16, 9)]],
+	["batu", 7, [Vector2i(12, 25), Vector2i(23, 25), Vector2i(36, 25), Vector2i(5, 25), Vector2i(31, 3)]],
+]
+## Tall reeds at the jetty and along the bank (sway in the wind).
+const BANK_REEDS := [Vector2i(16, 26), Vector2i(20, 26), Vector2i(17, 27), Vector2i(19, 27),
+	Vector2i(14, 26), Vector2i(22, 26), Vector2i(6, 26), Vector2i(41, 26)]
 
 ## Trees (PixelLab, 64 px, drawn at 2x like the houses). [variant, trunk cell].
 const TREE_DIR := "res://assets/sprites/trees/"
@@ -66,9 +99,9 @@ const DUMMY_CELL := Vector2i(15, 11)
 const REEDS := [Vector2i(4, 29), Vector2i(11, 30), Vector2i(25, 29), Vector2i(33, 30), Vector2i(42, 29)]
 
 const VERTICES := [
-	"ggggggggggggggggggggggggggggggggggggggggggggggg",
-	"ggggggggggggggggggggggggggggggggggggggggggggggg",
-	"ggggggggggggggggggggggggggggggggggggggggggggggg",
+	"ggggggggggggggggggddggggggggggggggggggggggggggg",
+	"ggggggggggggggggggddggggggggggggggggggggggggggg",
+	"ggggggggggggggggggddggggggggggggggggggggggggggg",
 	"ggggggdddddddddddddddddddddddddgggggggggggggggg",
 	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
 	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
@@ -77,9 +110,9 @@ const VERTICES := [
 	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
 	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
 	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
-	"dddddddddddddddddddddddddddddddgggsssssssssssgg",
-	"dddddddddddddddddddddddddddddddgggggggggggggggg",
-	"dddddddddddddddddddddddddddddddgggggggggggggggg",
+	"dddddddddddddddddddddddddddddddddgsssssssssssgg",
+	"dddddddddddddddddddddddddddddddddgggggggggggggg",
+	"dddddddddddddddddddddddddddddddddgggggggggggggg",
 	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
 	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
 	"ggggggdddddddddddddddddddddddddgggsssssssssssgg",
@@ -102,6 +135,7 @@ const VERTICES := [
 ]
 
 var _crop_sprites := {}   ## Vector2i -> Sprite2D
+var _door_visits := {}    ## house index -> times you've knocked
 var ambience := Ambience.new()
 var sun_shadows := SunShadows.new()
 var dummy := TrainingDummy.new()
@@ -121,6 +155,7 @@ func _ready() -> void:
 	_build_ground()
 	_build_jetty()
 	_build_props()
+	_build_details()
 	_sync_crops()
 	_build_ambience()
 	var w := _width() * TILE
@@ -337,6 +372,10 @@ func _build_ambience() -> void:
 		var cell: Vector2i = h[1]
 		lamps.append(Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE - 100))
 		lamp_ground.append(Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE + 8))
+	for n in ysort.get_children():
+		if n.has_meta("lamp_point"):
+			lamps.append(n.get_meta("lamp_point"))
+			lamp_ground.append(n.position + Vector2(0, 6))
 	sun_shadows.set_lamps(lamp_ground)
 	sun_shadows.add_caster(player.sprite)
 	sun_shadows.asar_started.connect(func(): hud.show_message(SunShadows.asar_message()))
@@ -344,6 +383,81 @@ func _build_ambience() -> void:
 	move_child(ambience, decor.get_index() + 1)
 	ambience.setup(self, {"tile": TILE, "map_size": Vector2(_width(), _height()) * TILE,
 		"water_cells": water, "firefly_cells": flies, "sway": sway, "leaf_trees": fruit, "lamps": lamps})
+
+
+# ---------------------------------------------------------------- kampung details
+
+## Fences, firewood, water jars, stones, bank reeds, Tok Pawang's sign and lamp, north path.
+func _build_details() -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 7
+	for line in FENCE_LINES:
+		var y: int = line[0]
+		for x in range(line[1], line[2] + 1):
+			for half in 2:
+				var pos := Vector2(x * TILE + 12 + half * 24, (y + 1) * TILE - 12)
+				_detail("pagar_%d.png" % rng.randi_range(0, 6), pos, Vector2(24, 6), false)
+	for group in KAMPUNG_PROPS:
+		for i in (group[2] as Array).size():
+			var c: Vector2i = group[2][i]
+			_detail("%s_%d.png" % [group[0], (i * 3 + c.x) % group[1]],
+				Vector2(c.x * TILE + TILE / 2.0, (c.y + 1) * TILE - 8), Vector2(20, 8), false)
+	for i in BANK_REEDS.size():
+		var c: Vector2i = BANK_REEDS[i]
+		_detail("rumput_air_%d.png" % (i % 8), Vector2(c.x * TILE + TILE / 2.0, (c.y + 1) * TILE - 6), Vector2.ZERO, true)
+	_build_pawang_details()
+	_build_forest_path()
+
+
+## Tok Pawang's house: a small, easy-to-miss sign half hidden by grass, and a pelita on a post.
+func _build_pawang_details() -> void:
+	var cell: Vector2i = HOUSES[PAWANG_HOUSE][1]
+	var base := Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE)
+	_detail("rumput_air_1.png", base + Vector2(-100, 2), Vector2.ZERO, true)   # grass just behind it
+	_detail("papan_tanda.png", base + Vector2(-124, 8), Vector2.ZERO, false)
+	var lamp := _detail("pelita.png", base + Vector2(96, 10), Vector2(8, 6), false)
+	lamp.set_meta("lamp_point", lamp.position + Vector2(-12 + 17, -46 + 29))  # flame pixel (17, 29)
+
+
+## North exit path: walking up it shows that the forest isn't safe yet.
+func _build_forest_path() -> void:
+	var area := Area2D.new()
+	var shape := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = Vector2(TILE * 2, 24)
+	shape.shape = rect
+	area.add_child(shape)
+	area.position = Vector2((FOREST_PATH_X + 1) * TILE, 14)
+	area.body_entered.connect(func(body):
+		if body is Player:
+			hud.show_message("The path leads north to Hutan Pinggir. The forest is not safe yet."))
+	add_child(area)
+
+
+## A small kampung prop at 1x, bottom-centre at `pos`. `blocker` = collision at its foot.
+func _detail(file: String, pos: Vector2, blocker: Vector2, sway: bool) -> Sprite2D:
+	var tex: Texture2D = load(KPROPS_DIR + file)
+	var s := Sprite2D.new()
+	s.texture = tex
+	s.offset = Vector2(0, -tex.get_height() / 2.0)
+	s.position = pos.round()
+	if sway:
+		s.set_meta("sway", true)
+	ysort.add_child(s)
+	if not sway:
+		sun_shadows.add_caster(s)
+	if blocker != Vector2.ZERO:
+		ZoneUtil.add_blocker(self, pos + Vector2(0, -blocker.y / 2.0), blocker)
+	return s
+
+
+## Index of the house whose door area contains `cell`, or -1.
+func house_at_door(cell: Vector2i) -> int:
+	for i in HOUSES.size():
+		var c: Vector2i = HOUSES[i][1]
+		if Rect2i(c.x - 2, c.y - 1, 5, 3).has_point(cell):
+			return i
+	return -1
 
 
 # ---------------------------------------------------------------- farming
@@ -376,6 +490,13 @@ func _on_use_requested(tool: int, cell: Vector2i) -> void:
 	if HOME_DOOR.has_point(cell):
 		hud.show_message("You sleep until morning...")
 		GameState.advance_day()
+		return
+	var house := house_at_door(cell)
+	if house > 0:
+		var lines: Array = HOUSE_PEOPLE[house].lines
+		var n: int = _door_visits.get(house, 0)
+		_door_visits[house] = n + 1
+		hud.show_message(lines[n % lines.size()])
 		return
 	if FarmState.is_ripe(cell):
 		var crop := FarmState.crop_data(FarmState.plots[cell].crop)

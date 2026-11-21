@@ -25,7 +25,12 @@
 - **Connected zones** (walk off an edge into the next zone). Built so far:
   - **Kampung**, the main place and the player's home (48 px tiles, PixelLab tilesets in the swamp
     style): dirt yard with 4 rumah kampung (2x scale), sawah fields where padi is planted, sandy
-    riverbank with a jetty, river. West path → swamp.
+    riverbank with a jetty, river. West path → swamp; **north path → Hutan Pinggir** (not built
+    yet: "the forest is not safe yet").
+  - **Houses:** yours, **Mak Som**, **Pak Hamid** and **Tok Pawang** (the mossy one, with a small,
+    easy-to-miss sign and a pelita post). Pressing E at a neighbour's door gives a short line.
+  - **Details:** rail fences on the sawah bunds (path between the two fields), firewood, tempayan,
+    stones and reeds at the jetty. Small props are drawn at 1×, matching the Pendekar's pixel size.
   - **Paya Bakau, the mangrove swamp** (48 px tiles, Dark Swamp pack): river with boardwalks and an
     island with a **defiled keramat**. Future home of Bujang Senang.
 - The early placeholder farm zone was removed; farming now happens in the kampung sawah.

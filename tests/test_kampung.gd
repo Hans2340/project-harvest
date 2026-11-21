@@ -41,6 +41,19 @@ func _initialize() -> void:
 		if c.has_meta("tree"):
 			trees += 1
 	_check(trees == 24 and bad_trees.is_empty(), "24 trees on dry ground, off the main path (bad: %s)" % [bad_trees])
+	# kampung details and house roles
+	var details := {}
+	for n in zone.get_node("YSort").get_children():
+		if n is Sprite2D and n.texture and n.texture.resource_path.contains("/kampung/props/"):
+			var key: String = n.texture.resource_path.get_file().get_basename().split("_")[0]
+			details[key] = details.get(key, 0) + 1
+	_check(details.get("pagar", 0) >= 80 and details.get("kayu", 0) == 5 and details.get("tempayan", 0) == 5 and details.get("batu", 0) == 5, "fences, firewood, jars and stones placed %s" % [details])
+	_check(details.get("papan", 0) == 1 and details.get("pelita", 0) == 1, "Tok Pawang's small sign and pelita placed")
+	var c3: Vector2i = zone.HOUSES[zone.PAWANG_HOUSE][1]
+	_check(zone.house_at_door(c3) == zone.PAWANG_HOUSE and zone.HOUSE_PEOPLE[zone.PAWANG_HOUSE].name == "Rumah Tok Pawang", "Tok Pawang's door found")
+	_check(zone.house_at_door(Vector2i(40, 25)) == -1, "no house door on the riverbank")
+	_check(zone._corner(18, 0) == "d" and zone._corner(19, 2) == "d", "dirt path to the north edge")
+	_check(zone._corner(32, 12) == "d" and zone._corner(33, 12) == "g", "path from the yard toward the sawah")
 	var game_time = root.get_node("GameState").GAME_MINUTES_PER_SECOND
 	_check(is_equal_approx(game_time * 25.0 * 60.0, 24.0 * 60.0), "25 real minutes = 24 game hours")
 	print("RESULT: ", "PASS" if ok else "FAIL")
