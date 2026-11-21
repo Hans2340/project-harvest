@@ -30,6 +30,17 @@ const SOLID := {"g": [0, 0], "d": [0, 15], "s": [1, 15], "b": [2, 15], "w": [3, 
 const HOUSES := [
 	[0, Vector2i(11, 9)], [1, Vector2i(24, 9)], [3, Vector2i(11, 18)], [2, Vector2i(24, 18)],
 ]
+## Feet of each house's corner stilts in its 144 px picture: front, left, right (the back one is
+## hidden; it completes the parallelogram). Used for the sun shadow's floor plan.
+const HOUSE_FEET := [
+	[Vector2(67, 135), Vector2(30, 119), Vector2(117, 110)],
+	[Vector2(47, 135), Vector2(12, 120), Vector2(112, 100)],
+	[Vector2(64, 138), Vector2(26, 118), Vector2(119, 112)],
+	[Vector2(74, 138), Vector2(14, 108), Vector2(133, 113)],
+]
+## Height of the houses to the eaves, and how far the roof sticks out (world px).
+const HOUSE_EAVES := 120.0
+const HOUSE_OVERHANG := 12.0
 ## Cells you can face to sleep (front of the home house).
 const HOME_DOOR := Rect2i(9, 8, 5, 3)
 
@@ -90,6 +101,7 @@ const VERTICES := [
 
 var _crop_sprites := {}   ## Vector2i -> Sprite2D
 var ambience := Ambience.new()
+var sun_shadows := SunShadows.new()
 
 @onready var ground: TileMapLayer = $Ground
 @onready var decor: Node2D = $Decor
@@ -102,6 +114,7 @@ var ambience := Ambience.new()
 
 
 func _ready() -> void:
+	shadows.add_child(sun_shadows)
 	_build_ground()
 	_build_jetty()
 	_build_props()
@@ -221,12 +234,12 @@ func _build_props() -> void:
 		s.position = base
 		s.set_meta("minimap", "building")
 		ysort.add_child(s)
-		shadows.add_child(ShadowUtil.make(base + Vector2(0, -26), Vector2(236, 64)))
+		sun_shadows.add_box(_house_footprint(s, HOUSE_FEET[h[0]]), HOUSE_EAVES, HOUSE_OVERHANG)
 		ZoneUtil.add_blocker(self, base + Vector2(0, -40), Vector2(200, 72))
 	for t in PALMS:
-		_add_tree("kelapa_%02d.png" % t[0], t[1], Vector2(16, 10), Vector2(46, 16)).set_meta("tree_kind", "palm")
+		_add_tree("kelapa_%02d.png" % t[0], t[1], Vector2(16, 10), Vector2.ZERO).set_meta("tree_kind", "palm")
 	for t in FRUIT_TREES:
-		_add_tree("pokok_buah_%02d.png" % t[0], t[1], Vector2(28, 14), Vector2(104, 34)).set_meta("tree_kind", "fruit")
+		_add_tree("pokok_buah_%02d.png" % t[0], t[1], Vector2(28, 14), Vector2(124, 60), true).set_meta("tree_kind", "fruit")
 	for c in TUFTS:
 		_standing_prop(c, "grass_tuft_small.png", Vector2.ZERO)
 	for c in ROCKS:
@@ -239,8 +252,20 @@ func _build_props() -> void:
 		decor.add_child(r)
 
 
+## The ground plan of a house sprite, from its corner stilts' feet (picture px) to world px.
+func _house_footprint(s: Sprite2D, feet: Array) -> PackedVector2Array:
+	var top_left := s.get_rect().position
+	var front: Vector2 = feet[0]
+	var left: Vector2 = feet[1]
+	var right: Vector2 = feet[2]
+	var pts := PackedVector2Array()
+	for p in [front, right, left + right - front, left]:
+		pts.append(s.position + (top_left + p) * s.scale)
+	return pts
+
+
 ## A tree standing on `cell`: sprite base at the cell's bottom, trunk blocks movement.
-func _add_tree(file: String, cell: Vector2i, trunk: Vector2, shadow: Vector2) -> Sprite2D:
+func _add_tree(file: String, cell: Vector2i, trunk: Vector2, shadow: Vector2, oval_only := false) -> Sprite2D:
 	var tex: Texture2D = load(TREE_DIR + file)
 	var base := Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE - 6)
 	var s := Sprite2D.new()
@@ -252,7 +277,7 @@ func _add_tree(file: String, cell: Vector2i, trunk: Vector2, shadow: Vector2) ->
 	s.set_meta("minimap", "tree")
 	s.set_meta("sway", true)
 	ysort.add_child(s)
-	shadows.add_child(ShadowUtil.make(base + Vector2(0, -2), shadow))
+	sun_shadows.add_caster(s, shadow, oval_only)
 	ZoneUtil.add_blocker(self, base + Vector2(0, -trunk.y / 2.0), trunk)
 	return s
 
@@ -267,7 +292,8 @@ func _standing_prop(cell: Vector2i, file: String, blocker: Vector2) -> void:
 	if file.contains("tuft"):
 		s.set_meta("sway", true)
 	ysort.add_child(s)
-	shadows.add_child(ShadowUtil.make(base + Vector2(0, -1), Vector2(tex.get_width() + 6, 10)))
+	if not file.contains("tuft"):
+		sun_shadows.add_caster(s)
 	if blocker != Vector2.ZERO:
 		ZoneUtil.add_blocker(self, base + Vector2(0, -blocker.y / 2.0), blocker)
 
@@ -291,9 +317,14 @@ func _build_ambience() -> void:
 		if n.get_meta("tree_kind", "") == "fruit":
 			fruit.append(n)
 	var lamps := []
+	var lamp_ground := []
 	for h in HOUSES:
 		var cell: Vector2i = h[1]
 		lamps.append(Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE - 100))
+		lamp_ground.append(Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE + 8))
+	sun_shadows.set_lamps(lamp_ground)
+	sun_shadows.add_caster(player.sprite)
+	sun_shadows.asar_started.connect(func(): hud.show_message(SunShadows.asar_message()))
 	add_child(ambience)
 	move_child(ambience, decor.get_index() + 1)
 	ambience.setup(self, {"tile": TILE, "map_size": Vector2(_width(), _height()) * TILE,
