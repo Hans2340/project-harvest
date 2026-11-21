@@ -57,6 +57,7 @@ godot --headless --path . -s tests/test_kampung.gd
 godot --headless --path . -s tests/test_clock.gd
 godot --headless --path . -s tests/test_minimap_shadows.gd
 godot --headless --path . -s tests/test_ambience.gd
+godot --headless --path . -s tests/test_ground_detail.gd
 ```
 
 Each prints PASS/FAIL: sawah farming, the swamp, travelling between zones, the inventory, the kampung, the clock, the minimap/shadows, and the environment/weather.

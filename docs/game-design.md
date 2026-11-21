@@ -32,6 +32,10 @@
     Pressing E at a neighbour's door gives a short line that follows the lore rules.
   - **Details:** rail fences on the sawah bunds (path between the two fields), firewood, tempayan,
     stones and reeds at the jetty. Small props are drawn at 1×, matching the Pendekar's pixel size.
+  - **Ground detail (Stoneshard-inspired):** every object is dressed at its foot (weeds, wood chips,
+    moss, leaves, pebbles); a fixed-seed scatter adds weed clumps, wildflowers, bushes, pebbles, mud
+    and trampled earth by terrain, keeping paths clear; stone edging along the paths; fallen fronds
+    and coconuts under the palms; puddles in the rain; burung tiung that fly off when you come close.
   - **Paya Bakau, the mangrove swamp** (48 px tiles, Dark Swamp pack): river with boardwalks and an
     island with a **nailed Batu Sempadan** (boundary stone, see `docs/lore.md`). Act 1: Bujang Senang.
 - The early placeholder farm zone was removed; farming now happens in the kampung sawah.

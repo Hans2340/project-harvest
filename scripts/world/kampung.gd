@@ -75,6 +75,26 @@ const KAMPUNG_PROPS := [
 	["tempayan", 8, [Vector2i(14, 10), Vector2i(27, 10), Vector2i(14, 19), Vector2i(28, 19), Vector2i(16, 9)]],
 	["batu", 7, [Vector2i(12, 25), Vector2i(23, 25), Vector2i(36, 25), Vector2i(5, 25), Vector2i(31, 3)]],
 ]
+## Ground cover (PixelLab, 1x): name -> variant count. Flat pieces lie under the shadows;
+## standing ones (grass, flowers) are y-sorted and sway. Puddles only show in the rain.
+const GROUND_DIR := "res://assets/sprites/kampung/ground/"
+const GROUND_SETS := {"serpihan": 10, "rumput": 12, "rumput_kering": 4, "bunga": 12, "kerikil": 10,
+	"lopak": 8, "lumpur": 6, "daun": 10, "lumut": 10, "tanah": 10, "batu_tepi_h": 12, "batu_tepi_v": 10,
+	"renek": 14, "pelepah": 10, "kelapa_jatuh": 10}
+const STANDING_SETS := ["rumput", "rumput_kering", "bunga", "renek", "kelapa_jatuh"]
+## Stone edging along the paths (world px): [from, to, vertical?]. Gaps are left so it looks worn.
+const PATH_EDGES := [
+	[Vector2(852, 4), Vector2(852, 186), true], [Vector2(924, 4), Vector2(924, 186), true],       # north path
+	[Vector2(8, 516), Vector2(282, 516), false], [Vector2(8, 636), Vector2(282, 636), false],    # west path
+	[Vector2(1452, 516), Vector2(1590, 516), false], [Vector2(1452, 636), Vector2(1590, 636), false],  # to the sawah
+	[Vector2(806, 980), Vector2(806, 1100), true], [Vector2(922, 980), Vector2(922, 1100), true],  # to the jetty
+]
+var birds := GroundBirds.new()
+const GROUND_ALPHA := {"tanah": 0.5, "lumpur": 0.8}
+## Cells kept clear of scattered cover: paths people walk on (x, y, w, h in cells).
+const PATH_RECTS := [Rect2i(17, 0, 4, 4), Rect2i(0, 10, 7, 4), Rect2i(30, 10, 4, 4),
+	Rect2i(34, 12, 11, 2), Rect2i(16, 19, 5, 6), Rect2i(17, 24, 3, 7)]
+
 ## Tall reeds at the jetty and along the bank (sway in the wind).
 const BANK_REEDS := [Vector2i(16, 26), Vector2i(20, 26), Vector2i(17, 27), Vector2i(19, 27),
 	Vector2i(14, 26), Vector2i(22, 26), Vector2i(6, 26), Vector2i(41, 26)]
@@ -138,6 +158,9 @@ const VERTICES := [
 
 var _crop_sprites := {}   ## Vector2i -> Sprite2D
 var _door_visits := {}    ## house index -> times you've knocked
+var _ground_rng := RandomNumberGenerator.new()
+var _ground_cover := Node2D.new()   ## flat ground pieces, drawn under the shadows
+var _puddles: Array[Sprite2D] = []
 var ambience := Ambience.new()
 var sun_shadows := SunShadows.new()
 var dummy := TrainingDummy.new()
@@ -154,10 +177,15 @@ var dummy := TrainingDummy.new()
 
 func _ready() -> void:
 	shadows.add_child(sun_shadows)
+	_ground_rng.seed = 2026
+	add_child(_ground_cover)
+	move_child(_ground_cover, ground.get_index() + 1)
 	_build_ground()
 	_build_jetty()
 	_build_props()
 	_build_details()
+	_build_ground_cover()
+	_build_birds()
 	_sync_crops()
 	_build_ambience()
 	var w := _width() * TILE
@@ -399,11 +427,13 @@ func _build_details() -> void:
 			for half in 2:
 				var pos := Vector2(x * TILE + 12 + half * 24, (y + 1) * TILE - 12)
 				_detail("pagar_%d.png" % rng.randi_range(0, 6), pos, Vector2(24, 6), false)
+				_dress(pos, "fence")
 	for group in KAMPUNG_PROPS:
 		for i in (group[2] as Array).size():
 			var c: Vector2i = group[2][i]
-			_detail("%s_%d.png" % [group[0], (i * 3 + c.x) % group[1]],
-				Vector2(c.x * TILE + TILE / 2.0, (c.y + 1) * TILE - 8), Vector2(20, 8), false)
+			var ppos := Vector2(c.x * TILE + TILE / 2.0, (c.y + 1) * TILE - 8)
+			_detail("%s_%d.png" % [group[0], (i * 3 + c.x) % group[1]], ppos, Vector2(20, 8), false)
+			_dress(ppos, group[0])
 	for i in BANK_REEDS.size():
 		var c: Vector2i = BANK_REEDS[i]
 		_detail("rumput_air_%d.png" % (i % 8), Vector2(c.x * TILE + TILE / 2.0, (c.y + 1) * TILE - 6), Vector2.ZERO, true)
@@ -418,6 +448,7 @@ func _build_senik_details() -> void:
 	_detail("rumput_air_1.png", base + Vector2(-100, 2), Vector2.ZERO, true)   # grass just behind it
 	_detail("papan_tanda.png", base + Vector2(-124, 8), Vector2.ZERO, false)
 	var lamp := _detail("pelita.png", base + Vector2(96, 10), Vector2(8, 6), false)
+	_dress(lamp.position, "post")
 	lamp.set_meta("lamp_point", lamp.position + Vector2(-12 + 17, -46 + 29))  # flame pixel (17, 29)
 
 
@@ -447,7 +478,7 @@ func _detail(file: String, pos: Vector2, blocker: Vector2, sway: bool) -> Sprite
 		s.set_meta("sway", true)
 	ysort.add_child(s)
 	if not sway:
-		sun_shadows.add_caster(s)
+		sun_shadows.add_caster(s)   # cast shadow only (leoxent: foot ovals are for fruit trees only)
 	if blocker != Vector2.ZERO:
 		ZoneUtil.add_blocker(self, pos + Vector2(0, -blocker.y / 2.0), blocker)
 	return s
@@ -460,6 +491,203 @@ func house_at_door(cell: Vector2i) -> int:
 		if Rect2i(c.x - 2, c.y - 1, 5, 3).has_point(cell):
 			return i
 	return -1
+
+
+# ---------------------------------------------------------------- ground cover
+
+## Base dressing for everything standing, then terrain-based scatter, then puddles for rain.
+func _build_ground_cover() -> void:
+	for n in ysort.get_children():
+		if n.has_meta("tree"):
+			_dress(n.position, "fruit_tree" if n.get_meta("tree_kind", "") == "fruit" else "palm")
+		elif n.has_meta("minimap") and n.get_meta("minimap") == "building":
+			_dress(n.position, "house")
+	_dress(dummy.position, "trampled")
+	for c in ROCKS:
+		_dress(Vector2(c.x * TILE + TILE / 2.0, c.y * TILE + TILE - 8), "batu")
+	_scatter()
+	_build_path_edges()
+	GameState.weather_changed.connect(func(_w): _show_puddles())
+	_show_puddles()
+
+
+## Small things around an object's foot so it sits in the ground, not on it.
+func _dress(pos: Vector2, kind: String) -> void:
+	var r := _ground_rng
+	match kind:
+		"kayu_api":
+			_ground("tanah", pos + Vector2(0, -3))
+			for i in r.randi_range(2, 3):
+				_ground("serpihan", pos + Vector2(r.randf_range(-24, 24), r.randf_range(-2, 9)))
+			_ground("rumput", pos + Vector2(r.randf_range(14, 20) * (1 if r.randf() < 0.5 else -1), 2))
+		"tempayan":
+			_ground("lumut", pos + Vector2(0, 1))
+			if r.randf() < 0.6:
+				_ground("rumput", pos + Vector2(r.randf_range(10, 15) * (1 if r.randf() < 0.5 else -1), 3))
+		"batu":
+			for i in 2:
+				_ground("kerikil", pos + Vector2(r.randf_range(-26, 26), r.randf_range(0, 10)))
+			_ground("rumput", pos + Vector2(r.randf_range(-16, 16), 3))
+		"fence":
+			if r.randf() < 0.4:
+				_ground("rumput", pos + Vector2(r.randf_range(-10, 10), 3))
+			elif r.randf() < 0.2:
+				_ground("bunga", pos + Vector2(r.randf_range(-10, 10), 4))
+		"post":
+			_ground("lumut", pos + Vector2(0, 1))
+			_ground("rumput", pos + Vector2(-9, 3))
+		"fruit_tree":
+			for i in r.randi_range(3, 5):
+				_ground("daun", pos + Vector2(r.randf_range(-56, 56), r.randf_range(-14, 22)))
+			for i in 2:
+				_ground("rumput", pos + Vector2(r.randf_range(-22, 22), r.randf_range(2, 8)))
+		"palm":
+			_ground("rumput", pos + Vector2(r.randf_range(-14, 14), 4))
+			if r.randf() < 0.7:
+				_ground("pelepah", pos + Vector2(r.randf_range(-40, 40), r.randf_range(4, 18)))
+			if r.randf() < 0.55:
+				_ground("kelapa_jatuh", pos + Vector2(r.randf_range(-24, 24), r.randf_range(6, 14)))
+		"house":
+			for i in 4:   # weeds along the front stilts
+				_ground("rumput", pos + Vector2(r.randf_range(-96, 96), r.randf_range(-6, 4)))
+			for i in 2:
+				_ground("kerikil", pos + Vector2(r.randf_range(-90, 90), r.randf_range(4, 14)))
+		"trampled":
+			_ground("tanah", pos + Vector2(0, -2))
+			_ground("tanah", pos + Vector2(r.randf_range(-12, 12), 6))
+
+
+## One ground piece from `group` at `pos` (a random variant). Paths stay clear (except edging).
+func _ground(group: String, pos: Vector2) -> Sprite2D:
+	if not group.begins_with("batu_tepi") and _on_path(Vector2i(pos / float(TILE))):
+		return null
+	var tex: Texture2D = load(GROUND_DIR + "%s_%d.png" % [group, _ground_rng.randi_range(0, GROUND_SETS[group] - 1)])
+	var s := Sprite2D.new()
+	s.texture = tex
+	s.position = pos.round()
+	s.flip_h = _ground_rng.randf() < 0.5
+	s.modulate.a = GROUND_ALPHA.get(group, 1.0)
+	s.set_meta("ground", group)
+	if group in STANDING_SETS:
+		s.offset = Vector2(0, -tex.get_height() / 2.0)
+		s.set_meta("sway", true)
+		ysort.add_child(s)
+	else:
+		_ground_cover.add_child(s)
+	if group == "lopak":
+		_puddles.append(s)
+	return s
+
+
+func _on_path(cell: Vector2i) -> bool:
+	for r in PATH_RECTS:
+		if r.has_point(cell):
+			return true
+	return false
+
+
+## Cells next to houses and props are left to the base dressing.
+func _crowded(cell: Vector2i) -> bool:
+	for h in HOUSES:
+		var c: Vector2i = h[1]
+		if Rect2i(c.x - 3, c.y - 4, 7, 5).has_point(cell):
+			return true
+	for group in KAMPUNG_PROPS:
+		if cell in group[2]:
+			return true
+	return cell == DUMMY_CELL
+
+
+## Fixed-seed scatter by terrain: grass gets weeds and flowers, edges grow thicker, the dirt yard
+## gets pebbles, chips, mud and the odd tuft, sand gets pebbles. Paths, sawah and water stay clear.
+func _scatter() -> void:
+	var r := _ground_rng
+	for y in _height():
+		for x in _width():
+			var cell := Vector2i(x, y)
+			if _on_path(cell) or _crowded(cell):
+				continue
+			var c := _corner(x, y) + _corner(x + 1, y) + _corner(x, y + 1) + _corner(x + 1, y + 1)
+			if c.contains("w") or c == "ssss":
+				continue
+			var at := func(): return Vector2(x * TILE + r.randf_range(6, TILE - 6), y * TILE + r.randf_range(10, TILE - 4))
+			if c == "gggg":
+				if r.randf() < 0.06:
+					_bush(at.call())
+				if r.randf() < 0.32:
+					var p: Vector2 = at.call()
+					_ground("rumput", p)
+					if r.randf() < 0.45:   # clumps, not single tufts
+						_ground("rumput" if r.randf() < 0.8 else "rumput_kering", p + Vector2(r.randf_range(-14, 14), r.randf_range(-6, 6)))
+				if r.randf() < 0.13:
+					_ground("bunga", at.call())
+				if r.randf() < 0.05:
+					_ground("kerikil", at.call())
+			elif c.contains("g"):   # edges of yard, sawah and bank: thicker growth
+				if r.randf() < 0.42:
+					_ground("rumput", at.call())
+				if r.randf() < 0.08:
+					_ground("bunga", at.call())
+			elif c == "dddd":
+				var roll := r.randf()
+				if roll < 0.13:
+					_ground("kerikil", at.call())
+				elif roll < 0.18:
+					_ground("serpihan", at.call())
+				elif roll < 0.25:
+					_ground("lumpur", at.call())
+				elif roll < 0.33:
+					_ground("tanah", at.call())
+				elif roll < 0.39:
+					_ground("rumput", at.call())
+				if r.randf() < 0.11:
+					_ground("lopak", at.call())
+			elif c == "bbbb" and r.randf() < 0.1:
+				_ground("kerikil", at.call())
+
+
+## A bush (renek): y-sorted, sways, has a foot shadow and blocks a little at its foot.
+func _bush(pos: Vector2) -> void:
+	var b := _ground("renek", pos)
+	if b == null:
+		return
+	b.set_meta("sway", true)
+	sun_shadows.add_caster(b)
+	ZoneUtil.add_blocker(self, pos + Vector2(0, -4), Vector2(b.texture.get_width() * 0.6, 8))
+
+
+## Half-sunk stones along the edges of the main paths, with a few gaps.
+func _build_path_edges() -> void:
+	var r := _ground_rng
+	for e in PATH_EDGES:
+		var from: Vector2 = e[0]
+		var to: Vector2 = e[1]
+		var vertical: bool = e[2]
+		var step := 22.0 if vertical else 32.0
+		var n := int(from.distance_to(to) / step)
+		for i in n + 1:
+			if r.randf() < 0.25:   # worn gaps
+				continue
+			var p := from.lerp(to, float(i) / maxf(n, 1)) + Vector2(r.randf_range(-2, 2), r.randf_range(-2, 2))
+			_ground("batu_tepi_v" if vertical else "batu_tepi_h", p)
+
+
+## Burung tiung on grass and the yard by day (they fly off when you come close).
+func _build_birds() -> void:
+	var spots := []
+	for y in range(2, 24):
+		for x in range(1, 45):
+			var c := _corner(x, y) + _corner(x + 1, y + 1)
+			if not _on_path(Vector2i(x, y)) and not _crowded(Vector2i(x, y)) and (c == "gg" or c == "dd"):
+				spots.append(Vector2(x * TILE + TILE / 2.0, y * TILE + TILE / 2.0))
+	ysort.add_child(birds)
+	birds.setup(player, spots, 7)
+
+
+## Puddles are there only when it rains.
+func _show_puddles() -> void:
+	for pud in _puddles:
+		pud.visible = GameState.is_raining()
 
 
 # ---------------------------------------------------------------- farming
