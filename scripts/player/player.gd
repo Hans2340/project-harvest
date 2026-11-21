@@ -16,15 +16,16 @@ const TOOL_NAMES := ["Cangkul (hoe)", "Benih padi (seeds)", "Air (watering)"]
 ## Grid size of the current zone (48 px for kampung and swamp). Set by the zone.
 @export var tile_size: float = 32.0
 
-## Sprite sheet: one row per facing (down, up, side), column 0 = standing,
-## columns 1..RUN_FRAMES = run cycle.
-const RUN_FRAMES := 8
-## Run-cycle frames per second at walking speed (scaled up while running).
-@export var anim_fps: float = 10.0
+## Sprite sheet: 8 columns, 9 rows. Rows come in blocks of three facings
+## (down, up, side; left = side flipped), one block per animation below.
+enum Anim { IDLE, WALK, RUN }
+const ANIM_FRAMES := [4, 8, 8]
+const ANIM_FPS := [5.0, 10.0, 14.0]
 
 var facing := Vector2.DOWN
 var current_tool: int = Tool.HOE
 var can_move := true
+var _anim: int = Anim.IDLE
 var _anim_time := 0.0
 
 @onready var sprite: Sprite2D = $Sprite
@@ -37,12 +38,15 @@ func _physics_process(delta: float) -> void:
 	var running := Input.is_action_pressed("run")
 	velocity = input * (run_speed if running else speed)
 	move_and_slide()
+	var anim: int = Anim.IDLE
 	if input != Vector2.ZERO:
 		_update_facing(input)
-		_anim_time += delta * anim_fps * (run_speed / speed if running else 1.0)
-	else:
+		anim = Anim.RUN if running else Anim.WALK
+	if anim != _anim:
+		_anim = anim
 		_anim_time = 0.0
-	_update_frame(input != Vector2.ZERO)
+	_anim_time += delta * ANIM_FPS[_anim]
+	_update_frame()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -70,16 +74,14 @@ func _update_facing(dir: Vector2) -> void:
 	sprite.flip_h = facing == Vector2.LEFT
 
 
-func _update_frame(moving: bool) -> void:
-	var row := 0
+func _update_frame() -> void:
+	var face := 0
 	match facing:
 		Vector2.DOWN:
-			row = 0
+			face = 0
 		Vector2.UP:
-			row = 1
+			face = 1
 		_:
-			row = 2
-	var col := 0
-	if moving:
-		col = 1 + int(_anim_time) % RUN_FRAMES
-	sprite.frame_coords = Vector2i(col, row)
+			face = 2
+	var col := int(_anim_time) % int(ANIM_FRAMES[_anim])
+	sprite.frame_coords = Vector2i(col, _anim * 3 + face)
