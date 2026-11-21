@@ -1,8 +1,9 @@
 # Opening scene: "Hikayat Sungai Seri"
 
-A narrated opening of about 2 minutes: layered pictures that move (parallax, slow pans and zooms),
-particles done in Godot (fog, embers, rain, fireflies, dust), a narrator, and subtitles.
-People are **silhouettes** or are not shown. The player's face is never shown.
+A narrated opening of about 2 minutes, staged as a **Malay wayang kulit shadow play**: flat puppet
+cut-outs in front of a glowing screen (kelir), moved in layers (parallax, slow pans, puppets
+sliding on and off), particles done in Godot (fog, embers, fireflies, dust), a narrator in the
+manner of a storyteller, and subtitles. Everyone is a shadow, so no face is ever shown.
 
 Version 2 (2026-11-21), matching `docs/lore.md` v2 and the approved structure in
 `docs/game-design-proposed.md`:
@@ -14,31 +15,71 @@ Version 2 (2026-11-21), matching `docs/lore.md` v2 and the approved structure in
 - Batu Sempadan instead of keramat offerings; bound beings are victims; the Guardians are creatures
   of God, not gods; Islam is part of village life (azan subuh, surau) and is never shown as magic.
 
+**Art style: wayang kulit** (chosen by leoxent, 2026-11-21, from five Gemini tests). The cinematic
+is drawn in a different style from the pixel-art gameplay, on purpose. Images are made with
+**Gemini**. We take only the **look** of wayang kulit: no deity or epic puppets (Seri Rama,
+Hanuman and so on), no opening ritual (buka panggung), no dalang shown.
+
 ---
 
 ## 1. How to use the prompts
 
-**Size.** The game is 640x360. Draw each layer at **2x (1280x720)** so it stays sharp when
-scaled. Draw layers that pan **wider than the screen** (the width is given per layer).
+**Tool and size.** Generate with Gemini at 16:9 (or wider for pans), then scale to **1920x1080**.
+Layers that pan are **2304 px wide** (1.2x the screen). Shadows are soft by nature, so upscaling a
+little does not hurt.
 
-**Layers.** Every layer except the sky is **one separate image with a transparent background**,
-so Godot can move it at its own speed (far = slow, near = fast).
+**How a shot is built.** Every shot has the same three kinds of layer:
+1. **The kelir**: one glowing screen image, made **once** and reused in every shot. Godot tints it
+   per shot (gold at dawn, red for fire, cold blue at the Kuala).
+2. **Cut-out strips**: landscape shapes (hills, river bank, forest) as wide shadow cut-outs.
+3. **Puppets**: figures, creatures and objects as separate cut-outs, so Godot can move them.
 
-**Style prefix.** Put this at the start of **every** image prompt:
+**Transparent layers.** Gemini cannot make true transparency. Generate every cut-out on **flat
+pure green (#00FF00)** and key the green out (or use a remove-background tool). Dark shadows on
+green key cleanly.
 
-> pixel art, dark muted painterly palette, inspired by Stoneshard, 15th-century Malay Nusantara,
-> soft dithering, limited colour palette, cinematic, no text, no letters, no watermark
+**The look** (leoxent's chosen test prompt, kept word for word as the target):
 
-**Silhouette rule.** Put this in every prompt that has a person in it:
+> A scene inspired by Malay wayang kulit shadow puppetry: the figures, houses and palms are flat
+> cut-out silhouettes with delicate punched lace-like patterns, in front of a glowing warm screen of
+> orange and amber light, like a shadow play lit from behind by an oil lamp, with soft light falloff
+> toward the edges.
 
-> people shown only as solid near-black silhouettes with a thin warm rim light, no faces visible
+Use test image C as a **style reference** in Gemini for every layer, so all shots match it.
+No bamboo rods and no "photo of a real screen": the look is the clean one from test C.
 
-**Transparent layers.** Add this to every layer except the sky:
+**Style prefix for cut-outs and puppets.** Put this at the start of every cut-out prompt:
 
-> isolated on a transparent background, nothing behind it
+> Inspired by Malay wayang kulit shadow puppetry: a flat cut-out silhouette with delicate punched
+> lace-like patterns, dark shadow colour, crisp edges, in the same style as the reference image.
+> On a plain flat pure green (#00FF00) background, nothing else: no screen, no light, no ground.
 
-**Not allowed in any image:** Quran verses or any Arabic writing, real logos, modern objects
-(rifles, rubber trees, cassava, zinc roofs), and gore.
+**Ordo Sigillum look.** Malay shapes are curling and organic (vines, leaves, waves). Ordo shapes
+are **stiff and geometric**: straight lines, square holes in a grid, iron rivets, no lace. Add to
+every Ordo prompt:
+
+> drawn in a stiff, angular cut-out style with straight lines, square grid holes and rivets, cold
+> and mechanical, unlike the curling Malay shapes
+
+**Coloured "light-through" pieces.** Some things are not shadows but light shining through thin
+painted material (the hidden Bunian world, the bound beings). For these, replace "dark shadow
+colour" in the prefix with:
+
+> thin translucent painted cut-out with light shining through it, soft glowing colours
+
+**Surau.** Every prompt that shows the surau adds:
+
+> The surau has a two- or three-tiered pyramid roof (atap tumpang) with a small rounded finial on
+> top, no spire, not a pagoda or temple.
+
+**Rules for every prompt (put at the end):**
+
+> No text, letters, writing or symbols anywhere in the image, no Arabic script. No modern objects:
+> no zinc roofs, no rubber trees, no power lines. No visible faces.
+
+**After generating:** check every image for fake writing or letter-like marks (Gemini adds them)
+and remove them; check the surau is not a pagoda; give all images the same colour grade and a
+little grain so they read as one set.
 
 ---
 
@@ -47,17 +88,17 @@ so Godot can move it at its own speed (far = slow, near = fast).
 The narration is in Malay, in the style of an old hikayat. English subtitles are optional (`EN`).
 Timings are approximate.
 
-| # | Shot | Time | Camera |
-|---|---|---|---|
-| 1 | Subuh on Sungai Seri | 0:00–0:14 | slow pan right, sun rises |
-| 2 | Batu Sempadan, two worlds | 0:14–0:28 | slow push-in |
-| 3 | The Four Guardians | 0:28–0:48 | four slow cross-fades |
-| 4 | Pale sails at the Kuala | 0:48–1:00 | ships slide in, fog drifts |
-| 5 | Si Mata Berpaku | 1:00–1:10 | zoom on the emblem, nails strike |
-| 6 | The first nail, at the Kuala | 1:10–1:26 | push-in, black glow pulses |
-| 7 | Upriver, the two of them | 1:26–1:42 | slow pan along the bund |
-| 8 | Tok Senik's hut | 1:42–1:54 | static, lamp flicker |
-| 9 | The jetty, title | 1:54–2:08 | pull back, title fades in |
+| # | Shot | Time | Camera | Kelir tint |
+|---|---|---|---|---|
+| 1 | Subuh on Sungai Seri | 0:00–0:14 | slow pan right, light rises | pale gold to soft pink |
+| 2 | Batu Sempadan, two worlds | 0:14–0:28 | slow push-in | green-gold |
+| 3 | The Four Guardians | 0:28–0:48 | four puppet changes | teal, orange, deep green, pale gold |
+| 4 | Pale sails at the Kuala | 0:48–1:00 | ships slide in | cold grey-blue |
+| 5 | Si Mata Berpaku | 1:00–1:10 | emblem rises, nails strike | iron white |
+| 6 | The first nail, at the Kuala | 1:10–1:26 | push-in, glow pulses | deep violet, red at the bottom edge |
+| 7 | Upriver, the two of them | 1:26–1:42 | puppets walk along the bund | warm amber |
+| 8 | Tok Senik's hut | 1:42–1:54 | static, lamp flicker | deep orange |
+| 9 | The jetty, title | 1:54–2:08 | pull back, title fades in | dawn gold |
 
 The player's look is chosen after the cinematic, so the shot 7 narration ("seorang abang ...
 adiknya") and the silhouettes work for a younger brother or a younger sister.
@@ -110,125 +151,131 @@ adiknya") and the silhouettes work for a younger brother or a younger sister.
 > *(Title fades in. The working title is "Sungai Seri" until a final name is chosen. The same
 > line closes the epilogue, so the game begins and ends with it.)*
 
-After the title: fade to Tok Senik's questions (his voice, the hut from shot 8 behind the menu).
+After the title: the lamp behind the kelir goes out (the screen fades to black), then Tok Senik's
+questions begin in the game's own pixel style.
 
 ---
 
 ## 3. Image prompts, per shot
 
-Each prompt below comes **after** the style prefix (and the silhouette and transparent rules
-where they apply). Sizes are at 2x.
+Each cut-out prompt comes **after** the style prefix (plus the Ordo, light-through and surau lines
+where they apply) and **before** the rules. Sizes are final sizes after scaling.
+
+### The kelir (made once, used in every shot)
+
+| Layer | Size | Prompt (no style prefix, no green background) |
+|---|---|---|
+| K Kelir | 2304x1080 | An empty glowing warm screen of orange and amber light, like a shadow-play screen lit from behind by an oil lamp, brightest in the centre with soft light falloff toward the edges, a faint cloth texture. Nothing on the screen. |
+
+Godot tints this per shot (see the shot list). Keep the amber version as the default (shots 1, 7,
+8, 9); for the cold or dark shots, tint it, or generate a second, paler version that tints better.
 
 ### Shot 1: Subuh on Sungai Seri
 
 | Layer | Size | Prompt |
 |---|---|---|
-| 1a Sky | 1600x720 | pre-dawn sky over a tropical river valley, deep indigo at the top fading to soft orange and pink at the horizon, a few thin clouds lit from below, last faint stars |
-| 1b Far hills | 1800x400 | distant layered jungle hills in misty blue-grey silhouette, one taller mountain far away, soft haze, transparent above the ridgeline |
-| 1c River and sawah | 1800x360 | a calm wide brown river reflecting the dawn sky, flooded rice paddies with low earth bunds along the near bank, thin morning mist on the water |
-| 1d Kampung | 1600x420 | a small Malay kampung in silhouette: stilted wooden houses with steep thatched attap roofs, coconut palms, a small wooden surau with a tiered roof, one warm oil-lamp glow in a window |
-| 1e Foreground | 1800x300 | dark foreground reeds and tall grass, a few drooping coconut fronds at the edges, nearly black with a faint warm rim light |
+| 1a Far hills | 2304x500 | a long strip of distant layered jungle hills with one taller mountain, the top edge cut in soft rounded tree shapes, few holes, as a far-away shadow |
+| 1b Kampung bank | 2304x600 | a long strip of river bank: stilted wooden houses with steep thatched attap roofs, coconut palms and banana plants, a small wooden surau, the river shown as a few cut wavy lines along the bottom, punched patterns in the roofs and leaves |
+| 1c Foreground | 2304x400 | a strip of tall reeds and grass with two drooping coconut fronds at the ends, large and close |
+
+Godot: blur 1a slightly (further from the screen), fireflies fading out as the light rises.
 
 ### Shot 2: Batu Sempadan, two worlds
 
 | Layer | Size | Prompt |
 |---|---|---|
-| 2a Background forest | 1400x720 | deep tropical rainforest at dusk, huge buttress-root trees, hanging vines, layered green-blue mist, shafts of soft light |
-| 2b Batu Sempadan | 600x600 | an old weathered standing stone in a forest clearing, carved with simple worn spiral and leaf patterns (no letters), moss and roots around its base, calm and ancient |
-| 2c Hidden world | 1400x720 | a faint ghostly overlay of a hidden village among the trees: delicate pale-green and gold houses, glowing leaf shapes, very translucent and dreamlike, as if half seen |
-| 2d Foreground | 1400x320 | dark ferns and big leaves framing the bottom corners, almost black |
+| 2a Forest | 2304x1080 | a deep rainforest strip: huge buttress-root trees and hanging vines framing an empty clearing in the middle |
+| 2b Batu Sempadan (puppet) | 700x900 | an old standing stone, carved through with simple spiral and leaf patterns (no letters), roots and moss around its base, calm and ancient |
+| 2c Hidden world (light-through) | 2304x900 | a delicate hidden village among trees: slender houses and glowing leaf shapes in pale green and gold, very light and dreamlike |
+| 2d Foreground | 2304x400 | large fern and leaf shapes framing the bottom corners |
 
-Godot: fireflies, and fade layer 2c in and out slowly.
+Godot: fade 2c in and out slowly behind 2a; fireflies.
 
 ### Shot 3: The Four Guardians
 
-Four panels, about 5 seconds each, cross-faded. Each panel is 1280x720 with two layers (back and
-front) so it can drift slightly. Keep the creatures **half hidden**: they are shown as old and
-calm, not as monsters and not as something to bow to.
+Four quick scene changes, about 5 seconds each, the way a dalang swaps puppets. The creatures are
+shown as old and calm: not monsters, and nothing in them looks like an object of worship.
 
 | Layer | Size | Prompt |
 |---|---|---|
-| 3a Lake, back | 1400x720 | a still dark jungle lake at dawn, lotus pads and pink lotus flowers, mist over the water, forested hills behind |
-| 3a Naga, front | 1200x400 | a long serpent-like Malay naga with no legs and a small ornate crown (mahkota), mostly under the water, only a curve of scaled back and the crown above the surface, teal and copper scales |
-| 3b River mouth, back | 1400x720 | a mangrove river mouth at dusk, wide brown water meeting the sea, orange sky |
-| 3b Crocodile, front | 1200x300 | an enormous old crocodile almost fully under the water, only its eyes, snout tip and a long ridge of back scales above the surface, calm |
-| 3c Forest, back | 1400x720 | deep rainforest at night, huge buttress roots, a gap in the trees with soft light |
-| 3c Bunian lights, front | 1400x720 | many small floating pale-green and gold leaf-shaped lights among the roots, and the faint outline of a delicate hidden doorway between two trees, very translucent |
-| 3d Mountain, back | 1400x720 | the misty peak of a tall jungle mountain above a sea of clouds, early morning, pale gold light |
-| 3d Puteri, front | 500x500 | a small, far-off female silhouette standing on a rock ledge near the peak, a long selendang moving in the wind, seen from behind, no face |
+| 3w Water strip (shared) | 2304x400 | a strip of stylised water: rows of curling wave shapes, for the bottom of the screen |
+| 3a Naga (puppet) | 1600x700 | a long serpent-like Malay naga with no legs and a small ornate crown (mahkota), its body in loose coils as if rising from a lake, lace-patterned scales, lotus shapes beside it |
+| 3b Bujang Senang (puppet) | 1600x500 | an enormous old crocodile seen from the side, low and long, half sunk as if in water, ridged back scales cut as a pattern, calm |
+| 3c Bunian (light-through) | 2304x1080 | many floating leaf-shaped lights in pale green and gold among two giant buttress trees, with the faint outline of a slender doorway between them |
+| 3c Forest frame | 2304x1080 | two giant buttress-root trees at the left and right edges, an open gap between them |
+| 3d Mountain (strip) | 2304x700 | a tall jungle mountain peak rising above rolling cloud shapes |
+| 3d Puteri (puppet) | 400x700 | a slender woman standing, seen from behind, a long selendang flowing from her shoulders, simple and dignified, not a goddess or a court puppet |
 
-Godot: slow drift per panel; ripples on 3a and 3b; floating leaf lights on 3c; moving cloud sea on 3d.
-Art budget: 3c can reuse the light shapes from 2c.
+Godot: waves rock gently in 3a and 3b; leaf lights drift in 3c; clouds slide in 3d.
 
 ### Shot 4: Pale sails at the Kuala
 
 | Layer | Size | Prompt |
 |---|---|---|
-| 4a Sky and sea | 1600x720 | grey overcast sky over a river mouth opening to the sea, cold pale light, a flat silver sea |
-| 4b Ships | 1200x500 | three 15th-century carracks with tall pale bone-white sails, dark hulls, a black round seal sigil painted on the main sail, seen from the side at a distance |
-| 4c Coast | 1800x360 | a mangrove-lined river mouth in dark silhouette, a few fishing boats pulled up on the sand |
-| 4d Fog | 1800x360 | soft drifting sea fog bands, white and semi-transparent |
+| 4a Sea strip | 2304x400 | a strip of flat sea with low regular wave shapes, cut in straight even lines |
+| 4b Carracks (puppet, Ordo) | 1600x800 | three 15th-century carracks with tall square sails, high castles at bow and stern, the main sails cut through with a round seal shape that has an eye in the middle |
+| 4c Coast | 2304x500 | a strip of mangrove coast at a river mouth, tangled roots, a few small fishing boats pulled up on the sand |
+
+Godot: ships slide in from the right, sea fog particles drift across.
 
 ### Shot 5: Si Mata Berpaku
 
 | Layer | Size | Prompt |
 |---|---|---|
-| 5a Background | 1280x720 | a dark stone wall lit by torchlight, cold grey and iron tones |
-| 5b Emblem | 700x700 | a round iron seal with a single open eye in the centre, iron nails driven in all around it pointing inward, two wings at the sides, bone-white and iron-grey with a black seal mark, menacing |
-| 5c Nails | 4 images, 160x160 each | a single long black iron nail, slightly rusted, at four angles |
+| 5a Emblem (puppet, Ordo) | 1000x1000 | a round seal with a single open eye cut through its centre, long iron nails driven in all around it pointing inward, two stiff wings at the sides, menacing |
+| 5b Nail (puppet, Ordo) | 300x300 | a single long iron nail, square-headed, slightly bent |
 
-Godot: each nail slides in and "strikes", with a shake and a dust puff.
+Godot: the emblem rises from below; copies of the nail fly in and "strike" one by one, each with a
+screen shake and a dust puff.
 
 ### Shot 6: The first nail, at the Kuala
 
 | Layer | Size | Prompt |
 |---|---|---|
-| 6a Background | 1400x720 | a river mouth at night, a new square stone fort with bone-white banners on the shore, cold moonlight, fog on the water, a faint red glow of a distant burning village far upriver on the horizon |
-| 6b Nailed stone | 600x600 | the same carved standing stone as shot 2, now with a large black iron nail driven into it and a black round seal mark burned into the surface, chains around it, cracks spreading |
-| 6c Seal glow | 600x600 | a black and deep violet glow in the shape of a round seal, soft edges, for an additive glow |
-| 6d Bound beings | 800x500 | three or four faint translucent pale shapes being pulled into an iron lantern by thin chains, shapes only, no faces, sad and helpless rather than scary |
-| 6e Soldiers (optional) | 1000x400 | a few small soldier silhouettes with pikes beside the stone, and one tall figure in a long robe holding an iron lantern, far away and tiny, no face |
+| 6a Shore and fort (Ordo) | 2304x700 | a river-mouth shore with a new square stone fort, flat walls, square towers and stiff banners, on the left; mangrove roots on the right; a low row of distant hills |
+| 6b Nailed stone (puppet) | 700x900 | the same carved standing stone as shot 2, now with a large square-headed iron nail driven into it, chains around it, cracks cut across its patterns |
+| 6c Bound beings (light-through) | 1000x700 | three or four pale, faint, shapeless beings being pulled by thin chains into an iron lantern, shapes only, no faces, sad and helpless rather than scary |
+| 6d Soldiers (optional, Ordo) | 1200x500 | a few small soldiers with pikes, and one tall figure in a long robe holding up a lantern, far away and tiny |
 
-The robed figure is only a hint and is never named here. Leave it out if it draws too much
-attention.
+The robed figure is only a hint and is never named. Leave it out if it draws too much attention.
+Godot: a dark violet glow pulses from the nail (additive light); the red at the bottom edge of the
+kelir is a burning village far upriver.
 
 ### Shot 7: Upriver, the two of them
 
 | Layer | Size | Prompt |
 |---|---|---|
-| 7a Sky | 1600x720 | a warm late-afternoon sky over a river valley, soft gold and peach, a few slow clouds |
-| 7b Sawah | 1800x400 | green and gold rice paddies with earth bunds, a small kampung with stilted thatched houses and coconut palms behind, peaceful |
-| 7c Siblings | 1000x420 | two silhouettes walking home along a narrow earth bund between rice paddies: a taller young man in front with a sabit (curved rice sickle) on his shoulder, turning his head back as if joking, and a smaller younger person a few steps behind carrying a bundle of rice stalks |
-| 7d Foreground | 1800x300 | rice stalks and a wooden fence post in the near foreground, almost black |
+| 7a Kampung strip | 2304x600 | a kampung behind rice fields: stilted thatched houses, coconut palms and a small surau, peaceful |
+| 7b Sawah strip | 2304x400 | rice paddies with a long raised earth bund running across, young rice plants cut as small upright shapes |
+| 7c Siblings (puppets) | 900x700 | two puppets walking, side view: a taller young man in front with a sabit (curved rice sickle) on his shoulder, his head turned back as if joking, and a smaller younger person a few steps behind carrying a bundle of rice stalks, both in sarong and simple baju |
 
-Godot: a slow pan that keeps pace with the two, birds crossing, a soft breeze in the padi.
-This is the first and only time Awang is shown in the cinematic: always a little **ahead** of
-the player (see `game-design-proposed.md`, Awang's absence).
+Godot: the two puppets move along the bund with a slight bob, the way a dalang walks puppets; birds
+cross. This is the first and only time Awang is shown in the cinematic, always a little **ahead**
+of the player (see `game-design-proposed.md`, Awang's absence).
 
 ### Shot 8: Tok Senik's hut
 
 | Layer | Size | Prompt |
 |---|---|---|
-| 8a Interior | 1280x720 | the inside of a simple wooden kampung hut at night, woven mat walls, bundles of dried herbs and roots hanging from the beams, clay jars, warm orange light from a small oil lamp |
-| 8b Old man | 500x500 | an old man seated cross-legged in silhouette, thin, wearing a simple headcloth, one hand raised as if speaking, warm rim light from the lamp |
-| 8c Youth | 400x500 | a young person seen from behind in silhouette, seated facing the old man, face not visible, plain clothes |
-| 8d Lamp | 200x200 | a small clay oil lamp (pelita) with a flame, on a wooden floor |
+| 8a Hut interior | 2304x1080 | the inside of a simple wooden hut: roof beams, bundles of dried herbs and roots hanging, clay jars along the floor, a woven mat wall pattern |
+| 8b Old man (puppet) | 600x800 | a thin old man seated cross-legged, simple headcloth, one arm raised as if speaking (cut the raised arm as a separate piece so it can move) |
+| 8c Youth (puppet) | 500x700 | a young person seated, seen from behind, facing left, plain clothes |
+| 8d Pelita (puppet) | 250x250 | a small clay oil lamp (pelita) with an empty space where the flame would be |
 
-Godot: the lamp flame flickers, and the shadows breathe with it.
+Godot: the flame is a light, not part of the image; the kelir brightness flickers with it; Tok
+Senik's arm moves slightly as he speaks.
 
 ### Shot 9: The jetty, title
 
 | Layer | Size | Prompt |
 |---|---|---|
-| 9a Sky | 1600x720 | a clear dawn sky over a wide river, gold and pale blue, hopeful light |
-| 9b River | 1800x360 | a wide calm river with gold reflections, a distant forest bank, a small perahu far away |
-| 9c Jetty and siblings | 1000x500 | a simple wooden jetty on stilts reaching into the river, two young people sitting side by side at its end in silhouette, seen from behind, legs over the edge, looking upriver, a cloth sash moving in the wind |
-| 9d Foreground | 1800x300 | dark coconut palm fronds framing the top corners |
-| 9e Title frame | 900x260 | an ornate frame in carved wood and gold with Malay woodcarving (ukiran) leaf patterns, empty in the middle for the title text, transparent background |
+| 9a River strip | 2304x500 | a wide calm river shown as long gentle wave lines, a distant forest bank, a small perahu far away |
+| 9b Jetty and siblings | 1400x700 | a simple wooden jetty on stilts reaching into the river, two young people sitting side by side at its end, seen from behind, legs over the edge, looking upriver, a cloth sash lifting in the wind |
+| 9b-alone | 1400x700 | the same jetty with **one** young person sitting alone at its end (used later in game, after Awang is taken: the mirror shot) |
+| 9c Foreground | 2304x400 | coconut palm fronds hanging into the top corners |
+| 9d Title frame (puppet) | 1300x400 | an ornate frame of carved leaf and vine patterns (ukiran), cut like a puppet, empty in the middle for the title text |
 
-Write the title text itself in Godot with a font, not in the picture, so it can change later.
-Also draw **9c-alone**: the same jetty with **one** silhouette. It is used later, after Awang is
-taken (the mirror shot).
+Write the title text in Godot with a font, not in the picture, so it can change later.
 
 ---
 
@@ -236,43 +283,49 @@ taken (the mirror shot).
 
 | Kind | What |
 |---|---|
-| Narrator | One calm, dignified older male voice in Malay, old hikayat style (the 9 lines above). Speak slowly, with pauses at the "...". |
+| Narrator | One calm, dignified older male voice in Malay, telling it like an old storyteller (the 9 lines above). Speak slowly, with pauses at the "...". |
 | Azan subuh | Use a **real, respectful recording** with a licence that allows it. Play it soft and distant. Never cut it off abruptly or put it under action sounds: let it fade out naturally before shot 2. |
-| Music | Shots 1–3: soft and traditional (seruling, gambus, rebana). Shots 4–6: darker, with low drums. Shots 7–9: warm and hopeful. |
-| Effects | River and birds (1), forest night (2), lake, water and wind per guardian panel (3), waves and creaking wood (4), metal nail strikes (5), deep water and chains (6), padi in the breeze and a laugh far off (7), lamp crackle (8), wind and water (9). |
+| Music | Traditional Malay instruments that fit a shadow play: serunai, gendang, geduk, gong, kesi. Shots 1–3 soft and slow; shots 4–6 darker, low gong and drums; shots 7–9 warm and hopeful. |
+| Effects | River and birds (1), forest night (2), water and wind per guardian (3), waves and creaking wood (4), metal nail strikes (5), deep water and chains (6), padi in the breeze and a laugh far off (7), lamp crackle (8), wind and water (9), the soft rustle of hide each time a puppet enters. |
 
 ---
 
 ## 5. Building it in Godot
 
-- One scene per shot, or one scene with an `AnimationPlayer` track per shot.
-- **Parallax:** a `Parallax2D` per layer, with the scroll scale rising from far (0.1) to near (1.2).
-  Move the camera along a path, or tween each layer's offset.
-- **Particles:** fireflies, embers, rain, fog and dust in Godot with `CPUParticles2D`. They need
-  no drawn assets beyond a small dot or soft-blob texture.
+- **Resolution.** The game renders at 640x360. The cinematic is not pixel art, so it must render at
+  the **window's own resolution** (e.g. its own `CanvasLayer` or `SubViewport` at 1920x1080),
+  otherwise the images get squeezed to 640x360 and look blurry and pixelated. (Code work for later.)
+- **The kelir:** one sprite behind everything; tint it per shot with `modulate`, and flicker its
+  brightness a little like an oil lamp.
+- **Depth:** a `Parallax2D` per layer, scroll scale from far (0.1) to near (1.2). Layers further
+  from the screen are **slightly blurred and larger**, as real shadows are; near layers are sharp.
+- **Puppets:** small sways and bobs (tweens), slide on and off from the sides like a shadow play.
+- **Particles:** fireflies, embers, fog and dust with `CPUParticles2D`, kept soft so they read as
+  light on the screen.
 - **Subtitles:** a `Label` at the bottom with a dark half-transparent band, fading in and out with
   each narration line. Keep the Malay and English text in a CSV so they can be translated.
 - **Skip:** any key skips to the title. Show "Tekan sebarang kekunci untuk langkau" after 3 seconds.
+- **The end:** the lamp goes out, fade to black, then the game's pixel art starts (Tok Senik's
+  questions). The black gap makes the style change feel deliberate.
 - The whole scene plays once on a new game. It can be replayed from the main menu.
 
 ---
 
 ## 6. Moved out of the cinematic: the prologue climax (day 3)
 
-The v1 shots "The kampung burns", "The nail in the swamp" and "Withered sawah, the long line" now
-belong to the **end of the prologue**, where the player is present. Do most of it in-engine with
-the game sprites (the player is there, so it should feel like the same world), plus a few painted
-stills for the strongest moments. Prompts kept for those stills:
+The burning kampung, the nail in the swamp and the withered sawah belong to the **end of the
+prologue**, where the player is present. Do most of it in-engine with the game's pixel sprites. If
+a few strong moments need still pictures, make them in the same wayang style with a **red** kelir,
+so they echo the opening:
 
 | Still | Size | Prompt |
 |---|---|---|
-| Burning kampung, sky | 1600x720 | night sky glowing red-orange from fires below, smoke clouds lit from beneath |
-| Burning houses | 1800x480 | stilted Malay houses with thatched roofs burning, flames and smoke, the houses in dark silhouette against the fire |
-| Soldiers and Kelana | 1400x420 | a line of soldier silhouettes with pikes and crossbows, open-faced helmets and tabards, one figure in a long grey robe holding up an iron lantern with a trapped blue-white glow inside, his face in shadow |
-| Awang taken | 1000x420 | a young man in silhouette with his hands bound, held by two soldiers with pikes, his head still raised, looking back toward the viewer |
-| The nail in the swamp | 600x600 | reuse 6b and 6c from shot 6, with a dark mangrove swamp behind |
-| Under the water | 1600x400 | the faint shape of an enormous crocodile under dark water, only the long outline and a ridge of back scales visible, with an iron nail glinting near its jaw |
-| Withered sawah | 1800x400 | rice paddies with withered brown and grey rice stalks, broken bunds, puddles reflecting a grey sky |
+| Burning kampung | 2304x700 | stilted thatched houses with flame shapes rising from the roofs, curling smoke shapes above |
+| Soldiers and Kelana (Ordo) | 1600x600 | a line of soldiers with pikes and crossbows, and one figure in a long robe holding up a lantern |
+| Awang taken (puppet) | 900x700 | a young man with his hands bound, held by two soldiers with pikes (Ordo style), his head still raised, looking back |
+| The nail in the swamp | 700x900 | reuse 6b, with a mangrove strip behind |
+| Under the water (puppet) | 1600x500 | an enormous crocodile low in the water, with an iron nail through its jaw |
+| Withered sawah | 2304x400 | rice paddies with broken bunds and drooping, dead rice plants |
 
-Kelana is shown only as a robed silhouette with his face in shadow. He speaks one line (from
-`lore.md`); Tok Senik names him afterwards.
+Kelana is only a robed shadow; he speaks one line (from `lore.md`), and Tok Senik names him
+afterwards.
