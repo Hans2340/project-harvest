@@ -19,7 +19,7 @@ func _initialize() -> void:
 			swaying += 1
 	_check(swaying == 24, "all 24 trees sway in the wind (%d)" % swaying)
 	_check(amb.water_cells.size() > 100 and amb.firefly_cells.size() > 50, "water glint and firefly areas found")
-	_check(amb._lamps.size() == 5, "a lamp at each house plus Tok Pawang's pelita post")
+	_check(amb._lamps.size() == 5, "a lamp at each house plus Tok Senik's pelita post")
 
 	gs.minutes = 12 * 60
 	await process_frame

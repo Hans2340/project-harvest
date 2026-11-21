@@ -10,6 +10,20 @@
   ln -sf /opt/godot47/Godot_v4.7-stable_linux.x86_64 /usr/local/bin/godot
   ```
 
+## Story, world and content: read the lore first
+- **Before any story, world, dialogue, NPC, zone or asset-content work, read `docs/lore.md` and
+  `docs/game-design-proposed.md`** (leoxent's lore and decisions), plus `docs/opening-scene.md` for
+  cinematic work. They take priority over older text in `docs/game-design.md`.
+- **Religion rules** (full text in `docs/lore.md`): unseen beings are creations of God, never
+  protectors, prayed to or asked for help; no offerings, jampi, azimat or incense rituals shown as
+  good; pantang larang that depend on spirits are never shown as true; Islam is part of village life,
+  shown with respect, never as magic; no Quran verses or Arabic writing in art.
+- **Names:** the old healer is **Tok Senik**; boundary stones are **Batu Sempadan** (not keramat);
+  powers are **Bakat** (good deeds) and **Anugerah** (Pawang class only); Mata Batin → Firasat.
+- **Timeline:** in the prologue the kampung is still at peace (the Ordo arrive on day 3);
+  only foreshadowing before that.
+- Suggestion numbers: `game-design-proposed.md` uses S25–S30; new ones continue after the highest.
+
 ## Running and testing
 - Import once after pulling (run twice; the first pass may log font errors): `godot --headless --path . --import`
 - Tests (each prints `RESULT: PASS/FAIL`): `for t in tests/test_*.gd; do godot --headless --path . -s $t; done`

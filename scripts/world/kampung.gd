@@ -44,22 +44,24 @@ const HOUSE_OVERHANG := 12.0
 ## Cells you can face to sleep (front of the home house).
 const HOME_DOOR := Rect2i(9, 8, 5, 3)
 ## Who lives in each house (same order as HOUSES) and what you hear at the door (E).
+## Story rules: docs/lore.md (the kampung is still at peace in the prologue; no jampi, incense or
+## superstition shown as true). Mak Som and Pak Hamid are minor neighbours, not in the lore yet.
 const HOUSE_PEOPLE := [
 	{"name": "Rumah kamu", "lines": []},
 	{"name": "Rumah Mak Som", "lines": [
-		"Mak Som calls from inside: \"Padi growing well, nak?\"",
+		"Mak Som calls from inside: \"Padi growing well, nak? Tell Awang I said thank you.\"",
 		"Someone is pounding chillies inside. It smells of sambal.",
-		"Mak Som: \"Don't stay out after Maghrib. The forest is not kind at night.\""]},
+		"Mak Som: \"Mind the wild boar after Maghrib. They dig up the batas at night.\""]},
 	{"name": "Rumah Pak Hamid", "lines": [
 		"The door is shut. You hear a parang being sharpened.",
-		"Pak Hamid grunts: \"The tax men came by the river again.\"",
+		"Pak Hamid: \"Salt costs more this month. The traders say the Kuala is closed.\"",
 		"A fishing net hangs drying by the stairs."]},
-	{"name": "Rumah Tok Pawang", "lines": [
-		"A faint smell of kemenyan drifts out. Someone is murmuring softly.",
-		"An old voice: \"Not yet, child. Come back when the time is right.\"",
-		"Dried leaves and roots hang under the eaves."]},
+	{"name": "Rumah Tok Senik", "lines": [
+		"Bundles of roots and leaves hang drying under the eaves. It smells of bitter herbs.",
+		"Tok Senik, without looking up: \"Come back later, child. This ramuan won't brew itself.\"",
+		"Someone is grinding something in a stone mortar inside."]},
 ]
-const PAWANG_HOUSE := 3   ## index in HOUSES
+const SENIK_HOUSE := 3   ## index in HOUSES: Tok Senik, the old healer (docs/lore.md)
 ## North path out of the kampung, toward Hutan Pinggir (not built yet).
 const FOREST_PATH_X := 18
 
@@ -387,7 +389,7 @@ func _build_ambience() -> void:
 
 # ---------------------------------------------------------------- kampung details
 
-## Fences, firewood, water jars, stones, bank reeds, Tok Pawang's sign and lamp, north path.
+## Fences, firewood, water jars, stones, bank reeds, Tok Senik's sign and lamp, north path.
 func _build_details() -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 7
@@ -405,13 +407,13 @@ func _build_details() -> void:
 	for i in BANK_REEDS.size():
 		var c: Vector2i = BANK_REEDS[i]
 		_detail("rumput_air_%d.png" % (i % 8), Vector2(c.x * TILE + TILE / 2.0, (c.y + 1) * TILE - 6), Vector2.ZERO, true)
-	_build_pawang_details()
+	_build_senik_details()
 	_build_forest_path()
 
 
-## Tok Pawang's house: a small, easy-to-miss sign half hidden by grass, and a pelita on a post.
-func _build_pawang_details() -> void:
-	var cell: Vector2i = HOUSES[PAWANG_HOUSE][1]
+## Tok Senik's house (the healer): a small, easy-to-miss sign by the grass, and a pelita on a post.
+func _build_senik_details() -> void:
+	var cell: Vector2i = HOUSES[SENIK_HOUSE][1]
 	var base := Vector2(cell.x * TILE + TILE / 2.0, (cell.y + 1) * TILE)
 	_detail("rumput_air_1.png", base + Vector2(-100, 2), Vector2.ZERO, true)   # grass just behind it
 	_detail("papan_tanda.png", base + Vector2(-124, 8), Vector2.ZERO, false)
@@ -419,7 +421,7 @@ func _build_pawang_details() -> void:
 	lamp.set_meta("lamp_point", lamp.position + Vector2(-12 + 17, -46 + 29))  # flame pixel (17, 29)
 
 
-## North exit path: walking up it shows that the forest isn't safe yet.
+## North exit path toward Hutan Pinggir (not built yet; Awang takes you hunting there in the prologue).
 func _build_forest_path() -> void:
 	var area := Area2D.new()
 	var shape := CollisionShape2D.new()
@@ -430,7 +432,7 @@ func _build_forest_path() -> void:
 	area.position = Vector2((FOREST_PATH_X + 1) * TILE, 14)
 	area.body_entered.connect(func(body):
 		if body is Player:
-			hud.show_message("The path leads north to Hutan Pinggir. The forest is not safe yet."))
+			hud.show_message("The path leads north to Hutan Pinggir. Awang said not to go in alone yet."))
 	add_child(area)
 
 

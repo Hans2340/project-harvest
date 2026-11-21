@@ -9,7 +9,7 @@ extends Node2D
 ##
 ## Legend:  . ground   , leafy grass   ~ water   | vertical boardwalk
 ##          = horizontal boardwalk   R rock   M stone mushroom   g grass tuft
-##          r reeds (water)   k muck (water)   A altar (bottom-left of 2x3)
+##          r reeds (water)   k muck (water)   A nailed Batu Sempadan (bottom-left of 2x3)
 
 const TILE := 48
 const SRC_GROUND := 0
@@ -214,7 +214,7 @@ func _add_blocker(center: Vector2, size: Vector2) -> void:
 	add_child(body)
 
 
-## The corrupted keramat: animated altar with a red flame light.
+## The nailed Batu Sempadan (boundary stone, docs/lore.md): animated, with a red seal glow.
 func _add_altar(cell: Vector2i) -> void:
 	var base := Vector2(cell.x * TILE + TILE, cell.y * TILE + TILE)
 	_altar_sprite = Sprite2D.new()
@@ -293,7 +293,7 @@ func _build_ambience() -> void:
 
 func _on_use_requested(_tool: int, cell: Vector2i) -> void:
 	if cell in _altar_cells:
-		hud.show_message("A keramat, defiled. A black seal burns on the stone...")
+		hud.show_message("A Batu Sempadan, nailed through. A black seal is burned into the stone...")
 	elif _is_water(cell):
 		hud.show_message("Dark water. Something big moves beneath it.")
 	else:

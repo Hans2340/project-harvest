@@ -26,13 +26,14 @@
   - **Kampung**, the main place and the player's home (48 px tiles, PixelLab tilesets in the swamp
     style): dirt yard with 4 rumah kampung (2x scale), sawah fields where padi is planted, sandy
     riverbank with a jetty, river. West path → swamp; **north path → Hutan Pinggir** (not built
-    yet: "the forest is not safe yet").
-  - **Houses:** yours, **Mak Som**, **Pak Hamid** and **Tok Pawang** (the mossy one, with a small,
-    easy-to-miss sign and a pelita post). Pressing E at a neighbour's door gives a short line.
+    yet: "Awang said not to go in alone yet").
+  - **Houses:** your family's, **Mak Som**, **Pak Hamid** (minor neighbours, not in the lore yet)
+    and **Tok Senik** the healer (the mossy one, with a small, easy-to-miss sign and a pelita post).
+    Pressing E at a neighbour's door gives a short line that follows the lore rules.
   - **Details:** rail fences on the sawah bunds (path between the two fields), firewood, tempayan,
     stones and reeds at the jetty. Small props are drawn at 1×, matching the Pendekar's pixel size.
   - **Paya Bakau, the mangrove swamp** (48 px tiles, Dark Swamp pack): river with boardwalks and an
-    island with a **defiled keramat**. Future home of Bujang Senang.
+    island with a **nailed Batu Sempadan** (boundary stone, see `docs/lore.md`). Act 1: Bujang Senang.
 - The early placeholder farm zone was removed; farming now happens in the kampung sawah.
 - Planted padi persists across zones; passing out anywhere wakes you at home in the kampung.
 - Time: 25 real minutes = 24 in-game hours (a 06:00-02:00 day is about 21 real minutes). Shift = run.
@@ -214,70 +215,65 @@ Notes:
 
 ## 💡 Suggestions (pending approval)
 
-### S25. World map design *(replaces S18–S23)*
+### S31. World map design *(replaces S18–S23; follows `docs/lore.md` and `docs/game-design-proposed.md`)*
 ![Draft world map](references/concept/world-map-draft.png)
 
-**1. Structure:** connected zones (walk off an edge into the next zone), as now. Each zone is
-its own Godot scene, so friends can build zones in parallel without conflicts. All zones use
-**48 px tiles** (one screen ≈ 13×7.5 tiles).
+*(Was numbered S25 here; renumbered because `game-design-proposed.md` already uses S25–S30.)*
 
-**2. The region: Negeri Sungai Seri** (placeholder name). One river runs from **Gunung Ledang**
-(north) down to the **sea** (south). The river is the backbone: story path, travel route
-(perahu) and the way the Ordo Sigillum advance (they land at the river mouth and push upriver).
-The legends come from different real places, so this invented negeri brings them together.
+**1. Structure:** connected zones (walk off an edge into the next zone), as now. Each zone is its
+own Godot scene, so friends can build zones in parallel. All zones use **48 px tiles**.
 
-**3. Zones**
+**2. The region: Sungai Seri.** One river runs from **Gunung Ledang** (north) to the **sea**
+(south). The Ordo Sigillum land at the **Kuala** (river mouth) and nail the Batu Sempadan, then push
+upriver. The player's kampung lies upriver, still at peace when the game starts.
 
-| Zone | Role | Stage | Size (tiles) | Status |
-|---|---|---|---|---|
-| **Kampung Seri** | Home hub: your house, neighbours, sawah, jetty, shops | Early | 46×32 | ✅ built |
-| **Paya Bakau** | Mangrove swamp: defiled keramat, fishing, Bujang Senang's river | Early | 32×22 | ✅ built |
-| **Hutan Pinggir** | Forest edge north of the kampung: foraging, wood and rattan, first free spirits, first Ordo patrol | Early | ~50×40 | next |
-| **Tasik Chini** | Lotus lake east of the forest: Naga Tasik Chini, Ordo mining camp draining the lake | Mid | ~50×40 | later |
-| **Hulu** | Upriver village by perahu: second kampung, trader, rare seeds | Mid | ~40×30 | later |
-| **Hutan Bunian** | Highland forest with a **hidden version** (Orang Bunian village) | Late | ~50×50 | later |
-| **Kuala Seri** | River-mouth port held by the Ordo: stone fort, docks, occupied market | Late | ~60×40 | later |
-| **Gunung Ledang** | Mountain: Puteri Gunung Ledang's quest chain, final areas | Late | ~40×60 | later |
+**3. Zones, in story order**
+
+| Zone | Story | Status |
+|---|---|---|
+| **Kampung** (home) | Prologue: life with Awang (farming, market, sparring); the raid on day 3 | ✅ built |
+| **Hutan Pinggir** (forest edge, north) | Prologue mission 5–6: the hunt with Awang, gathering, the first Binatang Berpaku | next |
+| **Paya Bakau** (swamp) | Act 1: Bujang Senang and the iron nail; the swamp's Batu Sempadan | ✅ built (Act 1 content to come) |
+| **Tasik Chini** (lake, east) | Act 2: the Ordo tin mine draining the lake, Severin, Awang as an overseer, the Naga | later |
+| **Rimba Bunian** (forest, north-west) | Act 3: earning the Bunian's trust, Tok Senik's confession, Si Raya revealed | later |
+| **Gunung Ledang** (mountain, north) | Act 4: Puteri's demands, Awang as Kelana's lantern bearer | later |
+| **Kuala** (river mouth, south) | Act 5: the white fort and the Great Seal | later |
+| **Hulu** (upriver village) | *Optional, not in the lore yet:* a second kampung and trader by perahu | proposal |
 
 **4. Connections**
-- **Walking:** Kampung ↔ Paya Bakau (west, built) · Kampung ↔ Hutan Pinggir (north) ·
-  Hutan Pinggir ↔ Tasik Chini (east) · Hutan Pinggir ↔ Hutan Bunian (north-west) ·
-  Hutan Bunian ↔ Gunung Ledang · Paya Bakau ↔ Kuala Seri (south).
-- **Perahu (boat):** jetties at Kuala Seri, Kampung Seri and Hulu. Travel by boat between them
-  once the perahu is repaired. It doubles as the main fast travel.
-- **Keramat shrines:** one per zone. Cleanse it once to unlock fast travel to it and blessing
-  upgrades there.
+- **Walking:** Kampung ↔ Paya Bakau (west, built) · Kampung ↔ Hutan Pinggir (north path, built,
+  zone not yet) · Hutan Pinggir ↔ Tasik Chini · Hutan Pinggir ↔ Rimba Bunian ↔ Gunung Ledang ·
+  Paya Bakau ↔ Kuala.
+- **Perahu:** jetties along the river; boat travel doubles as fast travel. Tengkujuh floods
+  open extra water routes (lore: "Tengkujuh floods paths and opens perahu routes").
+- **Batu Sempadan:** one in each wild zone. Freeing a nailed stone weakens the Ordo in that zone
+  (fewer Binatang Berpaku, colour comes back) and can unlock fast travel there. No worship, no
+  offerings: it is a border marker between neighbours (`docs/lore.md`).
+- **Adab hutan:** the forest is part of the human world (hunting, felling, gathering, mining are
+  core gameplay); only beyond the Batu Sempadan lies the unseen world, entered only when invited.
 
-**5. Progression across the seasons** (year 1)
-- **Kemarau (early):** Kampung, Paya Bakau, Hutan Pinggir. Learn farming, meet the old
-  pawang, first spirits, first Ordo tax visit.
-- **Musim Buah (mid):** repair the perahu → **Hulu**; clear the overgrown trail (parang) →
-  **Tasik Chini** and the Naga.
-- **Tengkujuh (late):** floods close low swamp paths but open **new water routes** by perahu,
-  including into **Kuala Seri**. **Hutan Bunian** is seen with Mata Batin, at dusk, or after the
-  Bunian trust you. **Gunung Ledang** opens after freeing 3 bound legends.
+**5. Progression:** one act ≈ one 28-day season (lore), so Acts 1–5 run over several seasons in
+order (Kemarau → Musim Buah → Tengkujuh → ...). Zones open as the story reaches them.
 
-**6. What makes the map feel alive** (systems that change zones)
-- **Ordo control (0–3) per zone:** more banners, checkpoints, patrols, burnt or seized sawah
-  and darker colours as control rises; cleansing the keramat and freeing spirits push it back.
-- **Monsoon:** Tengkujuh floods low ground (sawah and swamp paths) and raises the river;
-  Kemarau lowers it and exposes **sandbar shortcuts**.
-- **Day/night:** more spirits and Ordo raids at night; Bunian paths appear at dusk.
+**6. What makes the map feel alive**
+- **Ordo control per zone** (lore meter): Ordo zones look pale; freed zones regain colour.
+- **Monsoon:** Tengkujuh floods low ground and raises the river; Kemarau lowers it.
+- **The prologue → Act 1 change:** neighbours leave, the surau empties, Mak waits at the jetty,
+  Awang is missing from places he used to be (`game-design-proposed.md`, S28).
 
-**7. Kampung Seri: planned points of interest** (fills the built hub)
-- Your rumah kampung (sleep, later storage) · **Tok Pawang's house** (the opening questions)
-- **Surau** · **Balai** (village hall + notice board for tax days and requests)
-- **Gerai / pasar** (stall: sell padi, buy seeds) · **Perigi** (well) · **Jelapang padi** (rice barn)
-- **Jetty + perahu** (boat travel, fishing) · **Pondok cukai** (Ordo tax post at the kampung edge)
-- Exits: west → Paya Bakau (built), **north → Hutan Pinggir** (new path).
+**7. Kampung: points of interest** (from the lore and the prologue missions)
+- Your family's rumah (with Awang and Mak) · **Tok Senik's house** (the healer; the opening
+  questions) · **Surau** with Tok Imam Hasyim (evening news after Maghrib) · **Jelapang** (rice
+  barn, mission 2) · **market / tamu** inside the kampung (mission 3) · **perigi** (well) · **jetty**
+  (Mak waits here) · yard with the patung latihan (mission 4).
+- Built: houses for the family, Tok Senik and two neighbours (Mak Som, Pak Hamid: minor, not in
+  the lore yet), jetty, sawah, patung latihan, north and west paths.
 
-**8. Suggested build order**
-1. Kampung points of interest (stall, pawang's house, well) using existing assets plus a few new sprites.
-2. **Hutan Pinggir** zone + the kampung's north exit.
-3. Perahu travel between jetties (start with Kampung ↔ Paya Bakau as a test).
-4. Ordo control visuals in the kampung (tax post, banners) to show the conflict early.
-
-**Co-op note:** both players stay in the same zone for now; splitting up can come later.
+**8. Suggested build order** (to support the prologue first)
+1. Kampung: surau, jelapang and a market stall (PixelLab, same style refs).
+2. **Hutan Pinggir** for the hunt and gathering missions.
+3. Awang as a companion (follow AI from click-to-move, see S25 in the proposed doc).
+4. Perahu travel; then Act 1 content in Paya Bakau.
 
 ### S24. Player customisation: character creator + visible equipment
 Players can **change their look at the start** (character creator) **and during
@@ -361,7 +357,7 @@ player art. Results: `assets/sprites/player/s24_test/README.md`.
 
 ## Superseded suggestions
 - S18–S23 (world structure, region, starting zones, zone size, map features, co-op on the
-  map): merged and updated into **S25**. They assumed a separate farm zone and 32 px tiles.
+  map): merged and updated into **S31**. They assumed a separate farm zone and 32 px tiles.
 
 ## Rejected ideas
 - Real-history Penjajah (Portuguese / British / Japanese) → replaced by a fictional empire.

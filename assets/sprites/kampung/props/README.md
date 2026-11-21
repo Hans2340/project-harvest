@@ -12,7 +12,7 @@ south sprite or its upper half, a stone pile).
 | `tempayan_0..7` | clay water jar with lid | ~24×27 |
 | `batu_0..6` | river stone pile | ~37×24 |
 | `rumput_air_0..7` | tall reeds / water grass (sway in the wind) | ~42×45 |
-| `papan_tanda` | Tok Pawang's small vine-wrapped sign (meant to be easy to miss) | 25×25 |
+| `papan_tanda` | Tok Senik's small vine-wrapped sign (the healer's house) (meant to be easy to miss) | 25×25 |
 | `pelita` | tin oil lamp on a post (flame at pixel 17,29; lights up at night) | 25×46 |
 
 **Drawn at 1×** (the Pendekar's pixel size), unlike tiles, houses and trees (2×). At 2× these

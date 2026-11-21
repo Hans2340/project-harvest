@@ -48,9 +48,13 @@ func _initialize() -> void:
 			var key: String = n.texture.resource_path.get_file().get_basename().split("_")[0]
 			details[key] = details.get(key, 0) + 1
 	_check(details.get("pagar", 0) >= 80 and details.get("kayu", 0) == 5 and details.get("tempayan", 0) == 5 and details.get("batu", 0) == 5, "fences, firewood, jars and stones placed %s" % [details])
-	_check(details.get("papan", 0) == 1 and details.get("pelita", 0) == 1, "Tok Pawang's small sign and pelita placed")
-	var c3: Vector2i = zone.HOUSES[zone.PAWANG_HOUSE][1]
-	_check(zone.house_at_door(c3) == zone.PAWANG_HOUSE and zone.HOUSE_PEOPLE[zone.PAWANG_HOUSE].name == "Rumah Tok Pawang", "Tok Pawang's door found")
+	_check(details.get("papan", 0) == 1 and details.get("pelita", 0) == 1, "Tok Senik's small sign and pelita placed")
+	var c3: Vector2i = zone.HOUSES[zone.SENIK_HOUSE][1]
+	_check(zone.house_at_door(c3) == zone.SENIK_HOUSE and zone.HOUSE_PEOPLE[zone.SENIK_HOUSE].name == "Rumah Tok Senik", "Tok Senik's door found")
+	var all_lines := ""
+	for person in zone.HOUSE_PEOPLE:
+		all_lines += " ".join(person.lines).to_lower()
+	_check(not all_lines.contains("kemenyan") and not all_lines.contains("jampi") and not all_lines.contains("tax men"), "door lines follow the lore rules")
 	_check(zone.house_at_door(Vector2i(40, 25)) == -1, "no house door on the riverbank")
 	_check(zone._corner(18, 0) == "d" and zone._corner(19, 2) == "d", "dirt path to the north edge")
 	_check(zone._corner(32, 12) == "d" and zone._corner(33, 12) == "g", "path from the yard toward the sawah")
