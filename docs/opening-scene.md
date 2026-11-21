@@ -83,69 +83,93 @@ little grain so they read as one set.
 
 ---
 
-## 2. Shot list, narration and subtitles
+## 2. Shot list and narration script
 
-The narration is in Malay, in the style of an old hikayat. English subtitles are optional (`EN`).
-Timings are approximate.
+The narration is in Malay, in the style of an old hikayat (script approved for drafting by leoxent,
+2026-11-21). English subtitles are optional (`EN`). The whole opening runs about **2:16**.
 
 | # | Shot | Time | Camera | Kelir tint |
 |---|---|---|---|---|
-| 1 | Subuh on Sungai Seri | 0:00–0:14 | slow pan right, light rises | pale gold to soft pink |
-| 2 | Batu Sempadan, two worlds | 0:14–0:28 | slow push-in | green-gold |
-| 3 | The Four Guardians | 0:28–0:48 | four puppet changes | teal, orange, deep green, pale gold |
-| 4 | Pale sails at the Kuala | 0:48–1:00 | ships slide in | cold grey-blue |
-| 5 | Si Mata Berpaku | 1:00–1:10 | emblem rises, nails strike | iron white |
-| 6 | The first nail, at the Kuala | 1:10–1:26 | push-in, glow pulses | deep violet, red at the bottom edge |
-| 7 | Upriver, the two of them | 1:26–1:42 | puppets walk along the bund | warm amber |
-| 8 | Tok Senik's hut | 1:42–1:54 | static, lamp flicker | deep orange |
-| 9 | The jetty, title | 1:54–2:08 | pull back, title fades in | dawn gold |
+| 1 | Subuh on Sungai Seri | 0:00–0:18 | slow pan right, light rises | pale gold to soft pink |
+| 2 | Batu Sempadan, two worlds | 0:18–0:32 | slow push-in | green-gold |
+| 3 | The Four Guardians | 0:32–0:56 | four puppet changes | teal, orange, deep green, pale gold |
+| 4 | Pale sails at the Kuala | 0:56–1:08 | ships slide in | cold grey-blue |
+| 5 | Si Mata Berpaku | 1:08–1:18 | emblem rises, nails strike | iron white |
+| 6 | The first nail, at the Kuala | 1:18–1:34 | push-in, glow pulses | deep violet, red at the bottom edge |
+| 7 | Upriver, the two of them | 1:34–1:50 | puppets walk along the bund | warm amber |
+| 8 | Tok Senik's hut | 1:50–2:02 | static, lamp flicker | deep orange |
+| 9 | The jetty, title | 2:02–2:16 | pull back, title fades in | dawn gold |
 
 The player's look is chosen after the cinematic, so the shot 7 narration ("seorang abang ...
 adiknya") and the silhouettes work for a younger brother or a younger sister.
 
-### Narration and subtitles
+### Notes for the narrator
 
-**1. Subuh on Sungai Seri.** The sound of the azan subuh starts faintly before the first line.
-> Alkisah, di hulu Sungai Seri, hari bermula dengan azan subuh... dan bau tanah sawah yang basah.
-> `EN:` Long ago, upriver on the Seri, each day began with the dawn call to prayer... and the smell of wet rice fields.
+- **Voice:** one older man, calm and dignified, like an elder telling a story to children at
+  night. Never dramatic or shouting, even in the dark shots: the weight comes from going quieter.
+- **Pace:** slow, about 110–120 words a minute. `...` = short pause (about 1 second). `//` = long
+  pause (about 2 seconds). **Bold** words get a little weight.
+- **Hikayat words** (*Alkisah, Syahdan, Hatta, Maka, lalu*) are said softly, almost like a breath
+  before the sentence, not stressed.
+- **Pronunciation:** Sigillum = *si-GIL-lum*. Bujang Senang = *bu-JANG se-NANG*.
+- **Recording:** WAV, 48 kHz, mono, one file per shot (`narr_01.wav` … `narr_09.wav`), half a
+  second of silence at each end. Record two takes of each.
 
-**2. Batu Sempadan.**
-> Orang tua-tua berpesan: kita berjiran dengan alam yang tak terlihat.
-> Batu Sempadan menjadi tanda had. Mereka tak menceroboh kita, dan kita tak menceroboh mereka.
-> `EN:` The elders taught that we live beside an unseen world. The boundary stones marked the line: they stay on their side, and we stay on ours.
+### Script
 
-**3. The Four Guardians.**
-> Empat makhluk tua menjaga janji itu. Naga di Tasik Chini. Bujang Senang di kuala. Orang Bunian
-> di rimba. Dan Puteri di puncak Ledang.
-> Mereka juga makhluk ciptaan Tuhan, cuma lebih tua daripada ingatan kita. Selagi batu tak
-> diusik, sungai mengalir jernih... dan padi menguning setiap musim.
-> `EN:` Four old creatures kept that promise: the Naga of Tasik Chini, Bujang Senang at the river mouth, the Bunian in the forest, and the Puteri on Ledang's peak. They too were created by God, only older than our memory. While the stones stood untouched, the river ran clear... and the rice turned gold each season.
+**1. Subuh on Sungai Seri** (0:00–0:18)
+*Cue: the azan subuh plays **alone**, soft and distant, from 0:00 for about 5–6 seconds (one or two phrases), then fades out completely. Only then, at about 0:08, the narrator begins. Never speak over the azan (adab: it is listened to, not talked over). Under the narration: birds and river only. Mood: peaceful, warm.*
+> **Alkisah**, di hulu Sungai Seri... hari bermula dengan azan subuh, dan bau tanah sawah yang
+> basah.
+> `EN:` Long ago, upriver on the Seri... each day began with the dawn call to prayer, and the smell of wet rice fields.
 
-**4. Pale sails.**
-> Sehinggalah datang kapal-kapal berlayar pucat... dari tanah yang sudah mereka perah hingga kering.
-> `EN:` Until ships with pale sails came... from a land they had already squeezed dry.
+**2. Batu Sempadan** (0:18–0:32)
+*Cue: Forest night sounds. Mood: wise, a little mysterious.*
+> Pesan orang tua-tua: kita **berjiran** dengan alam yang tak terlihat. // Batu Sempadan menjadi
+> tanda had. Mereka tak menceroboh kita... dan kita tak menceroboh mereka.
+> `EN:` The elders taught that we are neighbours to an unseen world. The boundary stones marked the line. They do not trespass on us... and we do not trespass on them.
 
-**5. Si Mata Berpaku.**
-> Ordo Sigillum. Bagi mereka, segala yang bernyawa boleh dimiliki. Segala yang bebas boleh dipaku.
-> `EN:` The Ordo Sigillum. To them, every living thing could be owned, and anything free could be nailed down.
+**3. The Four Guardians** (0:32–0:56)
+*Cue: each name lands as its puppet appears. Mood: awe, but gentle.*
+> **Syahdan**, empat makhluk tua menjaga janji itu. // Naga di Tasik Chini. Bujang Senang di
+> kuala. Orang Bunian di rimba. Dan Puteri... di puncak Ledang. // Mereka juga makhluk
+> **ciptaan Tuhan**, cuma lebih tua daripada ingatan kita. // Selagi batu tak diusik, sungai
+> mengalir jernih... dan padi menguning setiap musim.
+> `EN:` And so, four old creatures kept that promise. The Naga of Tasik Chini. Bujang Senang at the river mouth. The Bunian in the forest. And the Puteri... on Ledang's peak. They too were created by God, only older than our memory. While the stones stood untouched, the river ran clear... and the rice turned gold each season.
 
-**6. The first nail.**
-> Di kuala, Batu Sempadan yang pertama dipaku. Makhluk ditarik keluar dari alamnya sendiri...
-> dan dikurung dalam tanglung besi. Kampung-kampung di hilir mula sunyi.
-> `EN:` At the river mouth, the first boundary stone was nailed. Beings were dragged out of their own world... and caged in iron lanterns. The villages downriver began to fall silent.
+**4. Pale sails** (0:56–1:08)
+*Cue: the music darkens, low drum. Mood: unease.*
+> **Hatta**, pada suatu musim... datanglah kapal-kapal berlayar **pucat**, dari tanah yang sudah
+> mereka perah hingga kering.
+> `EN:` Then, one season... ships with pale sails came, from a land they had already squeezed dry.
 
-**7. Upriver.**
-> Tetapi di hulu, khabar itu belum sampai. Di sebuah kampung kecil, seorang abang masih membawa
-> adiknya turun ke sawah... seperti ayah mereka dahulu.
-> `EN:` But upriver, the news had not yet arrived. In a small village, an elder brother still took his younger sibling down to the rice fields... as their father once did.
+**5. Si Mata Berpaku** (1:08–1:18)
+*Cue: each nail strike falls in the gaps between phrases, never over a word. Mood: cold.*
+> Merekalah **Ordo Sigillum**. // Bagi mereka, segala yang bernyawa boleh dimiliki... dan segala
+> yang bebas, boleh **dipaku**.
+> `EN:` They were the Ordo Sigillum. To them, every living thing could be owned... and anything free could be nailed down.
 
-**8. Tok Senik's hut.**
-> Dan di hujung kampung, seorang tua masih menyimpan ilmu lama. Dia hanya mahu bertanya beberapa
-> soalan... kepada kau.
-> `EN:` And at the edge of the village, an old man still kept the old knowledge. He had a few questions to ask... of you.
+**6. The first nail** (1:18–1:34)
+*Cue: deep water, chains, a low gong. Mood: grief, held back.*
+> **Maka** di kuala, Batu Sempadan yang pertama pun dipaku. // Makhluk ditarik keluar dari alamnya
+> sendiri, **lalu** dikurung dalam tanglung besi. // Kampung-kampung di hilir... mula sunyi.
+> `EN:` And so at the river mouth, the first boundary stone was nailed. Beings were dragged out of their own world, then caged in iron lanterns. The villages downriver... began to fall silent.
 
-**9. The jetty, title.**
-> Kezaliman tak pernah kekal. Dan sungai ini... masih ingat siapa tuannya.
+**7. Upriver** (1:34–1:50)
+*Cue: the music turns warm again, padi in the breeze, a laugh far off. Mood: tender.*
+> Tetapi di hulu, khabar itu **belum** sampai. // Di sebuah kampung kecil, seorang abang masih
+> membawa adiknya turun ke sawah... seperti arwah ayah mereka dahulu.
+> `EN:` But upriver, the news had not yet arrived. In a small village, an elder brother still took his younger sibling down to the rice fields... as their late father once did.
+
+**8. Tok Senik's hut** (1:50–2:02)
+*Cue: lamp crackle. On "kepada kau" the narrator speaks a little closer, as if to the player.*
+> Dan di hujung kampung, seorang tua masih menyimpan ilmu lama. // Dia hanya mahu bertanya
+> beberapa soalan... kepada **kau**.
+> `EN:` And at the edge of the village, an old man still kept the old knowledge. He had only a few questions to ask... of you.
+
+**9. The jetty, title** (2:02–2:16)
+*Cue: the music swells softly, then thins. Mood: quiet hope. The slowest line of all.*
+> Kezaliman tak pernah **kekal**. // Dan sungai ini... masih ingat siapa tuannya.
 > `EN:` Tyranny never lasts. And this river... still remembers who it belongs to.
 >
 > *(Title fades in. The working title is "Sungai Seri" until a final name is chosen. The same
@@ -153,6 +177,9 @@ adiknya") and the silhouettes work for a younger brother or a younger sister.
 
 After the title: the lamp behind the kelir goes out (the screen fades to black), then Tok Senik's
 questions begin in the game's own pixel style.
+
+**Word count:** about 200 words over 2:16, which leaves room for the music, the azan and the
+pauses. If a line runs long in the recording, stretch the shot rather than rush the voice.
 
 ---
 
@@ -283,8 +310,8 @@ Write the title text in Godot with a font, not in the picture, so it can change 
 
 | Kind | What |
 |---|---|
-| Narrator | One calm, dignified older male voice in Malay, telling it like an old storyteller (the 9 lines above). Speak slowly, with pauses at the "...". |
-| Azan subuh | Use a **real, respectful recording** with a licence that allows it. Play it soft and distant. Never cut it off abruptly or put it under action sounds: let it fade out naturally before shot 2. |
+| Narrator | One calm, dignified older male voice in Malay, telling it like an old storyteller (the script in section 2, with the narrator notes there). |
+| Azan subuh | Use a **real, respectful recording** with a licence that allows it. Play it soft and distant. Never cut it off abruptly or put it under action sounds: play it alone at the start of shot 1 and let it fade out completely before the narrator speaks. Nobody speaks over it. |
 | Music | Traditional Malay instruments that fit a shadow play: serunai, gendang, geduk, gong, kesi. Shots 1–3 soft and slow; shots 4–6 darker, low gong and drums; shots 7–9 warm and hopeful. |
 | Effects | River and birds (1), forest night (2), water and wind per guardian (3), waves and creaking wood (4), metal nail strikes (5), deep water and chains (6), padi in the breeze and a laugh far off (7), lamp crackle (8), wind and water (9), the soft rustle of hide each time a puppet enters. |
 

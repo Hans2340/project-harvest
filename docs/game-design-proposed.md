@@ -48,7 +48,7 @@ After the cinematic the player controls the main character in kampung life. The 
 main tutorial **and** the emotional setup. Target length: **30–45 minutes** (see S25 for a
 pacing review).
 
-**Awang** is the player's older brother, who raised and looked after them after their father died.
+**Awang** is the player's older brother, who raised and looked after them after their father died of an illness.
 He is the first mentor and companion, not just a tutorial NPC:
 - he walks with the player (usually a little ahead), gives advice during work, chats while
   working, teases and jokes like a brother, and helps when the player makes a mistake;
@@ -290,7 +290,7 @@ text on screen. The prayer is shown with a fade rather than played in full.
   Air, if added) give Pawang a support-like role.
 - **Awang and Kelana have an Anugerah** *(decided)*. People with Anugerah are rare, so the Ordo
   hunt them; this fits the existing hook "the Ordo want to capture the player".
-- **Story hooks** (the first three approved by leoxent, 2026-11-21; elements and family still
+- **Story hooks** (the first three approved by leoxent, 2026-11-21; elements approved too; family still
   proposed):
   - **Awang hides his Anugerah** from the village, because people with one get taken. In the
     prologue there are small signs only a careful player notices (e.g. water runs to the sawah
@@ -301,11 +301,11 @@ text on screen. The prayer is shown with a fade rather than played in full.
   - **If the player is Pawang**, Awang teaches the first cast in secret in mission 4 (*"Jangan
     beritahu sesiapa, faham?"*), so Tok Senik is not needed as the Pawang teacher. If the player
     is another class, they learn Awang's secret only at the raid.
-  - **Elements:** Awang = **Air** (water: protecting and nurturing, the brother who raised the
+  - **Elements** *(approved by leoxent, 2026-11-21)*: Awang = **Air** (water: protecting and nurturing, the brother who raised the
     player). Kelana = **Bumi** (earth and stone: a gift for keeping things steady, turned into
-    nailing the stones and binding). Si Raya wants Kelana *because* of his Anugerah.
+    nailing the stones and binding). Si Raya wants Kelana *because* of his Anugerah. Awang's Air means water is an Anugerah element in the world; whether the player's Pawang can use it is still open.
   - **Family:** if the player (Pawang) and Awang both have one, it may run in the family. Did
-    the father have one? This links to "how did the father die?", so decide it together.
+    the father have one? The father died of an illness (decided); whether he had an Anugerah is open.
 - **Balance levers.** Ranged is the safest style in top-down action, so Pawang has the lowest HP,
   a short wind-up on casts, a resource (stamina or *tenaga*), and projectiles slow enough to dodge
   (on both sides). Melee classes hit harder per hit and get i-frames on dodge. Bayang needs enemy
@@ -387,9 +387,7 @@ creature bonded by kindness, with its own fantasy look; details below are propos
 - The player names their own beast; the default is **Si Belang**.
 
 ## Open questions (new; the older ones stay in `game-design.md`)
-- How did the player's father die? (Do not link it to Si Raya or the Ordo without deciding.)
 - Solat (S26): on hold (KIV).
-- Add an Air (water) element (S27)?
+- Can the player's Pawang use Air (water), Awang's element (S27)?
 - New name for the Pawang class (KIV, candidates in S27).
-- Awang's and Kelana's elements (S27)?
 

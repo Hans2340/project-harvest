@@ -30,14 +30,14 @@ teach or glorify shirk:
 ## Cast
 - **The player**: a farmer's child from a kampung upriver on the Seri.
 - **Awang**: the player's older brother, who raised and looked after them after their father
-  died. Farmer, hunter and pesilat; the player's first mentor and companion. **Has an Anugerah**,
-  kept secret from the village until the raid (element proposed: water). Taken to the mines at the
+  died of an illness. Farmer, hunter and pesilat; the player's first mentor and companion. **Has an Anugerah**,
+  kept secret from the village until the raid (element: **Air**, water). Taken to the mines at the
   end of the prologue.
 - **Mak**: waits at the jetty every evening.
 - **Tok Senik**: old healer, keeps a guilty secret (he taught Kelana).
 - **Tok Imam Hasyim**: imam of the surau, gentle and unbending.
 - **Kelana (Warden Kelanus)**: main villain. A local Malay, Tok Senik's former student. **Has an
-  Anugerah** (proposed: earth, the gift he turned into nailing and binding).
+  Anugerah** (element: **Bumi**, earth: the gift he turned into nailing and binding).
 - **Severin**: young Ordo Acolyte, joined because he was starving; can defect.
 - **Si Raya**: a hantu raya that does **not** want to be freed: the hidden mastermind.
 - **The Four Guardians** (creatures, not gods): Naga Tasik Chini (lake), Bujang Senang (swamp
@@ -59,9 +59,9 @@ teach or glorify shirk:
   every living thing can be owned. They nail the boundary stones, drag beings out of their world
   and enslave them in iron lanterns. Bound beings are **victims**. Locals call the emblem
   "Si Mata Berpaku".
-- **Binatang Berpaku** (proposed, not decided): ordinary animals poisoned by the "seal poison"
+- **Binatang Berpaku** (approved by leoxent, 2026-11-21): ordinary animals poisoned by the "seal poison"
   leaking from nailed stones (wild boar, tiger, python, monitor lizard, monkeys, bats, hornets,
-  young crocodiles). Daily enemies; fewer once a zone's stone is freed. Also proposed: empty
+  young crocodiles). Daily enemies; fewer once a zone's stone is freed. Still proposed: empty
   armour moved by a bound being (break the lantern, the being goes free).
 
 ## Story
@@ -147,6 +147,5 @@ to the zone). Same zone first, split zones later. Build solo first, keep code co
 
 ## Open
 - Final game name (working title "Sungai Seri").
-- Approve Binatang Berpaku and the Ordo armour enemy?
-- How did the father die?
+- Approve the Ordo armour enemy (empty armour moved by a bound being)?
 - Write the prologue dialogue (Awang's lines per mission, the day-3 raid, Kelana's first scene).
