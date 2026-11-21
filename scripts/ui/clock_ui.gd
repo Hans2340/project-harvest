@@ -192,11 +192,10 @@ class Dial:
 
 	const RING := preload("res://assets/ui/clock_kayu/dial_ring.png")
 	const HILLS := preload("res://assets/ui/clock_kayu/dial_hills.png")
-	const KERIS := preload("res://assets/ui/clock_kayu/keris.png")
 	const K_CENTER := Vector2(31.5, 32.0)   ## centre of the ring art (64 x 64)
 	const K_RADIUS := 24.5                  ## inside of the ring
-	const KERIS_PIVOT := Vector2(19, 5.5)   ## the guard; the blade points to the tip at (0, 0.5)
-	const KERIS_ANGLE := -2.884             ## atan2(-5, -19): the blade's direction in the art
+	const STEEL := Color(0.86, 0.86, 0.8)
+	const HILT := Color(0.42, 0.26, 0.14)
 
 	var kayu := false
 
@@ -274,7 +273,20 @@ class Dial:
 				draw_circle(body, 4, Color(0.92, 0.92, 0.85))
 				draw_circle(body + Vector2(2, -1), 3, ClockUI.sky_color(hours))
 		draw_texture(HILLS, Vector2.ZERO)
-		draw_set_transform(c, -ClockUI.hand_angle(hours) - KERIS_ANGLE)
-		draw_texture(KERIS, -KERIS_PIVOT)
-		draw_set_transform(Vector2.ZERO)
+		_draw_keris(c, Vector2.from_angle(-ClockUI.hand_angle(hours)), r)
 		draw_texture(RING, Vector2.ZERO)
+
+	## The hand as a keris drawn with plain lines (a rotated sprite turns to mush at this size):
+	## dark-outlined steel blade, gold guard across it, a short wooden hilt behind the pin.
+	func _draw_keris(c: Vector2, d: Vector2, r: float) -> void:
+		var n := d.orthogonal()
+		var tip := c + d * (r - 3)
+		var guard := c + d * 2
+		var pommel := c - d * 6
+		draw_line(pommel, tip, OUTLINE, 3.0)            # outline of the whole hand
+		draw_line(guard + n * 3, guard - n * 3, OUTLINE, 3.0)
+		draw_line(guard, tip - d, STEEL, 1.0)           # blade
+		draw_line(c, pommel, HILT, 1.0)                 # hilt
+		draw_line(guard + n * 2, guard - n * 2, GOLD, 1.0)
+		draw_circle(pommel, 1.5, CAMEL)
+		draw_circle(c, 1.5, GOLD)

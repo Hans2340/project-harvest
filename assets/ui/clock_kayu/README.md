@@ -10,6 +10,6 @@ leoxent's mockup: text and icons painted out, then each piece converted with Pix
 | bar.png | 112x22 | money bar |
 | dial_ring.png | 64x64 | gold ring with stars, transparent inside |
 | dial_hills.png | 64x64 | hills and house silhouette (the sky is drawn in code) |
-| keris.png | 30x9 | the hand; pivot at the guard (19, 5.5), tip at (0, 0) |
 
 Switch styles in the dev tools (F1): "Jam: lama / kayu ukir". Saved in `user://settings.cfg`.
+The hand is a keris drawn in code with plain lines (`ClockUI.Dial._draw_keris`): a rotated sprite was too blurry at 30x9.
