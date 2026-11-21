@@ -45,7 +45,7 @@ green key cleanly.
 > orange and amber light, like a shadow play lit from behind by an oil lamp, with soft light falloff
 > toward the edges.
 
-Use test image C as a **style reference** in Gemini for every layer, so all shots match it.
+Use `references/cinematic/style_ref_swatch.png` (a close-up crop of the carved pattern on layer 2b) as the **style reference** in Gemini for every cut-out, and start the prompt with: "The attached image is only a close-up sample of the cut-out technique. Use the same technique and line weight, but do not draw the sample itself." A full scene as reference (test image C) leaks into the result: its people, sawah and amber glow get copied. Use a fresh chat for every image.
 No bamboo rods and no "photo of a real screen": the look is the clean one from test C.
 
 **Style prefix for cut-outs and puppets.** Put this at the start of every cut-out prompt:
@@ -117,6 +117,10 @@ adiknya") and the silhouettes work for a younger brother or a younger sister.
 
 ### Script
 
+Revised by leoxent (2026-11-21) to be safer in religious terms: the world is "bumi Tuhan", the
+balance holds "dengan izin-Nya", the Guardians are only witnesses, and Tok Senik keeps "petua dan
+hikmah" rather than "ilmu".
+
 **1. Subuh on Sungai Seri** (0:00–0:18)
 *Cue: the azan subuh plays **alone**, soft and distant, from 0:00 for about 5–6 seconds (one or two phrases), then fades out completely. Only then, at about 0:08, the narrator begins. Never speak over the azan (adab: it is listened to, not talked over). Under the narration: birds and river only. Mood: peaceful, warm.*
 > **Alkisah**, di hulu Sungai Seri... hari bermula dengan azan subuh, dan bau tanah sawah yang
@@ -124,18 +128,18 @@ adiknya") and the silhouettes work for a younger brother or a younger sister.
 > `EN:` Long ago, upriver on the Seri... each day began with the dawn call to prayer, and the smell of wet rice fields.
 
 **2. Batu Sempadan** (0:18–0:32)
-*Cue: Forest night sounds. Mood: wise, a little mysterious.*
-> Pesan orang tua-tua: kita **berjiran** dengan alam yang tak terlihat. // Batu Sempadan menjadi
-> tanda had. Mereka tak menceroboh kita... dan kita tak menceroboh mereka.
-> `EN:` The elders taught that we are neighbours to an unseen world. The boundary stones marked the line. They do not trespass on us... and we do not trespass on them.
+*Cue: forest night sounds. Mood: wise, a little mysterious.*
+> Pesan orang tua-tua: kita **berkongsi** bumi Tuhan ini dengan alam yang tak terlihat. // Batu
+> Sempadan menjadi tanda batas. Mereka tak menceroboh kita... dan kita tak menceroboh mereka.
+> `EN:` The elders taught that we share God's earth with an unseen world. The boundary stones marked the line. They do not trespass on us... and we do not trespass on them.
 
 **3. The Four Guardians** (0:32–0:56)
 *Cue: each name lands as its puppet appears. Mood: awe, but gentle.*
-> **Syahdan**, empat makhluk tua menjaga janji itu. // Naga di Tasik Chini. Bujang Senang di
+> **Syahdan**, empat makhluk tua menjadi saksi janji itu. // Naga di Tasik Chini. Bujang Senang di
 > kuala. Orang Bunian di rimba. Dan Puteri... di puncak Ledang. // Mereka juga makhluk
-> **ciptaan Tuhan**, cuma lebih tua daripada ingatan kita. // Selagi batu tak diusik, sungai
-> mengalir jernih... dan padi menguning setiap musim.
-> `EN:` And so, four old creatures kept that promise. The Naga of Tasik Chini. Bujang Senang at the river mouth. The Bunian in the forest. And the Puteri... on Ledang's peak. They too were created by God, only older than our memory. While the stones stood untouched, the river ran clear... and the rice turned gold each season.
+> **ciptaan Tuhan**, cuma lebih tua daripada ingatan kita. // Dengan izin-Nya, selagi amanah itu
+> terpelihara, sungai mengalir jernih... dan padi menguning setiap musim.
+> `EN:` And so, four old creatures stood witness to that promise. The Naga of Tasik Chini. Bujang Senang at the river mouth. The Bunian in the forest. And the Puteri... on Ledang's peak. They too were created by God, only older than our memory. By His will, while that trust was kept, the river ran clear... and the rice turned gold each season.
 
 **4. Pale sails** (0:56–1:08)
 *Cue: the music darkens, low drum. Mood: unease.*
@@ -163,14 +167,14 @@ adiknya") and the silhouettes work for a younger brother or a younger sister.
 
 **8. Tok Senik's hut** (1:50–2:02)
 *Cue: lamp crackle. On "kepada kau" the narrator speaks a little closer, as if to the player.*
-> Dan di hujung kampung, seorang tua masih menyimpan ilmu lama. // Dia hanya mahu bertanya
-> beberapa soalan... kepada **kau**.
-> `EN:` And at the edge of the village, an old man still kept the old knowledge. He had only a few questions to ask... of you.
+> Dan di hujung kampung, seorang tua masih menyimpan petua dan hikmah lama. // Dia hanya mahu
+> bertanya beberapa soalan... kepada **kau**.
+> `EN:` And at the edge of the village, an old man still kept the old lore and wisdom. He had only a few questions to ask... of you.
 
 **9. The jetty, title** (2:02–2:16)
 *Cue: the music swells softly, then thins. Mood: quiet hope. The slowest line of all.*
-> Kezaliman tak pernah **kekal**. // Dan sungai ini... masih ingat siapa tuannya.
-> `EN:` Tyranny never lasts. And this river... still remembers who it belongs to.
+> Kezaliman tak pernah **kekal**. // Dan tanah ini... masih ingat siapa anak-anaknya.
+> `EN:` Tyranny never lasts. And this land... still remembers who its children are.
 >
 > *(Title fades in. The working title is "Sungai Seri" until a final name is chosen. The same
 > line closes the epilogue, so the game begins and ends with it.)*
@@ -274,7 +278,7 @@ kelir is a burning village far upriver.
 |---|---|---|
 | 7a Kampung strip | 2304x600 | a kampung behind rice fields: stilted thatched houses, coconut palms and a small surau, peaceful |
 | 7b Sawah strip | 2304x400 | rice paddies with a long raised earth bund running across, young rice plants cut as small upright shapes |
-| 7c Siblings (puppets) | 900x700 | two puppets walking, side view: a taller young man in front with a sabit (curved rice sickle) on his shoulder, his head turned back as if joking, and a smaller younger person a few steps behind carrying a bundle of rice stalks, both in sarong and simple baju |
+| 7c Siblings (puppets) | 900x700 | two puppets walking, side view: a young man in his early twenties in front with a sabit (curved rice sickle) on his shoulder, his head turned back as if joking, and a teenager about 16 to 18 years old, nearly as tall as him, a few steps behind carrying a bundle of rice stalks, both in sarong and simple baju (the teenager is the player: never a small child) |
 
 Godot: the two puppets move along the bund with a slight bob, the way a dalang walks puppets; birds
 cross. This is the first and only time Awang is shown in the cinematic, always a little **ahead**
@@ -286,7 +290,7 @@ of the player (see `game-design-proposed.md`, Awang's absence).
 |---|---|---|
 | 8a Hut interior | 2304x1080 | the inside of a simple wooden hut: roof beams, bundles of dried herbs and roots hanging, clay jars along the floor, a woven mat wall pattern |
 | 8b Old man (puppet) | 600x800 | a thin old man seated cross-legged, simple headcloth, one arm raised as if speaking (cut the raised arm as a separate piece so it can move) |
-| 8c Youth (puppet) | 500x700 | a young person seated, seen from behind, facing left, plain clothes |
+| 8c Youth (puppet) | 500x700 | a teenager about 16 to 18 years old seated cross-legged, seen from behind, facing left, plain baju and sarong, not a small child |
 | 8d Pelita (puppet) | 250x250 | a small clay oil lamp (pelita) with an empty space where the flame would be |
 
 Godot: the flame is a light, not part of the image; the kelir brightness flickers with it; Tok
@@ -297,8 +301,8 @@ Senik's arm moves slightly as he speaks.
 | Layer | Size | Prompt |
 |---|---|---|
 | 9a River strip | 2304x500 | a wide calm river shown as long gentle wave lines, a distant forest bank, a small perahu far away |
-| 9b Jetty and siblings | 1400x700 | a simple wooden jetty on stilts reaching into the river, two young people sitting side by side at its end, seen from behind, legs over the edge, looking upriver, a cloth sash lifting in the wind |
-| 9b-alone | 1400x700 | the same jetty with **one** young person sitting alone at its end (used later in game, after Awang is taken: the mirror shot) |
+| 9b Jetty and siblings | 1400x700 | a simple wooden jetty on stilts reaching into the river, two young people sitting side by side at its end, seen from behind, legs over the edge, looking upriver (a young man in his early twenties and a teenager about 16 to 18, nearly as tall as him), a cloth sash lifting in the wind |
+| 9b-alone | 1400x700 | the same jetty with **one** teenager (16 to 18) sitting alone at its end (used later in game, after Awang is taken: the mirror shot) |
 | 9c Foreground | 2304x400 | coconut palm fronds hanging into the top corners |
 | 9d Title frame (puppet) | 1300x400 | an ornate frame of carved leaf and vine patterns (ukiran), cut like a puppet, empty in the middle for the title text |
 

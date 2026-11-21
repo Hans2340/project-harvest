@@ -28,8 +28,9 @@ teach or glorify shirk:
   unique passive or active talent.
 
 ## Cast
-- **The player**: a farmer's child from a kampung upriver on the Seri.
-- **Awang**: the player's older brother, who raised and looked after them after their father
+- **The player**: a farmer's child from a kampung upriver on the Seri, a teenager of **16 to 18**
+  (decided by leoxent, 2026-11-21: never drawn as a small child; nearly as tall as Awang).
+- **Awang**: the player's older brother (early twenties), who raised and looked after them after their father
   died of an illness. Farmer, hunter and pesilat; the player's first mentor and companion. **Has an Anugerah**,
   kept secret from the village until the raid (element: **Air**, water). Taken to the mines at the
   end of the prologue.
@@ -121,8 +122,8 @@ across the border**, not killed (it is a creature with its own place, just not h
 | Pahit | Awang fell | Ordo falls, the player returns alone and now waits at the jetty with Mak. |
 | Tunduk | Always paid, rarely resisted | Village safe but Ordo stays at the Kuala; Severin smuggles out a map (a hint of hope). |
 Epilogue, **Sungai Masih Mengalir**: the first dawn after victory, the azan from a full surau; Tok Senik and Tok Imam on the
-surau steps watching the sun over green sawah. "Kezaliman tak pernah kekal. Dan sungai ini...
-masih ingat siapa tuannya."
+surau steps watching the sun over green sawah. "Kezaliman tak pernah kekal. Dan tanah ini...
+masih ingat siapa anak-anaknya." (same line as the end of the opening)
 
 ## Game flow (summary)
 - Main menu → opening cinematic (`docs/opening-scene.md`) → Tok Senik's questions (class,
