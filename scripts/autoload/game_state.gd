@@ -7,6 +7,8 @@ signal time_changed(minutes: int)
 signal items_changed
 signal gold_changed(gold: int)
 signal weather_changed(weather: String)
+signal character_changed(id: String)
+signal clock_style_changed(style: String)
 
 const DAY_START_MINUTES := 6 * 60   ## 06:00
 const DAY_END_MINUTES := 26 * 60    ## 02:00 next day: pass out
@@ -26,6 +28,51 @@ var items := {
 	"padi": 0,
 }
 var clock_running := true
+
+## Playable characters: id -> display name. Each has `assets/sprites/player/<id>/player_sheet.png`
+## in the same 8x18 layout. Picked from the dev tools (F1) for now.
+const CHARACTERS := {
+	"pendekar_lelaki": "Pendekar lelaki",
+	"pendekar_perempuan": "Pendekar perempuan",
+}
+var character := "pendekar_lelaki"
+
+
+func set_character(id: String) -> void:
+	if not CHARACTERS.has(id) or id == character:
+		return
+	character = id
+	character_changed.emit(id)
+
+
+## Look of the top-right clock, picked from the dev tools (F1) until the team settles on one:
+## "lama" = the Dark Ages pack panels, "kayu" = carved wood and gold with the keris hand.
+const CLOCK_STYLES := {"lama": "Jam: lama", "kayu": "Jam: kayu ukir"}
+const SETTINGS_PATH := "user://settings.cfg"
+var clock_style := "lama"
+
+
+func set_clock_style(style: String) -> void:
+	if not CLOCK_STYLES.has(style) or style == clock_style:
+		return
+	clock_style = style
+	clock_style_changed.emit(style)
+	var cfg := ConfigFile.new()
+	cfg.load(SETTINGS_PATH)
+	cfg.set_value("ui", "clock_style", style)
+	cfg.save(SETTINGS_PATH)
+
+
+func _load_settings() -> void:
+	var cfg := ConfigFile.new()
+	if cfg.load(SETTINGS_PATH) == OK:
+		var style: String = cfg.get_value("ui", "clock_style", clock_style)
+		if CLOCK_STYLES.has(style):
+			clock_style = style
+
+
+static func character_sheet(id: String) -> Texture2D:
+	return load("res://assets/sprites/player/%s/player_sheet.png" % id)
 
 
 func _process(delta: float) -> void:
@@ -107,10 +154,46 @@ func is_raining() -> bool:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("fullscreen"):   # F11
-		var full := DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if full else DisplayServer.WINDOW_MODE_FULLSCREEN)
+		toggle_fullscreen()
 	if event.is_action_pressed("debug_weather"):   # F7: toggle rain for testing
 		set_weather("cerah" if is_raining() else "hujan")
+
+
+## Windows keeps the taskbar on top of a plain (borderless) fullscreen window, so use exclusive
+## fullscreen, which covers the whole screen.
+func toggle_fullscreen() -> void:
+	var mode := DisplayServer.window_get_mode()
+	var full := mode == DisplayServer.WINDOW_MODE_FULLSCREEN or mode == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if full else DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
+	if full:
+		fit_window.call_deferred()
+
+
+const TITLE_BAR := 40   ## px kept free above the window for its title bar
+
+
+func _ready() -> void:
+	_load_settings()
+	fit_window()
+
+
+## Size the window to the largest whole multiple of the base resolution (640x360) that fits the
+## screen's usable area (minus the taskbar and the title bar), and centre it: 1280x720 on a 1080p
+## screen, 1920x1080 on 1440p, 3200x1800 on 4K. The stretch aspect is "expand", so any other window
+## shape or screen ratio shows more of the world instead of black bars.
+func fit_window() -> void:
+	if DisplayServer.get_name() == "headless" or Engine.is_embedded_in_editor():
+		return
+	if DisplayServer.window_get_mode() != DisplayServer.WINDOW_MODE_WINDOWED:
+		return
+	var base := Vector2i(ProjectSettings.get_setting("display/window/size/viewport_width"),
+		ProjectSettings.get_setting("display/window/size/viewport_height"))
+	var area := DisplayServer.screen_get_usable_rect()
+	var scale := maxi(1, mini(area.size.x / base.x, (area.size.y - TITLE_BAR) / base.y))
+	var size := base * scale
+	DisplayServer.window_set_min_size(base)
+	DisplayServer.window_set_size(size)
+	DisplayServer.window_set_position(area.position + (area.size - size) / 2 + Vector2i(0, TITLE_BAR / 2))
 
 
 func add_gold(amount: int) -> void:

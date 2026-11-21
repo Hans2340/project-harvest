@@ -22,12 +22,18 @@ const WEATHER_ICONS := {
 }
 const COIN := preload("res://assets/ui/icons/coin_pitis.png")
 
+## "kayu" style: carved wood and gold, made with PixelLab from leoxent's mockup
+## (assets/ui/clock_kayu/README.md).
+const KAYU_PANEL := preload("res://assets/ui/clock_kayu/panel.png")
+const KAYU_BAR := preload("res://assets/ui/clock_kayu/bar.png")
+
+var style := ""
 var _date: Label
 var _time: Label
 var _gold: Label
-var _season_icon := TextureRect.new()
-var _weather_icon := TextureRect.new()
-var _dial := Dial.new()
+var _season_icon: TextureRect
+var _weather_icon: TextureRect
+var _dial: Dial
 
 
 func _ready() -> void:
@@ -37,53 +43,91 @@ func _ready() -> void:
 	offset_right = -4
 	offset_top = 4
 	offset_bottom = 4 + SIZE.y
-
-	var panel := UiSkin.nine(UiSkin.PANEL_DARK, 12)
-	panel.position = Vector2(48, 2)
-	panel.size = Vector2(110, 58)
-	add_child(panel)
-
-	_date = UiSkin.label("", 10, UiSkin.TEXT_GOLD)
-	_date.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_date.position = Vector2(56, 6)
-	_date.size = Vector2(98, 14)
-	add_child(_date)
-
-	for icon in [_weather_icon, _season_icon]:
-		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		icon.size = Vector2(12, 12)
-		add_child(icon)
-	_weather_icon.position = Vector2(84, 24)
-	_season_icon.position = Vector2(112, 24)
-
-	_time = UiSkin.label("", 10)
-	_time.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_time.position = Vector2(56, 39)
-	_time.size = Vector2(98, 14)
-	add_child(_time)
-
-	var bar := UiSkin.nine(UiSkin.PANEL_DARK, 12)
-	bar.position = Vector2(48, 60)
-	bar.size = Vector2(110, 22)
-	add_child(bar)
-	var coin := TextureRect.new()
-	coin.texture = COIN
-	coin.position = Vector2(58, 65)
-	coin.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(coin)
-	_gold = UiSkin.label("", 10, UiSkin.TEXT_GOLD)
-	_gold.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_gold.position = Vector2(74, 64)
-	_gold.size = Vector2(76, 14)
-	add_child(_gold)
-
-	add_child(_dial)   # last, so it sits on top of the panel's edge
-
+	_build(GameState.clock_style)
+	GameState.clock_style_changed.connect(_build)
 	GameState.time_changed.connect(func(_m): _refresh())
 	GameState.day_changed.connect(func(_d): _refresh())
 	GameState.gold_changed.connect(func(_g): _refresh())
 	GameState.weather_changed.connect(func(_w): _refresh())
+
+
+## (Re)build the clock in a style ("lama" or "kayu").
+func _build(new_style: String) -> void:
+	style = new_style
+	for c in get_children():
+		remove_child(c)
+		c.queue_free()
+	_season_icon = TextureRect.new()
+	_weather_icon = TextureRect.new()
+	_dial = Dial.new()
+	_dial.kayu = style == "kayu"
+	if _dial.kayu:
+		_dial.size = Vector2(64, 64)
+		_build_kayu()
+	else:
+		_build_lama()
+	for icon in [_weather_icon, _season_icon]:
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		icon.size = Vector2(12, 12)
+	add_child(_dial)   # last, so it sits on top of the panel's edge
 	_refresh()
+
+
+func _build_lama() -> void:
+	var panel := UiSkin.nine(UiSkin.PANEL_DARK, 12)
+	panel.position = Vector2(48, 2)
+	panel.size = Vector2(110, 58)
+	add_child(panel)
+	_date = _text(Vector2(56, 6), Vector2(98, 14), UiSkin.TEXT_GOLD)
+	add_child(_weather_icon)
+	add_child(_season_icon)
+	_weather_icon.position = Vector2(84, 24)
+	_season_icon.position = Vector2(112, 24)
+	_time = _text(Vector2(56, 39), Vector2(98, 14), UiSkin.TEXT)
+	var bar := UiSkin.nine(UiSkin.PANEL_DARK, 12)
+	bar.position = Vector2(48, 60)
+	bar.size = Vector2(110, 22)
+	add_child(bar)
+	_coin_and_gold(Vector2(58, 65), Vector2(74, 64))
+
+
+func _build_kayu() -> void:
+	_sprite(KAYU_PANEL, Vector2(48, 2))   # 112 x 56; the dial covers its left edge
+	_date = _text(Vector2(60, 7), Vector2(88, 14), UiSkin.TEXT_GOLD)
+	add_child(_weather_icon)
+	add_child(_season_icon)
+	_weather_icon.position = Vector2(85, 22)
+	_season_icon.position = Vector2(113, 22)
+	_time = _text(Vector2(60, 38), Vector2(88, 14), UiSkin.TEXT)
+	_sprite(KAYU_BAR, Vector2(48, 60))   # 112 x 22
+	_coin_and_gold(Vector2(58, 65), Vector2(72, 64))
+
+
+func _sprite(tex: Texture2D, pos: Vector2) -> TextureRect:
+	var r := TextureRect.new()
+	r.texture = tex
+	r.position = pos
+	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(r)
+	return r
+
+
+func _text(pos: Vector2, size_: Vector2, color: Color) -> Label:
+	var l := UiSkin.label("", 10, color)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.position = pos
+	l.size = size_
+	add_child(l)
+	return l
+
+
+func _coin_and_gold(coin_pos: Vector2, gold_pos: Vector2) -> void:
+	_sprite(COIN, coin_pos)
+	_gold = UiSkin.label("", 10, UiSkin.TEXT_GOLD)
+	_gold.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_gold.position = gold_pos
+	_gold.size = Vector2(76, 14)
+	add_child(_gold)
 
 
 func _process(_delta: float) -> void:
@@ -146,11 +190,23 @@ class Dial:
 	const CAMEL := Color(0.76, 0.57, 0.29)       ## pack "Camel" #C19149
 	const EARTH := Color(0.24, 0.2, 0.15)
 
+	const RING := preload("res://assets/ui/clock_kayu/dial_ring.png")
+	const HILLS := preload("res://assets/ui/clock_kayu/dial_hills.png")
+	const K_CENTER := Vector2(31.5, 32.0)   ## centre of the ring art (64 x 64)
+	const K_RADIUS := 24.5                  ## inside of the ring
+	const STEEL := Color(0.86, 0.86, 0.8)
+	const HILT := Color(0.42, 0.26, 0.14)
+
+	var kayu := false
+
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
 		size = Vector2(62, 62)
 
 	func _draw() -> void:
+		if kayu:
+			_draw_kayu()
+			return
 		var c := ClockUI.DIAL_CENTER
 		var r := ClockUI.DIAL_RADIUS
 		var hours := GameState.minutes / 60.0
@@ -191,3 +247,46 @@ class Dial:
 		draw_line(c, tip, CAMEL, 1.0)
 		draw_circle(c, 3, OUTLINE)
 		draw_circle(c, 2, GOLD)
+
+	## Carved style: code sky, sun/moon and stars under the PixelLab hills, the keris as the
+	## hand, and the gold ring on top.
+	func _draw_kayu() -> void:
+		var c := K_CENTER
+		var r := K_RADIUS
+		var hours := GameState.minutes / 60.0
+		draw_circle(c, r, ClockUI.sky_color(hours))
+		var night := clampf((hours - 19.0) / 1.5, 0.0, 1.0)
+		if night > 0.0:
+			for p in [Vector2(-13, -12), Vector2(-4, -18), Vector2(8, -15), Vector2(15, -6), Vector2(-17, -4), Vector2(3, -9)]:
+				draw_rect(Rect2((c + p).floor(), Vector2(1, 1)), Color(1, 1, 0.85, night))
+		if GameState.is_raining():
+			for k in 3:
+				draw_circle(c + Vector2(-9 + k * 8, -13 + (k % 2) * 3), 5, Color(0.55, 0.58, 0.62))
+			for k in 4:
+				draw_line(c + Vector2(-11 + k * 6, -6), c + Vector2(-13 + k * 6, -1), Color(0.6, 0.75, 0.9), 1.0)
+		else:
+			var body := (c + Vector2.from_angle(-ClockUI.body_angle(hours)) * (r - 8)).floor()
+			if hours < 19.0:
+				draw_circle(body, 4.5, Color(1.0, 0.85, 0.4))
+				draw_circle(body, 3, Color(1.0, 0.95, 0.7))
+			else:
+				draw_circle(body, 4, Color(0.92, 0.92, 0.85))
+				draw_circle(body + Vector2(2, -1), 3, ClockUI.sky_color(hours))
+		draw_texture(HILLS, Vector2.ZERO)
+		_draw_keris(c, Vector2.from_angle(-ClockUI.hand_angle(hours)), r)
+		draw_texture(RING, Vector2.ZERO)
+
+	## The hand as a keris drawn with plain lines (a rotated sprite turns to mush at this size):
+	## dark-outlined steel blade, gold guard across it, a short wooden hilt behind the pin.
+	func _draw_keris(c: Vector2, d: Vector2, r: float) -> void:
+		var n := d.orthogonal()
+		var tip := c + d * (r - 3)
+		var guard := c + d * 2
+		var pommel := c - d * 6
+		draw_line(pommel, tip, OUTLINE, 3.0)            # outline of the whole hand
+		draw_line(guard + n * 3, guard - n * 3, OUTLINE, 3.0)
+		draw_line(guard, tip - d, STEEL, 1.0)           # blade
+		draw_line(c, pommel, HILT, 1.0)                 # hilt
+		draw_line(guard + n * 2, guard - n * 2, GOLD, 1.0)
+		draw_circle(pommel, 1.5, CAMEL)
+		draw_circle(c, 1.5, GOLD)
